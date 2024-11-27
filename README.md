@@ -27,7 +27,7 @@ This project is designed to provide a comprehensive workshop on the TIBCO platfo
     - [TODO]()
 - [Using Platform Provisioner](https://github.com/tibco-bnl/workshop-tibco-platform/tree/main/2.%20TIBCO-Platform/Using-Platform-Provisioner)
     - [Run Platform Provisioner - Setup on k8s on Linux or Windows-WSL](https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/2.%20TIBCO-Platform/Using-Platform-Provisioner/run_platform_provisioner-wsl-ubuntu.md)
-    - [Run Platform Provisioner - Setup on k8s on Macbook]()
+    - [Run Platform Provisioner - Setup on k8s on Macbook](https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/2.%20TIBCO-Platform/Using-Platform-Provisioner/run_platform_provisioner-macbook.md)
 
 
 ## Contributing
