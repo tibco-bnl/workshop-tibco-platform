@@ -11,10 +11,9 @@ Ensure you have the following tools installed:
 
 Follow these steps to run the script:
 
-1. **Install WSL Ubuntu dependencies**
+1. **Install dependencies**
     ```sh
-    sudo apt update
-    sudo apt install -y yq
+    brew install yq
     ```
 
 2. **Clone the platform-provisioner repository:**
