@@ -24,14 +24,13 @@ This project is designed to provide a comprehensive workshop on the TIBCO platfo
     - [1. Install WSL2 Ubuntu on Windows](https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/1.%20Setup%20K8s%20Cluster/Windows-WSL2-Microk8s/1.%20Install%20WSL2%20Ubuntu%20on%20Windows.md)
     - [2. Install microK8s on Windows](https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/1.%20Setup%20K8s%20Cluster/Windows-WSL2-Microk8s/2.%20Install%20microK8s%20on%20windows.md)
     - [3. Add microk8s to your Kubeconfig](https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/1.%20Setup%20K8s%20Cluster/Windows-WSL2-Microk8s/3.%20Add%20microk8s%20to%20your%20Kubeconfig.md)
-
 [2. TIBCO Platform](https://github.com/tibco-bnl/workshop-tibco-platform/tree/main/2.%20TIBCO-Platform/Using-Platform-Provisioner)
 - [Using SaaS CP (Easy way)]()
     - [TODO]()
 - [Using Platform Provisioner](https://github.com/tibco-bnl/workshop-tibco-platform/tree/main/2.%20TIBCO-Platform/Using-Platform-Provisioner)
-    - [Run Platform Provisioner - Setup on k8s on Linux or Windows-WSL](https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/2.%20TIBCO-Platform/Using-Platform-Provisioner/run_platform_provisioner-wsl-ubuntu.md)
-    - [Run Platform Provisioner - Setup on k8s on Macbook](https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/2.%20TIBCO-Platform/Using-Platform-Provisioner/run_platform_provisioner-macbook.md)
-
+    - [1. Building the Platform Provisioner docker image](https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/2.%20TIBCO-Platform/Using-Platform-Provisioner/1.%20Build%20Platform%20provisioner%20Docker%20image.md)
+    - [2. Using Platfomr Provisioner-Win-WSL-Linux.md](https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/2.%20TIBCO-Platform/Using-Platform-Provisioner/2.%20Using%20Platfomr%20Provisioner-Win-WSL-Linux.md)
+    - [2. Using Platform Provisioner-Macbook.md](https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/2.%20TIBCO-Platform/Using-Platform-Provisioner/2.%20Using%20Platform%20Provisioner-Macbook.md)
 
 ## Contributing
 
