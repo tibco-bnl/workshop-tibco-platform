@@ -24,6 +24,7 @@ This project is designed to provide a comprehensive workshop on the TIBCO platfo
     - [1. Install WSL2 Ubuntu on Windows](https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/1.%20Setup%20K8s%20Cluster/Windows-WSL2-Microk8s/1.%20Install%20WSL2%20Ubuntu%20on%20Windows.md)
     - [2. Install microK8s on Windows](https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/1.%20Setup%20K8s%20Cluster/Windows-WSL2-Microk8s/2.%20Install%20microK8s%20on%20windows.md)
     - [3. Add microk8s to your Kubeconfig](https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/1.%20Setup%20K8s%20Cluster/Windows-WSL2-Microk8s/3.%20Add%20microk8s%20to%20your%20Kubeconfig.md)
+    - [4. WSL2 image distribution](1.%20Setup%20K8s%20Cluster/Windows-WSL2-Microk8s/4.%20WSL2%20image%20distribution.md)
 [2. TIBCO Platform](https://github.com/tibco-bnl/workshop-tibco-platform/tree/main/2.%20TIBCO-Platform/Using-Platform-Provisioner)
 - [Using SaaS CP (Easy way)]()
     - [TODO]()
