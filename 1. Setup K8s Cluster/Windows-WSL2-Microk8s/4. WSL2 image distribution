@@ -1,0 +1,76 @@
+### Create wsl snapshot of WSL2 Ubuntu image
+---
+1. Terminate all terminals with WSL2 Ubuntu sessions
+
+
+2. Shutdown WSL2
+    In Windows Powershell stop WSL2 (may result in warnings from docker desktop)
+
+    ```powershell
+    wsl --shutdown
+    ```
+
+3. Export distribution
+
+    ```
+    mkdir $env:USERPROFILE\wsl-backup
+    wsl --export Ubuntu %UserProfile%\wsl-backup\Ubuntu_01_minikube.tar
+    ``` 
+    This may take a couple of minutes depending on the size of the distribution
+---
+
+### Import wsl snapshot on other machine
+---
+
+1. Terminate all terminals with WSL2 Ubuntu sessions
+
+
+2. Shutdown WSL2
+    In Windows Powershell stop WSL2 (may result in warnings from docker desktop)
+
+    ```powershell
+    wsl --shutdown
+    ```
+
+3. Unregister existing distribution 
+
+    This will cause the existing distribution to be completely removed. Please make an export if any data in the distribution is required for future use.
+
+    ```powershell
+    wsl --unregister Ubuntu
+    ```
+
+3. Copy the wsl export file (tar) to the target machine
+
+    ```
+    mkdir -p $env:USERPROFILE\wsl\tars
+    ```
+    Copy the tar file to this directory
+    
+4. For the import an path is required to act as install location. Here the imported distribution will be created
+    ```
+    mkdir -p $env:USERPROFILE\wsl\installLoction
+    wsl --import Ubuntu $env:USERPROFILE\wsl\installLoction $env:USERPROFILE\wsl\tars\Ubuntu_01_minikube.tar
+    ```
+
+    This may take a couple of minutes depending on the size of the distribution
+
+5. Show distributions
+
+    ```
+    wsl -l -v
+    ```
+    The imported distribution (here 'Ubuntu') will be present.
+
+6. Set the newly imported distribution as default
+
+    ```
+    wsl --set-default Ubuntu
+    ```
+
+7. Set default user to tibco user instead of root
+
+    In this example user tibco was used as the main user upon inital creation of the distribution
+    ```
+    ubuntu config --default-user tibco
+    ```
