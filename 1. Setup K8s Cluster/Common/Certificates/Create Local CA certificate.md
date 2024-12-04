@@ -111,11 +111,11 @@ kubectl create secret tls server-tibco-plat --key server-tibco-plat.key --cert s
 
 In the windows search box type “Manage computer certificates” and select “Manage computer certificates”.  
 
-![alt text](ca_windows_1.png)
+![alt text](images/ca_windows_1.png)
 
 Import the CA certificate that was created by openSSL  Trusted Root Certification Authorities
 
-![alt text](ca_windows_2.png)
+![alt text](images/ca_windows_2.png)
 
 
 
@@ -127,7 +127,7 @@ sudo security add-trusted-cert -d -r trustRoot -p ssl -k /Library/Keychains/Syst
 
 To Validate the certificate open the Keychain Access application and open the certificate to validate that SSL is Always trusted. 
 
-![alt text](ca_mac_1.png)
+![alt text](images/ca_mac_1.png)
 
 ## Build a Custom Truststore 
 
