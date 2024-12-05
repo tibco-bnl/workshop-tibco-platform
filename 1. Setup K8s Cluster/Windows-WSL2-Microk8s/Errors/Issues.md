@@ -6,7 +6,15 @@ kubectl apply error
 
 - Solution:
 '''
+on platform-provisioner-pipelinerun.sh line 75
 
+ pipeline_name=$(cat "${PIPELINE_INPUT_RECIPE}" | yq ".kind | select(. != null)" )
+
+change this to 
+
+ pipeline_name=$(cat "${PIPELINE_INPUT_RECIPE}" | yq -r ".kind | select(. != null)" )
+
+and give it a try.....
 '''
 
 2. ./dev/platform-provisioner-install.sh
