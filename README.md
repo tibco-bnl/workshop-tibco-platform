@@ -6,7 +6,7 @@ This project is designed to provide a comprehensive workshop on the TIBCO platfo
 
 | Name | Date |   Version   | Remarks                                                   |
 |:---------------------|----------|:-----------:|:--------------------------------------------------------------|
-| Kulbhushan               | 26/11/1982 | v1  | Initial draft |
+| Kulbhushan               | 26/11/2024 | v1  | Initial draft |
 
 
 ## Contents
