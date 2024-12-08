@@ -27,9 +27,14 @@ Use the following steps to install a fresh Data Plane on Docker Desktop for WSL.
 ```bash
 mkdir platforminstall
 cd platforminstall
+```
 
 3) Type 'wsl' to get a wsl prompt.
-4) Run the installation script: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/tibco-bnl/workshop-tibco-platform/main/tibcodpforddforwsl/bin/InstallTibcoDataPlaneOnDDForWSL.sh)
+4) Run the installation script:
+```bash
+ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/tibco-bnl/workshop-tibco-platform/main/tibcodpforddforwsl/bin/InstallTibcoDataPlaneOnDDForWSL.sh)
+```
+
 
 # Register the Data Plane
 
