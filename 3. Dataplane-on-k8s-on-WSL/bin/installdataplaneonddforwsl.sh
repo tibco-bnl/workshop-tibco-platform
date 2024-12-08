@@ -1,6 +1,6 @@
 #!/bin/bash
 
-curl -fsSL https://raw.githubusercontent.com/tibco-bnl/workshop-tibco-platform/main/tibcodpforddforwsl/bin/replaceguienvvar.sh -o  replaceguienvvar.sh
+curl -fsSL https://raw.githubusercontent.com/tibco-bnl/workshop-tibco-platform/dataplane-on-k8s-in-wsl/3.%20Dataplane-on-k8s-on-WSL/bin/replaceguienvvar.sh -o  replaceguienvvar.sh
 chmod +x replaeguienvvar.sh
 curl -fsSL https://raw.githubusercontent.com/TIBCOSoftware/platform-provisioner/master/docs/recipes/tp-base/tp-base-on-prem.yaml -o tp-base-on-prem.yaml
 export PIPELINE_INPUT_RECIPE="tp-base-on-prem.yaml"
