@@ -13,8 +13,9 @@ In order to setup the Data Plane the following prerequisites must be met:
 a) ![Click settings --> Kubernetes](pics/DockerDesktop1.png)
 b) ![Set 'enable Kubernetes' en click 'Apply & Restart'](pics/DockerDesktop2.png)
 Wait for Kubernetes to start.
-c) Open a command prompt and type 'kubectl get namespaces'. 
 
+c) Open a command prompt and type 'kubectl get namespaces'. 
+Check if you get a list of available namespaces.
 
 # Installation
 Use the following steps to install a fresh Data Plane on Docker Desktop for WSL. The process takes about 20 minutes. It will install a standalone Data Plane including all observability tooling and an Ingress controller.
