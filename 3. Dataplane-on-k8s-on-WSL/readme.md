@@ -9,8 +9,9 @@ A Data Plane running on Docker Desktop for WSL should only be used for education
 # Prerequisites
 In order to setup the Data Plane the following prerequisites must be met:
 1) Have Docker Desktop for Windows Subsystem for Linux (WSL) installed. See [here](https://docs.docker.com/desktop/setup/install/windows-install/). Please mind: use an installation on WSL, NOT on Hyper-V.
-2) Enable Kubernetes on Docker Desktop. Click Click settings --> Kubernetes
-a) ![](pics/DockerDesktop1.png)
+2) 
+a) Enable Kubernetes on Docker Desktop. Click Click settings --> Kubernetes
+![](pics/DockerDesktop1.png)
 
 b) Set 'enable Kubernetes' en click 'Apply & Restart'
 ![](pics/DockerDesktop2.png)
