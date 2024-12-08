@@ -23,8 +23,11 @@ Check if you get a list of available namespaces.
 # Installation
 Use the following steps to install a fresh Data Plane on Docker Desktop for WSL. The process takes about 20 minutes. It will install a standalone Data Plane including all observability tooling and an Ingress controller.
 1) Open a Command Prompt.
-2) Make a new directory (mkdir platforminstall) and go to this directory (cd platforminstall)
-![](pics/platforminstall.png)
+2) Make a new directory and go to this directory
+```bash
+mkdir platforminstall
+cd platforminstall
+
 3) Type 'wsl' to get a wsl prompt.
 4) Run the installation script: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/tibco-bnl/workshop-tibco-platform/main/tibcodpforddforwsl/bin/InstallTibcoDataPlaneOnDDForWSL.sh)
 
