@@ -32,9 +32,8 @@ cd platforminstall
 3) Type 'wsl' to get a wsl prompt.
 4) Run the installation script:
 ```bash
- /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/tibco-bnl/workshop-tibco-platform/main/tibcodpforddforwsl/bin/InstallTibcoDataPlaneOnDDForWSL.sh)
+ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/tibco-bnl/workshop-tibco-platform/main/3.%20Dataplane-on-k8s-on-WSL/bin/installdataplaneonddforwsl.sh -o installdataplaneonddforwsl.sh)
 ```
-
 
 # Register the Data Plane
 
