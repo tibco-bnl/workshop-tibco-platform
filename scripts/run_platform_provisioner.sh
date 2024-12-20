@@ -29,14 +29,19 @@ if [ ! -d "$PP_DIR" ]; then
     git checkout kul-pp
 else
     cd $PP_DIR
+    echo "Platform-provisioner directory already exists. Stashing your changes and applying them after pulling from remote..."
+    git add .
+    git stash
+    git fetch --all --prune
     git pull
+    git stash apply
 fi
-read -p 'Press [Enter] key to continue...'
+read -p 'Press [Enter] key to continue...(If error occurs, fix git steps manually in another window to keep your changes and continue or run again)'
 # Navigate to the platform-provisioner directory
 cd $PP_DIR
-echo -e "---We are working from following git repo ----------------\n"
+echo -e "---We are working from following git repo ----------------"
 pwd
-echo -e "----------------------------------------------------------\n"
+echo -e "----------------------------------------------------------"
 # Build the Docker image
 echo "Building the Docker image for platform-provisioner..."
 read -p 'Press [Enter] key to continue...'
@@ -95,7 +100,6 @@ read -p 'Press [Enter] key to continue...'
 # Install the platform provisioner
 export PIPELINE_NAME="generic-runner"
 export PIPELINE_INPUT_RECIPE="$PP_DIR/docs/recipes/tests/test-local.yaml"
-
 cd $PP_DIR
 ./dev/platform-provisioner-install.sh
 
@@ -103,18 +107,21 @@ cd $PP_DIR
 echo "Waiting for Tekton Pipelines to be ready..."
 kubectl wait --for=condition=available --timeout=600s deployment/tekton-pipelines-controller -n tekton-pipelines
 kubectl wait --for=condition=available --timeout=600s deployment/tekton-pipelines-webhook -n tekton-pipelines
-read -p 'Press [Enter] key to continue...'
 
 echo "----------------------------------------------------------"
 # Get the Platform Provisioner UI and access via Browser
 echo "Get the Platform Provisioner UI and access via Browser:"
 export POD_NAME=$(kubectl get pods --namespace tekton-tasks -l "app.kubernetes.io/name=platform-provisioner-ui,app.kubernetes.io/instance=platform-provisioner-ui" -o jsonpath="{.items[0].metadata.name}")
-
-# Forward ports
-kubectl port-forward $POD_NAME 8080:8080 -n tekton-tasks &
-kubectl port-forward svc/tekton-dashboard 9097:9097 -n tekton-pipelines &
+echo "Forwarding ports for the Platform Provisioner UI and Tekton Dashboard"
+nohup kubectl port-forward $POD_NAME 8080:8080 -n tekton-tasks &
+nohup kubectl port-forward svc/tekton-dashboard 9097:9097 -n tekton-pipelines &
+echo "----------------------------------------------------------"
 
 # Wait for user input to continue
+echo "Next steps include: "
+echo "1. Install TP Base"
+echo "2. Install TIBCO Platform Control Plane"
+echo " You can stop this script here and create both from Platform provisioner UI as well.. which is more interactive and works well"
 echo "----------------------------------------------------------"
 read -p 'Press [Enter] key to continue...'
 
