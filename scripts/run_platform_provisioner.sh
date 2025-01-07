@@ -11,7 +11,7 @@
 
 # Clone the platform-provisioner repository
 
-PP_GIT_DIR=/home/marco/projects/platform-dev
+PP_GIT_DIR=~/git/tmp
 PP_DIR=$PP_GIT_DIR/platform-provisioner
 #DOCKER_USERNAME=
 #DOCKER_PASSWORD=
