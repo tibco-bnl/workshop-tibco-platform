@@ -12,7 +12,7 @@ cd ~/projects/platform-dev
 git clone  https://github.com/mcommiss-tibco/platform-provisioner.git
 git clone  https://github.com/tibco-bnl/workshop-tibco-platform
 
-# platform-provisioner is temp from mcommiss user which includes the recipes for local... to be moved to tibco-bnl repo
+Platform-provisioner is temporary from mcommiss user which includes the recipes for local... to be moved to tibco-bnl repo
 
 > open ~/projects/platform-dev in vs-code
 
