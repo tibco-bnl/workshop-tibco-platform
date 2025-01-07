@@ -11,7 +11,7 @@
 
 # Clone the platform-provisioner repository
 
-PP_GIT_DIR=~/git/tmp
+PP_GIT_DIR=/home/marco/projects/platform-dev
 PP_DIR=$PP_GIT_DIR/platform-provisioner
 #DOCKER_USERNAME=
 #DOCKER_PASSWORD=
@@ -43,34 +43,35 @@ echo -e "---We are working from following git repo ----------------"
 pwd
 echo -e "----------------------------------------------------------"
 # Build the Docker image
-echo "Building the Docker image for platform-provisioner..."
-read -p 'Press [Enter] key to continue...'
-cd $PP_DIR/docker
-./build.sh
+# echo "Building the Docker image for platform-provisioner..."
+# read -p 'Press [Enter] key to continue...'
+# cd $PP_DIR/docker
+# ./build.sh
 
 # (Optional)Login to Docker
 #Ask for DOCKER_USERNAME
-read -p 'Enter your Docker Username: ' DOCKER_USERNAME
-DOCKER_USERNAME=${DOCKER_USERNAME:-$USER}
-echo "Docker Username: $DOCKER_USERNAME"
-echo "Login to Docker"
-docker login -u $DOCKER_USERNAME 
+# read -p 'Enter your Docker Username: ' DOCKER_USERNAME
+# DOCKER_USERNAME=${DOCKER_USERNAME:-$USER}
+# echo "Docker Username: $DOCKER_USERNAME"
+# echo "Login to Docker"
+# docker login -u $DOCKER_USERNAME 
 
 # Optionally: Tag and push the Docker image for microk8s you must login to docker to pull and push images to your own repo
-docker image tag platform-provisioner:latest $DOCKER_USERNAME/platform-provisioner:latest
-docker image tag platform-provisioner:latest $DOCKER_USERNAME/platform-provisioner:v1
-docker push $DOCKER_USERNAME/platform-provisioner:v1
-docker push $DOCKER_USERNAME/platform-provisioner:latest
+# docker image tag platform-provisioner:latest $DOCKER_USERNAME/platform-provisioner:latest
+# docker image tag platform-provisioner:latest $DOCKER_USERNAME/platform-provisioner:v1
+# docker push $DOCKER_USERNAME/platform-provisioner:v1
+# docker push $DOCKER_USERNAME/platform-provisioner:latest
 
 # Verify the Docker image
-echo "Platform provisioner Docker image with tags"
-docker images | grep platform-provisioner
+# echo "Platform provisioner Docker image with tags"
+# docker images | grep platform-provisioner
 
-read -p 'Press [Enter] key to continue...'
+# read -p 'Press [Enter] key to continue...'
 
 # Set environment variable
 export PIPELINE_SKIP_TEKTON_DASHBOARD=false
-export PIPELINE_DOCKER_IMAGE=$DOCKER_USERNAME/platform-provisioner
+# export PIPELINE_DOCKER_IMAGE=$DOCKER_USERNAME/platform-provisioner
+export PIPELINE_DOCKER_IMAGE=
 
 # List available Kubernetes contexts and ask the user to choose one
 echo "Available Kubernetes contexts:"
@@ -148,7 +149,7 @@ read -p 'Press [Enter] key to continue...'
 echo "----------------------------------------------------------\n"
 #Make coredns changes 
 export PIPELINE_NAME="helm-install"
-export PIPELINE_INPUT_RECIPE="$PP_DIR/docs/recipes/controlplane/tp-config-coredns-$KUBE_CONTEXT.md"
+export PIPELINE_INPUT_RECIPE="$PP_DIR/docs/recipes/controlplane/tp-config-coredns-$KUBE_CONTEXT.yaml"
 read -p 'Press [Enter] key to continue...'
 ./dev/platform-provisioner-pipelinerun.sh
 
