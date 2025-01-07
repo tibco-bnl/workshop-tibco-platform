@@ -34,6 +34,7 @@ else
     git stash
     git fetch --all --prune
     git pull
+    git checkout kul-pp
     git stash apply
 fi
 read -p 'Press [Enter] key to continue...(If error occurs, fix git steps manually in another window to keep your changes and continue or run again)'

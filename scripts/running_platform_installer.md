@@ -18,7 +18,7 @@ Platform-provisioner is temporary from mcommiss user which includes the recipes 
 
 > open ~/projects/platform-dev/workshop-tibco-platform/scripts/run_platform_provisioner.sh
 
-update PP_GIT_DIR with full value of project location, i.e. '/home/marco/projects/platform-dev'
+update PP_GIT_DIR with full value of project location, i.e. '~/projects/platform-dev'
 
 > open ~/projects/platform-dev/platform-provisioner/docs/recipes/tp-base/tp-base-on-prem-https-docker-desktop.yaml
 
