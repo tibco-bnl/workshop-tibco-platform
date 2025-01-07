@@ -1,6 +1,6 @@
 > Open WSL Ubuntu
 
-> install git, kubectl, helm
+> install git, kubectl
 
 > create directory ~/projects/platform-dev
 
