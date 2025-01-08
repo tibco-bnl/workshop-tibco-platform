@@ -5,20 +5,9 @@ This document contains a description to install the control plane + data plane o
 
 ## Step 1: start the WSL Ununtu image
 
-Step 1.1: If you haven't done so already, open a command prompt.
-Create an installation directory (c:\tibcoplatform)
+Step 1.1: Open a windows terminal and run the following command
 
-```windows terminal
-mkdir c:\tibcoplatform
-```
-
-Step 1.2: Go to this directory
-```windows terminal
-mkdir c:\tibcoplatform
-```
-
-
-Open the a WSL linux image by running the following command:
+command:
 ```windows terminal
 wsl -d Ubuntu-22.04
 ```
@@ -26,9 +15,146 @@ wsl -d Ubuntu-22.04
 You will be transferred to a terminal that runs on the basic Ubuntu WSL image. All commands from this moment in time are carried out on this Linux terminal.
 
 
-## Step 2: Run the installation script 
+Step 1.2: Go to the directory ~/tibcoplatform
 
-Step 2.1: update and upgrade packeges
-    ```bash
-    /bin/bash -c "$(curl -fsSL https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/scripts/run_platform_provisioner.sh)"
-    ```
+b) Go to your home directory
+```bash
+cd ~/tibcoplatform
+```
+
+## Step 2: Clone the required repositories
+The required scripts are stored in the following repositories:
+- https://github.com/mcommiss-tibco/platform-provisioner.git 
+- https://github.com/tibco-bnl/workshop-tibco-platform 
+
+Clone these repositories with the following commands
+```bash
+git clone https://github.com/mcommiss-tibco/platform-provisioner.git 
+git clone https://github.com/tibco-bnl/workshop-tibco-platform
+```
+
+## Step 3: Make a couple of changes to the receipts
+
+Step 3.1: Start Visual Studio
+
+From the directory ~/tibcoplatform in which you cloned the repository, run the following command.
+
+```bash
+code . 
+```
+
+Step 3.2: Configure the directory from which the installation will take place
+
+Open the file ~/tibcoplatform/workshop-tibco-platform/scripts/run_platform_provisioner.sh in Visual Studio and set PP_GIT_DIR to ~/tibcoplatform
+
+Result
+```bash
+PP_GIT_DIR=~/tibcoplatform 
+```
+
+Step 3.3: Set the TLS keys to be used for the communication between the CP and the DP
+Open the file ~/tibcoplatform/platform-provisioner/docs/recipes/tp-base tp-base-on-prem-https-docker-desktop.yaml in Visual Studio and set the following two variables:
+a) GUI_TP_TLS_CERT 
+b) GUI_TP_TLS_KEY
+
+The values will be provided by TIBCO. 
+For TIBCO staff: the values can be taken from https://docs.google.com/document/d/1f39d0_L6iRpEPjJggYFJrL3oVAtDyPdVbOnjmzU7E0E/edit?tab=t.l6dihjhx60qc#heading=h.8ir76m4dmdxu
+
+Result
+```bash
+GUI_TP_TLS_CERT: LS0t ...... ==
+GUI_TP_TLS_KEY: LS0tLS1 ...... ==
+```
+
+
+Step 3.4: Set the password for the container registry.
+
+Open the file ~/tibcoplatform/platform-provisioner/docs/recipes/controlplane/tp-cp-docker-desktop.yaml in Visual Studio and set the following variables: GUI_CP_CONTAINER_REGISTRY_PASSWORD
+
+The value will be provided by TIBCO
+For TIBCO staff: the values can be taken from https://docs.google.com/document/d/1f39d0_L6iRpEPjJggYFJrL3oVAtDyPdVbOnjmzU7E0E/edit?tab=t.l6dihjhx60qc#heading=h.8ir76m4dmdxu
+
+Result
+```bash
+GUI_CP_CONTAINER_REGISTRY_PASSWORD: .....
+```
+
+
+## Step 4: Install the Data Plane
+
+Step 4.1: Start the installation script
+
+a) Run
+
+```bash
+cd ~/tibcoplatform/workshop-tibco-platform/scripts
+./run_platform_provisioner.sh
+```
+
+b) Ignore the errors and enter -enter-.
+
+A docker image will be downloaded.
+
+c) Type 'docker-desktop' (without the quotes) when asked for the following input
+----------------------------------------------------------
+Available Kubernetes contexts:
+docker-desktop
+Enter the Kubernetes context you want to use:
+
+d) Press -enter- on the next prompt with the following text:
+
+Switching to docker-desktop Kubernetes context...
+Switched to context "docker-desktop".
+Using Docker Desktop Kubernetes context
+Switched to context "docker-desktop".
+Press [Enter] key to continue...
+
+e) Press -enter- on the next prompt with the following text:
+
+Next steps include:
+1. Install TP Base
+2. Install TIBCO Platform Control Plane
+ You can stop this script here and create both from Platform provisioner UI as well.. which is more interactive and works well
+----------------------------------------------------------
+Press [Enter] key to continue...nohup: appending output to 'nohup.out'
+nohup: appending output to 'nohup.out'
+
+f) Press -enter- on the next prompt with the following text:
+
+Install tp-base recipe
+Update tp-base-on-prem-https-docker-desktop.yaml with correct values GUI_TP_TLS_CERT and GUI_TP_TLS_KEY
+
+-DON'T PRESS ENTER AGAIN-
+
+g) Open the Tekton GUI in you browser in windows and go to: http://127.0.0.1:9097/ . Tekton is used to install the dataplane and click 'pipeline runs'
+
+![](images/tekton1.png)
+
+h) Select the running pipeline
+
+![](images/tekton2.png)
+
+g) Check the progress of the installation task (scroll down to the bottum)
+
+![](images/tekton3.png)
+
+-ONLY PROCEED IF THE DATAPLANE WAS INSTALLED SUCCESSFULLY-
+
+## Step 4: Install the Controll Plane
+
+Go back to the Ubuntu WLS promt
+
+Step 4.1 Press -enter- on the next prompt with the following text:
+
+Install tp-base recipe
+Update tp-base-on-prem-https-docker-desktop.yaml with correct values GUI_TP_TLS_CERT and GUI_TP_TLS_KEY
+Press [Enter] key to continue...
+
+Step 4.2 Press -enter- on the next prompt with the following text:
+
+Update tp-cp-docker-desktop.yaml with correct values GUI_CP_CONTAINER_REGISTRY_PASSWORD
+Press [Enter] key to continue...
+
+Step 4.3 Go to the tekton pipeline and check the progress of the installation task
+
+
