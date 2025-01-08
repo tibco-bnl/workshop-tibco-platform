@@ -9,6 +9,17 @@
 # chmod +x run_platform_provisioner.sh
 # sh run_platform_provisioner.sh
 
+
+# function to color text for user input
+RED="\e[31m"
+ENDCOLOR="\e[0m"
+function enter_to_continue() { 
+        echo -e "${RED}Press [Enter] key to continue... ${ENDCOLOR} "
+        read 
+        }
+
+
+
 # Clone the platform-provisioner repository
 
 PP_GIT_DIR=~/git/tmp
@@ -20,141 +31,168 @@ PP_DIR=$PP_GIT_DIR/platform-provisioner
 chmod 600 ~/.kube/config
 
 echo "Cloning the platform-provisioner repository...Note: This is a forked repository maintained by kulbhushan-tibco with some workarounds."
+echo ""
+
 mkdir -p $PP_GIT_DIR
 cd $PP_GIT_DIR
 
 if [ ! -d "$PP_DIR" ]; then
     git clone https://github.com/kulbhushan-tibco/platform-provisioner.git
+    echo ""
+
     ##Following branch has most of the workarounds
+    cd platform-provisioner
     git checkout kul-pp
+    echo ""
+
 else
     cd $PP_DIR
     echo "Platform-provisioner directory already exists. Stashing your changes and applying them after pulling from remote..."
+    echo ""
     git add .
     git stash
+    echo ""
     git fetch --all --prune
+    echo ""
     git pull
+    echo ""
     git checkout kul-pp
+    echo ""
     git stash apply
+    echo ""
+
 fi
-read -p 'Press [Enter] key to continue...(If error occurs, fix git steps manually in another window to keep your changes and continue or run again)'
+echo "If error occured, fix git steps manually in another window to keep your changes and continue or run again" 
+echo ""
+enter_to_continue
+
 # Navigate to the platform-provisioner directory
 cd $PP_DIR
+echo ""
 echo -e "---We are working from following git repo ----------------"
 pwd
 echo -e "----------------------------------------------------------"
-# Build the Docker image
-# echo "Building the Docker image for platform-provisioner..."
-# read -p 'Press [Enter] key to continue...'
-# cd $PP_DIR/docker
-# ./build.sh
-
-# (Optional)Login to Docker
-#Ask for DOCKER_USERNAME
-# read -p 'Enter your Docker Username: ' DOCKER_USERNAME
-# DOCKER_USERNAME=${DOCKER_USERNAME:-$USER}
-# echo "Docker Username: $DOCKER_USERNAME"
-# echo "Login to Docker"
-# docker login -u $DOCKER_USERNAME 
-
-# Optionally: Tag and push the Docker image for microk8s you must login to docker to pull and push images to your own repo
-# docker image tag platform-provisioner:latest $DOCKER_USERNAME/platform-provisioner:latest
-# docker image tag platform-provisioner:latest $DOCKER_USERNAME/platform-provisioner:v1
-# docker push $DOCKER_USERNAME/platform-provisioner:v1
-# docker push $DOCKER_USERNAME/platform-provisioner:latest
-
-# Verify the Docker image
-# echo "Platform provisioner Docker image with tags"
-# docker images | grep platform-provisioner
-
-# read -p 'Press [Enter] key to continue...'
+echo ""
 
 # Set environment variable
 export PIPELINE_SKIP_TEKTON_DASHBOARD=false
-# export PIPELINE_DOCKER_IMAGE=$DOCKER_USERNAME/platform-provisioner
+# PIPELINE_DOCKER_IMAGE is emtpy to use default platform image from tibcosoftware repository
 export PIPELINE_DOCKER_IMAGE=
 
 # List available Kubernetes contexts and ask the user to choose one
 echo "Available Kubernetes contexts:"
 kubectl config get-contexts -o name
+echo ""
 
-read -p 'Enter the Kubernetes context you want to use: ' KUBE_CONTEXT
-
+echo -e "${RED}Enter the Kubernetes context you want to use: ${ENDCOLOR} "
+read -p "" KUBE_CONTEXT
+echo ""
 # Switch to the selected Kubernetes context
 echo "Switching to $KUBE_CONTEXT Kubernetes context..."
 kubectl config use-context $KUBE_CONTEXT
+echo ""
 
 # Detect Kubernetes context and set the context accordingly
 KUBE_CONTEXT=$(kubectl config current-context)
 if [[ "$KUBE_CONTEXT" == "docker-desktop" ]]; then
+    echo ""
     echo "Using Docker Desktop Kubernetes context"
     kubectl config use-context docker-desktop
+    echo ""
 elif [[ "$KUBE_CONTEXT" == "microk8s" ]]; then
     echo "Using MicroK8s Kubernetes context"
     alias kubectl='microk8s kubectl'
+    echo ""
 else
+    echo ""
     echo "Unsupported Kubernetes context: $KUBE_CONTEXT"
     exit 1
 fi
-
-read -p 'Press [Enter] key to continue...'
-
+echo ""
+echo "Ready to deploy provisioner and tekton tooling" 
+echo ""
+enter_to_continue
+echo ""
 # Install the platform provisioner
 export PIPELINE_NAME="generic-runner"
 export PIPELINE_INPUT_RECIPE="$PP_DIR/docs/recipes/tests/test-local.yaml"
 cd $PP_DIR
 ./dev/platform-provisioner-install.sh
+echo ""
 
 # Wait for Tekton Pipelines to be ready
+echo ""
 echo "Waiting for Tekton Pipelines to be ready..."
 kubectl wait --for=condition=available --timeout=600s deployment/tekton-pipelines-controller -n tekton-pipelines
 kubectl wait --for=condition=available --timeout=600s deployment/tekton-pipelines-webhook -n tekton-pipelines
-
+echo ""
 echo "----------------------------------------------------------"
 # Get the Platform Provisioner UI and access via Browser
 echo "Get the Platform Provisioner UI and access via Browser:"
 export POD_NAME=$(kubectl get pods --namespace tekton-tasks -l "app.kubernetes.io/name=platform-provisioner-ui,app.kubernetes.io/instance=platform-provisioner-ui" -o jsonpath="{.items[0].metadata.name}")
 echo "Forwarding ports for the Platform Provisioner UI and Tekton Dashboard"
-nohup kubectl port-forward $POD_NAME 8080:8080 -n tekton-tasks &
-nohup kubectl port-forward svc/tekton-dashboard 9097:9097 -n tekton-pipelines &
+nohup kubectl port-forward $POD_NAME 8080:8080 -n tekton-tasks >/dev/null 2>&1 &
+nohup kubectl port-forward svc/tekton-dashboard 9097:9097 -n tekton-pipelines >/dev/null 2>&1 &
 echo "----------------------------------------------------------"
 
 # Wait for user input to continue
 echo "Next steps include: "
-echo "1. Install TP Base"
-echo "2. Install TIBCO Platform Control Plane"
+echo "- Install TP Base"
+echo "- Install TIBCO Platform Control Plane"
 echo " You can stop this script here and create both from Platform provisioner UI as well.. which is more interactive and works well"
 echo "----------------------------------------------------------"
-read -p 'Press [Enter] key to continue...'
+echo ""
+enter_to_continue
 
 # Install TP Base
+echo ""
 echo "Install tp-base recipe"
 export PIPELINE_NAME="helm-install"
 export PIPELINE_INPUT_RECIPE="$PP_DIR/docs/recipes/tp-base/tp-base-on-prem-https-$KUBE_CONTEXT.yaml"
-echo "Update tp-base-on-prem-https-$KUBE_CONTEXT.yaml with correct values GUI_TP_TLS_CERT and GUI_TP_TLS_KEY "
-read -p 'Press [Enter] key to continue...'
+echo ""
+echo -e "Update recipe ${RED}${PIPELINE_INPUT_RECIPE}${ENDCOLOR} with correct values GUI_TP_TLS_CERT and GUI_TP_TLS_KEY "
+enter_to_continue
+echo ""
 ./dev/platform-provisioner-pipelinerun.sh
+echo ""
 echo "Waiting for helm-install pipeline run to complete..."
+echo ""
 echo "!!! Login to tekton dashboard or Platform provisioner UI >> Status >> press filter button and let the helm-install pipeline run complete and then continue here"
-
-
+echo ""
 echo "----------------------------------------------------------\n"
+
+
 #Install TIBCO Platform Control Plane
+echo ""
 echo "Install TIBCO Platform Control Plane"
 export PIPELINE_NAME="helm-install"
 export PIPELINE_INPUT_RECIPE="$PP_DIR/docs/recipes/controlplane/tp-cp-$KUBE_CONTEXT.yaml"
-echo "Update tp-cp-$KUBE_CONTEXT.yaml with correct values GUI_CP_CONTAINER_REGISTRY_PASSWORD"
-read -p 'Press [Enter] key to continue...'
+echo ""
+echo -e "Update recipe ${RED}${PIPELINE_INPUT_RECIPE}${ENDCOLOR} with correct values GUI_CP_CONTAINER_REGISTRY_PASSWORD"
+echo ""
+enter_to_continue
 ./dev/platform-provisioner-pipelinerun.sh
-
+echo ""
 echo "----------------------------------------------------------\n"
+echo ""
+echo "Waiting for helm-install pipeline run to complete..."
+echo ""
+echo "!!! Login to tekton dashboard or Platform provisioner UI >> Status >> press filter button and let the helm-install pipeline run complete and then continue here"
+echo ""
+echo "----------------------------------------------------------\n"
+
 #Make coredns changes 
+
 export PIPELINE_NAME="helm-install"
 export PIPELINE_INPUT_RECIPE="$PP_DIR/docs/recipes/controlplane/tp-config-coredns-$KUBE_CONTEXT.yaml"
-read -p 'Press [Enter] key to continue...'
+echo ""
+enter_to_continue
+echo ""
+echo "Update coredns configuration"
+echo ""
 ./dev/platform-provisioner-pipelinerun.sh
-
-
+echo ""
+echo ""
 
 
 echo "----------------------SAVE THIS SOMEWHERE or Bookmark------------------------------------\n"
@@ -180,4 +218,4 @@ echo "cd $PP_DIR"
 echo "./dev/platform-provisioner-uninstall.sh"
 echo "----------------------------------------------------------\n"
 
-read -p 'Press [Enter] key to continue...'
+enter_to_continue
