@@ -138,6 +138,9 @@ g) Check the progress of the installation task (scroll down to the bottum)
 
 ![](images/tekton3.png)
 
+It will take 25-45 minutes for the data plane to be installed.
+
+
 -ONLY PROCEED IF THE DATAPLANE WAS INSTALLED SUCCESSFULLY-
 
 ## Step 4: Install the Controll Plane
@@ -155,6 +158,6 @@ Step 4.2 Press -enter- on the next prompt with the following text:
 Update tp-cp-docker-desktop.yaml with correct values GUI_CP_CONTAINER_REGISTRY_PASSWORD
 Press [Enter] key to continue...
 
-Step 4.3 Go to the tekton pipeline and check the progress of the installation task
+Step 4.3 Go to the tekton pipeline and check the progress of the installation task. It will take 25-45 minutes for the controll plane to be installed.
 
 
