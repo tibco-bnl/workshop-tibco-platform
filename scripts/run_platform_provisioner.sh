@@ -103,6 +103,10 @@ elif [[ "$KUBE_CONTEXT" == "microk8s" ]]; then
     echo "Using MicroK8s Kubernetes context"
     alias kubectl='microk8s kubectl'
     echo ""
+elif [[ "$KUBE_CONTEXT" == "minikube" ]]; then
+    echo "Using MiniKube Kubernetes context"
+    alias kubectl='minikube kubectl'
+    echo ""
 else
     echo ""
     echo "Unsupported Kubernetes context: $KUBE_CONTEXT"
