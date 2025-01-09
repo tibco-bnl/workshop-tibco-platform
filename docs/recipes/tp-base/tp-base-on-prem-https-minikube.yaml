@@ -1,0 +1,289 @@
+apiVersion: v1
+kind: helm-install
+meta:
+  guiEnv:
+    note: deploy-tp-base-on-prem-cert
+    GUI_TP_DNS_DOMAIN: localhost.dataplanes.pro
+    GUI_TP_TLS_CERT: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUdLakNDQlJLZ0F3SUJBZ0lTQTE3RXZLTHVWSVhKalhkYXJRYUtDQzVETUEwR0NTcUdTSWIzRFFFQkN3VUEKTURNeEN6QUpCZ05WQkFZVEFsVlRNUll3RkFZRFZRUUtFdzFNWlhRbmN5QkZibU55ZVhCME1Rd3dDZ1lEVlFRRApFd05TTVRFd0hoY05NalF4TVRFeU1ERXlNekV6V2hjTk1qVXdNakV3TURFeU16RXlXakFsTVNNd0lRWURWUVFECkRCb3FMbXh2WTJGc2FHOXpkQzVrWVhSaGNHeGhibVZ6TG5CeWJ6Q0NBU0l3RFFZSktvWklodmNOQVFFQkJRQUQKZ2dFUEFEQ0NBUW9DZ2dFQkFMT3Nwa3Y3QTRsK3ZYRXlLS1V0Ti9BRGZMRWNndVNmdzZReExQQVRUYS9HVk1uYQorWldrTU5Id1dGMTBtT2pwbE8vejIrS2ZhWTJ1RnpGTmNqR1YzS1Z2bW9FbWp0d2pTU1YyTDBiSDFOSGRDcXlNClJzNkRUSm1HWmt4Q1V3Nlh2Ri9tVVFYeVdjaUplMzRtOWphcHNBNkFCL3NVYlRZaHI5ZWMzZWRWeWNKQXJDc3gKY2dwVEJZTk05S1NTMURzUUNWeHp0M2xTWENUU3RORnhCSkV1MDRmcHhlN0h3QzBnYVNVdDNpUnZ6UzU4Yy9TLwpLcnRVZWxKYWRleDhkT2l1OStuSXppR3JVb1czOWdyaDd1VXNNbU14ckZHWXZid0l4ZFhEek9OTmxWVnhiWHduCkJPWkZ4ZExyOUVLU21BTjdkbE9tUnhSSHVHSmRrL2E5czBUZUZ3Y0NBd0VBQWFPQ0EwUXdnZ05BTUE0R0ExVWQKRHdFQi93UUVBd0lGb0RBZEJnTlZIU1VFRmpBVUJnZ3JCZ0VGQlFjREFRWUlLd1lCQlFVSEF3SXdEQVlEVlIwVApBUUgvQkFJd0FEQWRCZ05WSFE0RUZnUVVVdUlZQ0dsRXBEaTNJZDhuTVNRS1dyWTVVaWd3SHdZRFZSMGpCQmd3CkZvQVV4YzlHcE9yMHc4QjZiSlhFTGJCZWtpOG00N2t3VndZSUt3WUJCUVVIQVFFRVN6QkpNQ0lHQ0NzR0FRVUYKQnpBQmhoWm9kSFJ3T2k4dmNqRXhMbTh1YkdWdVkzSXViM0puTUNNR0NDc0dBUVVGQnpBQ2hoZG9kSFJ3T2k4dgpjakV4TG1rdWJHVnVZM0l1YjNKbkx6Q0NBVWtHQTFVZEVRU0NBVUF3Z2dFOGdpRXFMbU53TVMxdGVTNXNiMk5oCmJHaHZjM1F1WkdGMFlYQnNZVzVsY3k1d2NtK0NKU291WTNBeExYUjFibTVsYkM1c2IyTmhiR2h2YzNRdVpHRjAKWVhCc1lXNWxjeTV3Y20rQ0lTb3VZM0F5TFcxNUxteHZZMkZzYUc5emRDNWtZWFJoY0d4aGJtVnpMbkJ5YjRJbApLaTVqY0RJdGRIVnVibVZzTG14dlkyRnNhRzl6ZEM1a1lYUmhjR3hoYm1WekxuQnliNEloS2k1amNETXRiWGt1CmJHOWpZV3hvYjNOMExtUmhkR0Z3YkdGdVpYTXVjSEp2Z2lVcUxtTndNeTEwZFc1dVpXd3ViRzlqWVd4b2IzTjAKTG1SaGRHRndiR0Z1WlhNdWNISnZnaG9xTG14dlkyRnNhRzl6ZEM1a1lYUmhjR3hoYm1WekxuQnliNElkS2k1dAplUzVzYjJOaGJHaHZjM1F1WkdGMFlYQnNZVzVsY3k1d2NtK0NJU291ZEhWdWJtVnNMbXh2WTJGc2FHOXpkQzVrCllYUmhjR3hoYm1WekxuQnliekFUQmdOVkhTQUVEREFLTUFnR0JtZUJEQUVDQVRDQ0FRUUdDaXNHQVFRQjFua0MKQkFJRWdmVUVnZklBOEFCMkFLTGpDdVJGNzcydG0zNDQ3VWRuZDFQWGdsdUVsTmNyWGhzc3hMbFFwRWZuQUFBQgpreDR0Uks0QUFBUURBRWN3UlFJaEFQdmU0Q2RlbXZnaEJKRGp4ZVVDYm54YmQ2eXp2bmV5dnBIWldaRjlPTW90CkFpQW10bEJsdzEvNEorUmd3dG10Smg4cGlNOWI3OVBMYXcrR2UzTE8vQXpNbFFCMkFNOFJWdTdWTG55djg0ZGIKMldrdW0ra2FjV2RLc0Jmc3JBSFNXM2ZPekRzSUFBQUJreDR0Uk9RQUFBUURBRWN3UlFJaEFKdFJUUFViL2ZUQwpHYTFnUWZ0aG1HQmhsTUtNUzRDbjdpOHJsUlM0MGpIQ0FpQkFuSGgwTDBUR1hxT1hGOC8xUTJLd3FGK2FsQU0zCnNoVEFtVlJOaE95RFhqQU5CZ2txaGtpRzl3MEJBUXNGQUFPQ0FRRUFON1RLR0s0anZFSHZNU2VOeTU1Z1dtOHUKU2VFUmVSQWU3M1NhQlh4NXpUdVd5d3l0V2tkaEl4eFlvN2N3dUVsby9ubEJidWhOelJSWVhHWGxybzZJR3E0VQoxTlpuSkFJcm4yU2x2QW03cndVTm01RUR2N0d6ckJnampLVXQ2WEI0WDUxUGRyVmxua3RZai9kMm9ma3RTR093CkY2Snd5ZHExaFYwVFhHeEZJdXdGelZJWXUxLzJkMk1IaUZBTmh4YUVoR3gybjVoa1pQZmNvL1k2eVllRTF6RVIKRUV1ZG1XKzJmS2RCQ0RLek1BeU0xMFhUaktaKzFIUjhnNXRVUDlOQkg4TjhmTWlnZnlISlp0elNYa1psZ0VvRgptTC9sODRGZXhBY042MFAwTWt2MXVnWmZaRHFDZS9uWUpkMlZ0dFZkeDhXV1pJeTU2QSt6YWJQMTkvSnRwZz09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0KLS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUZCakNDQXU2Z0F3SUJBZ0lSQUlwOVBoUFdMekR2STRhOUtRZHJOUGd3RFFZSktvWklodmNOQVFFTEJRQXcKVHpFTE1Ba0dBMVVFQmhNQ1ZWTXhLVEFuQmdOVkJBb1RJRWx1ZEdWeWJtVjBJRk5sWTNWeWFYUjVJRkpsYzJWaApjbU5vSUVkeWIzVndNUlV3RXdZRFZRUURFd3hKVTFKSElGSnZiM1FnV0RFd0hoY05NalF3TXpFek1EQXdNREF3CldoY05NamN3TXpFeU1qTTFPVFU1V2pBek1Rc3dDUVlEVlFRR0V3SlZVekVXTUJRR0ExVUVDaE1OVEdWMEozTWcKUlc1amNubHdkREVNTUFvR0ExVUVBeE1EVWpFeE1JSUJJakFOQmdrcWhraUc5dzBCQVFFRkFBT0NBUThBTUlJQgpDZ0tDQVFFQXVvZThYQnNBT2N2S0NzM1VaeEQ1QVR5bFRxVmh5eWJLVXZzVkFiZTVLUFVvSHUwbnN5UVlPV2NKCkRBanM0RHF3TzNjT3ZmUGxPVlJCREU2dVFkYVpkTjVSMis5Ny8xaTlxTGNUOXQ0eDFmSnl5WEpxQzROMGxaeEcKQUdRVW1mT3gyU0xaemFpU3Fod21lai8rNzFnRmV3aVZnZHR4RDQ3NzR6RUp1d20rVUUxZmo1RjJQVnFkbm9QeQo2Y1JtcytFR1prTklHSUJsb0RjWW1wdUVNcGV4c3IzRStCVUFuU2VJKytKakY1WnNteWRuUzhUYktGNXB3bm53ClNWemdKRkRoeEx5aEJheDdRRzBBdE1KQlA2ZFl1Qy9GWEp1bHV3bWU4Zjdyc0lVNS9hZ0s3MFhFZU90bEtzTFAKWHp6ZTQxeE5HL2NMSnl1cUMwSjNVMDk1YWgySDJRSURBUUFCbzRINE1JSDFNQTRHQTFVZER3RUIvd1FFQXdJQgpoakFkQmdOVkhTVUVGakFVQmdnckJnRUZCUWNEQWdZSUt3WUJCUVVIQXdFd0VnWURWUjBUQVFIL0JBZ3dCZ0VCCi93SUJBREFkQmdOVkhRNEVGZ1FVeGM5R3BPcjB3OEI2YkpYRUxiQmVraThtNDdrd0h3WURWUjBqQkJnd0ZvQVUKZWJSWjVudTI1ZVFCYzRBSWlNZ2FXUGJwbTI0d01nWUlLd1lCQlFVSEFRRUVKakFrTUNJR0NDc0dBUVVGQnpBQwpoaFpvZEhSd09pOHZlREV1YVM1c1pXNWpjaTV2Y21jdk1CTUdBMVVkSUFRTU1Bb3dDQVlHWjRFTUFRSUJNQ2NHCkExVWRId1FnTUI0d0hLQWFvQmlHRm1oMGRIQTZMeTk0TVM1akxteGxibU55TG05eVp5OHdEUVlKS29aSWh2Y04KQVFFTEJRQURnZ0lCQUU3aWlWMEtBeHlRT05EMUgvbHhYUGpEajdJM2lIcHZzQ1VmN2I2MzJJWUdqdWtKaE0xeQp2NEh6L01yUFUwanR2ZlpwUXRTbEVUNDF5Qk95a2gwRlgrb3UxTmo0U2NPdDlabVduTzhtMk9HMEpBdElJRTM4CjAxUzBxY1loeU9FMkcvOTNaQ2tYdWZCTDcxM3F6WG5RdjVDL3ZpT3lrTnBLcVVneGRLbEVDK0hpOWkyRGNhUjEKZTlLVXdRVVpSaHk1ai9QRWRFZ2xLZzNsOWR0RDR0dVRtN2tadEI4djMyb09qekhUWXcrN0tkemRaaXcvc0J0bgpVZmhCUE9STnVheTRwSnhtWS9XcmhTTWR6Rk8ycTNHdTNNVUJjZG8yN2dvWUtqTDlDVEY4ai9aejU1eWN0VW9WCmFuZUNXcy9halVYK0h5cGtCVEErYzhMR0RMbldPMk5LcTBZRC9wbkFSa0FuWUdQZlVEb0hSOWdWU3AvcVJ4K1oKV2doaURMWnNNd2hOMXpqdFNDMHVCV2l1Z0YzdlROellJRUZmYVBHN1dzM2pEckFNTVllYlE5NUpRK0hJQkQvUgpQQnVIUlRCcHFLbHlEbmtTSERIWVBpTlgzYWRQb1BBY2dkRjNIMi9XMHJtb3N3TVdnVGxMbjFXdTBtcmtzNy9xCnBkV2ZTNlBKMWp0eTgwcjJWS3NNL0RqM1lJRGZialhLZGFGVTVDKzhiaGZKR3FVM3RhS2F1dXowd0hWR1QzZW8KNkZsV2tXWXRidDRwZ2RhbWx3VmVaRVcrTE03cVpFSkVzTU5QcmZDMDNBUEttWnNKZ3BXQ0RXT0tadmtaY3ZqVgp1WWtRNG9tWUNUWDVvaHkra25NamRPbWRIOWM3U3BxRVdCREM4NmZpTmV4K08wWE9NRVpTYThEQQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    GUI_TP_TLS_KEY: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFb3dJQkFBS0NBUUVBczZ5bVMvc0RpWDY5Y1RJb3BTMDM4QU44c1J5QzVKL0RwREVzOEJOTnI4WlV5ZHI1CmxhUXcwZkJZWFhTWTZPbVU3L1BiNHA5cGphNFhNVTF5TVpYY3BXK2FnU2FPM0NOSkpYWXZSc2ZVMGQwS3JJeEcKem9OTW1ZWm1URUpURHBlOFgrWlJCZkpaeUlsN2ZpYjJOcW13RG9BSCt4UnROaUd2MTV6ZDUxWEp3a0NzS3pGeQpDbE1GZzB6MHBKTFVPeEFKWEhPM2VWSmNKTkswMFhFRWtTN1RoK25GN3NmQUxTQnBKUzNlSkcvTkxueHo5TDhxCnUxUjZVbHAxN0h4MDZLNzM2Y2pPSWF0U2hiZjJDdUh1NVN3eVl6R3NVWmk5dkFqRjFjUE00MDJWVlhGdGZDY0UKNWtYRjB1djBRcEtZQTN0MlU2WkhGRWU0WWwyVDlyMnpSTjRYQndJREFRQUJBb0lCQUVockt5L3V3Wk0ycVVhcApyK1k3bnBNMzVKZENaYU9lblcxZGdMNVhHWFhpbTZRc2hYS0NGa2RYOTFYYnZCSU1xOEkzYVFZanVKaXBkYUdpCmxJZFYzdlF6VW5RQnhZMEhEK0Z3akVlY0hiUmt3bnVmb3A1MEgzaTF5aCtzait1T3p4ZGNMb1lXRTRnWG1kWFUKQUdNeDY4czhZWHNhMVpYKzUvQWd3dlFPQ044cElwVnJKVTFtcC9yZWorWjZ0Q3owd1FIaitIVTFxSGxWOXFGdwpuZlI5NHJsUlpFc0ZLVDNvd25PSyszNjNTVHBUTkxYMWhiUHFON0NoZFhnMU10amlYUzFrbGJ4Mi84c1R0MFpECjVJa0xRN0ltdEdpVlZvK2YzOUM3Q2VIMmlyNkQ4TE1SWDRZN2wrakN5eG1uYS95SGlLVFZnRnZ5cHFzMWpVZ2EKU2ZFdTMza0NnWUVBNTZHSEIxcjNzWXNJUDVmOWZMVkdaWXhsYzZ2VWJHb3RhSVFaSzBuOHVITmhHeStOYUhXUgpSL1BNVlpGbldUSGhaM3FNWS9jdWxaSEpZQWNnUHQxRTlRb3Z6SWRvdExGUms0aUltTDRNTW9yN0FkZWlZblg4CkZQRUNzZnA2SGJtUHVmSWRrMHBFUG5Bd1FXTXl2akJXSkdZUDFqQmUrM0xIbmwwRXF6Mnh1MHNDZ1lFQXhwUEoKUkhKbDJXZ04zWThmSEFBOWJ4REdpUE1WZ1JuaEpLYURES2xENHpUNjBSb1B3L2hSUS90NURlY1pVUmR2NXVsZwpaYjJnWGxCUEg5eXJrSFNYOEQrdzJ3OGtUdzZHUHphS2JQeU5aaTZ5UHZ4UW9aRHc1RUNoZkZGLzJpUTI2cEUzCnNnWE9lUXh2QUhlL2pFRTUzN3JoYVlvdmVzLzRWNlNGOG4wd0liVUNnWUJjZ0Vrb1NzKzMrMG5qKzVLamh0RUMKSkxzdkltUEdsL0JpV0w2a1p2dWh2WkgrQlZOM2I5d0EyLyt4L0V0RmQ0SUlqUXdicjg3T3RGV3pINlZrOVlCZwpTeDBqbEwvZnlTQkd4ck9tSzk4N0gvMTFrdU9xWm11eEFUNk9UUFVQZ2RjLzdzeVkwWVBIVzQ0cHpxK28vQ3lxCmhJZTJoY0tvc0FHLzRHM0k1TzVoV1FLQmdRQ3AwMW9kbjNoYkpoSTFtV0VSb1dMb3lZQUJQMkwwdGgxR0t1R0kKd25tOHBtS2EwWjhLQ2lQMTcrcm5hT3pOM1MxbVhkQ0RNbGtrVDZwYnBXMVViV0pEcFRTckk1ZjV4SUlyTFluVgpDMmdpSzIxbFVJUGtxUUJiTktybWx3eXdrcWdrazJ6K1l0amh6VEJoUmdnYSt1MXoyVzlOdzFBM3lBU3JiNWplCmVSSGd3UUtCZ0V3amc1OEgzY2tmUEdLcS9rSVJTbmRBNkRpNlpvRWRsS1pzUkVaeFFSNE9LMituNVVpZVF5NkcKRzZqbFI0VVVoUitoa2F5a1NQZ1hQZk1lbVZrNkQ0ZHdhVUNvY3Blc1VKb1g4NUFuUVNyMWttS0dmNDV0RitaUQo5NUNEZGVKTk9oVGdsWEw0bzRTRkQ5SW45VUZtQ1J3cWdDNVBVZGtwVnI1VkZmcGNxZk1VCi0tLS0tRU5EIFJTQSBQUklWQVRFIEtFWS0tLS0tCg==
+    GUI_TP_INSTALL_NGINX_INGRESS: true
+    GUI_TP_INGRESS_SERVICE_TYPE: ClusterIP
+    GUI_TP_STORAGE_CLASS: standard
+    GUI_TP_STORAGE_CLASS_FOR_NFS_SERVER_PROVISIONER: ''
+    GUI_TP_NFS_SERVER_PROVISIONER_SIZE: 50Gi
+    GUI_TP_NFS_SERVER_PROVISIONER_STORAGE_CLASS_NAME: nfs
+    GUI_TP_PROVISIONER_UI_INGRESS_CLASSNAME: nginx
+    GUI_TP_PROVISIONER_UI_NAMESPACE: tekton-tasks
+    GUI_TP_INSTALL_NFS_SERVER_PROVISIONER: false
+    GUI_TP_INSTALL_POSTGRES: true
+    GUI_TP_DB_USER_NAME: postgres
+    GUI_TP_DB_PASSWORD: postgres
+    GUI_TP_DB_NAME: postgres
+    GUI_TP_DB_TLS_ENABLED: false
+    GUI_TP_INSTALL_PROVISIONER_UI: true
+    GUI_TP_INSTALL_CERT_MANAGER: true
+    GUI_TP_INSTALL_METRICS_SERVER: true
+    GUI_PIPELINE_LOG_DEBUG: true
+  globalEnvVariable:
+    REPLACE_RECIPE: true
+    PIPELINE_LOG_DEBUG: ${GUI_PIPELINE_LOG_DEBUG:-false}
+    PIPELINE_CHECK_DOCKER_STATUS: false
+    TP_CLUSTER_NAME: ${GUI_TP_CLUSTER_NAME:-"on-prem"}
+    TP_INSTALL_NGINX_INGRESS: ${GUI_TP_INSTALL_NGINX_INGRESS:-"true"}
+    TP_INSTALL_TRAEFIK_INGRESS: ${GUI_TP_INSTALL_TRAEFIK_INGRESS:-"false"}
+    TP_INGRESS_NAMESPACE: ingress-system
+    TP_DNS_DOMAIN: ${GUI_TP_DNS_DOMAIN:-"localhost.dataplanes.pro"}
+    TP_INGRESS_SERVICE_TYPE: ${GUI_TP_INGRESS_SERVICE_TYPE:-"ClusterIP"}
+    TP_INGRESS_USE_HOSTPORT: false
+    TP_TLS_CERT: ${GUI_TP_TLS_CERT}
+    TP_TLS_KEY: ${GUI_TP_TLS_KEY}
+    TP_STORAGE_CLASS: ${GUI_TP_STORAGE_CLASS:-"standard"}
+    TP_STORAGE_CLASS_FOR_NFS_SERVER_PROVISIONER: ${GUI_TP_STORAGE_CLASS_FOR_NFS_SERVER_PROVISIONER:-""}
+    TP_INSTALL_NFS_SERVER_PROVISIONER: ${GUI_TP_INSTALL_NFS_SERVER_PROVISIONER:-"false"}
+    TP_NFS_SERVER_PROVISIONER_SIZE: ${GUI_TP_NFS_SERVER_PROVISIONER_SIZE:-"50Gi"}
+    TP_NFS_SERVER_PROVISIONER_STORAGE_CLASS_NAME: ${GUI_TP_NFS_SERVER_PROVISIONER_STORAGE_CLASS_NAME:-"nfs"}
+    TP_EXT_NAMESPACE: tibco-ext
+    TP_INSTALL_PROVISIONER_UI: ${GUI_TP_INSTALL_PROVISIONER_UI:-"false"}
+    TP_PROVISIONER_UI_NAMESPACE: ${GUI_TP_PROVISIONER_UI_NAMESPACE:-"tekton-tasks"}
+    TP_PROVISIONER_UI_INGRESS_CLASSNAME: ${GUI_TP_PROVISIONER_UI_INGRESS_CLASSNAME:-"nginx"}
+    TP_INSTALL_POSTGRES: ${GUI_TP_INSTALL_POSTGRES:-"true"}
+    TP_DB_USER_NAME: ${GUI_TP_DB_USER_NAME:-"postgres"}
+    TP_DB_PASSWORD: ${GUI_TP_DB_PASSWORD:-"postgres"}
+    TP_DB_NAME: ${GUI_TP_DB_NAME:-"postgres"}
+    TP_DB_TLS_ENABLED: ${GUI_TP_DB_TLS_ENABLED:-"false"}
+    TP_INSTALL_CERT_MANAGER: ${GUI_TP_INSTALL_CERT_MANAGER:-true}
+    TP_INSTALL_METRICS_SERVER: ${GUI_TP_INSTALL_METRICS_SERVER:-true}
+  tools:
+    yq: '4.40'
+helmCharts:
+  - condition: ${TP_INSTALL_CERT_MANAGER}
+    name: cert-manager
+    version: v1.16.1
+    repo:
+      helm:
+        url: https://charts.jetstack.io
+    values:
+      keepPrevious: true
+      content: |
+        installCRDs: true
+        serviceAccount:
+          create: true
+          name: cert-manager
+    cluster:
+      names:
+        - ${TP_CLUSTER_NAME}
+    releaseName: cert-manager
+    namespace: cert-manager
+    flags:
+      wait: true
+      timeout: 1h
+      createNamespace: true
+  - condition: ${TP_INSTALL_METRICS_SERVER}
+    name: metrics-server
+    version: 3.12.2
+    repo:
+      helm:
+        url: https://kubernetes-sigs.github.io/metrics-server/
+    values:
+      keepPrevious: true
+      content: |
+        clusterName: ${TP_CLUSTER_NAME}
+        serviceAccount:
+          create: true
+          name: metrics-server
+        args:
+          - "--kubelet-insecure-tls" # https://github.com/docker/for-mac/issues/6274#issuecomment-1259624307
+          - "--metric-resolution=90s"
+    cluster:
+      names:
+        - ${TP_CLUSTER_NAME}
+    releaseName: metrics-server
+    namespace: kube-system
+    flags:
+      wait: true
+      timeout: 1h
+      createNamespace: true
+  - condition: ${TP_INSTALL_NGINX_INGRESS}
+    name: ingress-nginx
+    namespace: ${TP_INGRESS_NAMESPACE}
+    version: 4.11.3
+    repo:
+      helm:
+        url: https://kubernetes.github.io/ingress-nginx
+    values:
+      keepPrevious: true
+      content: |
+        # ingress-nginx doc: https://docs.nginx.com/nginx-ingress-controller/
+        # ingress-nginx chart values: https://github.com/kubernetes/ingress-nginx/blob/main/charts/ingress-nginx/values.yaml
+        controller:
+          allowSnippetAnnotations: true # https://github.com/kubernetes/ingress-nginx/pull/10393
+          hostPort:
+            enabled: ${TP_INGRESS_USE_HOSTPORT} # true for kind
+          service:
+            type: ${TP_INGRESS_SERVICE_TYPE} # NodePort for kind, LoadBalancer for others
+          ingressClass:
+            - nginx
+          extraArgs:
+            default-ssl-certificate: ${TP_INGRESS_NAMESPACE}/default-certificate
+    cluster:
+      names:
+        - ${TP_CLUSTER_NAME}
+    releaseName: ingress-nginx
+    flags:
+      wait: true
+      timeout: 1h
+      createNamespace: true
+    hooks:
+      preDeploy:
+        ignoreErrors: false
+        base64Encoded: false
+        skip: false
+        content: |
+          kubectl create ns ${TP_INGRESS_NAMESPACE}
+          kubectl apply -f - <<EOF
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: default-certificate
+            namespace: ${TP_INGRESS_NAMESPACE}
+          type: Opaque
+          data:
+            tls.crt: ${TP_TLS_CERT}
+            tls.key: ${TP_TLS_KEY}
+          EOF
+  - condition: ${TP_INSTALL_TRAEFIK_INGRESS}
+    name: traefik
+    namespace: ${TP_INGRESS_NAMESPACE}
+    version: 32.1.1
+    repo:
+      helm:
+        url: https://traefik.github.io/charts
+    values:
+      content: |
+        # traefik doc: https://doc.traefik.io/traefik/
+        # release: https://github.com/traefik/traefik-helm-chart/releases
+        # chart values: https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
+        hub: # for hub
+          enabled: false
+        service:  # for external-dns
+          type: ${TP_INGRESS_SERVICE_TYPE}
+        ingressClass:
+          name: traefik
+        ingressRoute: # for dashboard http://dashboard.localhost/dashboard/#/
+          dashboard:
+            enabled: true
+            matchRule: Host(`dashboard.${TP_DNS_DOMAIN}`) && PathPrefix(`/dashboard`) || Host(`dashboard.${TP_DNS_DOMAIN}`) && PathPrefix(`/api`)
+            entryPoints:
+              - traefik
+              - web
+              - websecure
+        providers: # for external service
+          kubernetesIngress:
+            allowExternalNameServices: true
+        additionalArguments:
+          - '--serversTransport.insecureSkipVerify=true'
+        tlsStore: # for default certificate
+          default:
+            defaultCertificate:
+              secretName: default-certificate
+    cluster:
+      names:
+        - ${TP_CLUSTER_NAME}
+    releaseName: traefik
+    flags:
+      wait: true
+      timeout: 1h
+      createNamespace: true
+    hooks:
+      preDeploy:
+        ignoreErrors: false
+        base64Encoded: false
+        skip: false
+        content: |
+          kubectl create ns ${TP_INGRESS_NAMESPACE}
+          kubectl apply -f - <<EOF
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: default-certificate
+            namespace: ${TP_INGRESS_NAMESPACE}
+          type: Opaque
+          data:
+            tls.crt: ${TP_TLS_CERT}
+            tls.key: ${TP_TLS_KEY}
+          EOF
+  - name: nfs-server-provisioner
+    version: 1.8.0
+    namespace: kube-system
+    releaseName: nfs-server-provisioner
+    condition: ${TP_INSTALL_NFS_SERVER_PROVISIONER}
+    repo:
+      helm:
+        url: https://kubernetes-sigs.github.io/nfs-ganesha-server-and-external-provisioner
+    cluster:
+      names:
+        - ${TP_CLUSTER_NAME}
+    values:
+      keepPrevious: true
+      content: |
+        persistence:
+          enabled: true
+          storageClass: "${TP_STORAGE_CLASS_FOR_NFS_SERVER_PROVISIONER}"
+          size: "${TP_NFS_SERVER_PROVISIONER_SIZE}"
+        storageClass:
+          name: "${TP_NFS_SERVER_PROVISIONER_STORAGE_CLASS_NAME}"
+    flags:
+      createNamespace: true
+      timeout: 1h
+  - name: postgresql
+    version: 15.5.38
+    namespace: ${TP_EXT_NAMESPACE}
+    releaseName: postgresql
+    condition: ${TP_INSTALL_POSTGRES}
+    repo:
+      helm:
+        url: https://charts.bitnami.com/bitnami
+    cluster:
+      names:
+        - ${TP_CLUSTER_NAME}
+    values:
+      keepPrevious: true
+      content: |
+        auth:
+          postgresPassword: ${TP_DB_PASSWORD}
+          username: ${TP_DB_USER_NAME}
+          password: ${TP_DB_PASSWORD}
+          database: "${TP_DB_NAME}"
+        global:
+          storageClass: ${TP_STORAGE_CLASS}
+        tls:
+          enabled: ${TP_DB_TLS_ENABLED}
+          autoGenerated: true
+    flags:
+      createNamespace: true
+      timeout: 1h
+  - name: platform-provisioner-ui
+    version: ^1.0.0
+    namespace: ${TP_PROVISIONER_UI_NAMESPACE}
+    releaseName: platform-provisioner-ui
+    condition: ${TP_INSTALL_PROVISIONER_UI}
+    repo:
+      helm:
+        url: https://tibcosoftware.github.io/platform-provisioner
+    cluster:
+      names:
+        - ${TP_CLUSTER_NAME}
+    values:
+      keepPrevious: true
+      content: |
+        ingress:
+          enabled: true
+          className: ${TP_PROVISIONER_UI_INGRESS_CLASSNAME}
+          hosts:
+            - host: provisioner.${TP_DNS_DOMAIN}
+              paths:
+                - path: /
+                  pathType: ImplementationSpecific
+    flags:
+      createNamespace: true
+      timeout: 1h
