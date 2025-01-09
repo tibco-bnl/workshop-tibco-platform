@@ -128,15 +128,15 @@ Update tp-base-on-prem-https-docker-desktop.yaml with correct values GUI_TP_TLS_
 
 g) Open the Tekton GUI in you browser in windows and go to: http://127.0.0.1:9097/ . Tekton is used to install the dataplane and click 'pipeline runs'
 
-![](images/tekton1.png)
+![](../images/tekton1.png)
 
 h) Select the running pipeline
 
-![](images/tekton2.png)
+![](../images/tekton2.png)
 
 g) Check the progress of the installation task (scroll down to the bottum)
 
-![](images/tekton3.png)
+![](../images/tekton3.png)
 
 It will take 25-45 minutes for the data plane to be installed.
 

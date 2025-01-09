@@ -56,7 +56,7 @@ echo "Docker Username: $DOCKER_USERNAME"
 echo "Login to Docker"
 docker login -u $DOCKER_USERNAME 
 
-# Optionally: Tag and push the Docker image for microk8s you must login to docker to pull and push images to your own repo
+# Optionally: Tag and push the Docker image for microk8s you must login to docker to pull and push ../images to your own repo
 docker image tag platform-provisioner:latest $DOCKER_USERNAME/platform-provisioner:latest
 docker image tag platform-provisioner:latest $DOCKER_USERNAME/platform-provisioner:v1
 docker push $DOCKER_USERNAME/platform-provisioner:v1
@@ -64,7 +64,7 @@ docker push $DOCKER_USERNAME/platform-provisioner:latest
 
 # Verify the Docker image
 echo "Platform provisioner Docker image with tags"
-docker images | grep platform-provisioner
+docker ../images | grep platform-provisioner
 
 read -p 'Press [Enter] key to continue...'
 

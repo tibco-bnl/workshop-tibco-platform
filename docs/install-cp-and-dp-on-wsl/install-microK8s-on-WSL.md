@@ -104,7 +104,7 @@ This will start the dashboard and display the local url.
 e.g. https://127.0.0.1:10443
 Note down also the token displayed in the console to login to the dashboard. 
 
-![Kubernetes Dashboard](./images/microk8s-dashboard.png)
+![Kubernetes Dashboard](./../images/microk8s-dashboard.png)
 
 In case you missed the note the token, you can get it at any time using the following command:
 
