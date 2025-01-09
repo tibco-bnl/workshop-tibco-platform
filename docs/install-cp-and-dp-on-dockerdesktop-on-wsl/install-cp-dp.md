@@ -158,6 +158,38 @@ Step 4.2 Press -enter- on the next prompt with the following text:
 Update tp-cp-docker-desktop.yaml with correct values GUI_CP_CONTAINER_REGISTRY_PASSWORD
 Press [Enter] key to continue...
 
-Step 4.3 Go to the tekton pipeline and check the progress of the installation task. It will take 25-45 minutes for the controll plane to be installed.
+-- DON'T PRESS ENTER JUST YET --
+
+Step 4.3 Go to the tekton pipeline and check the progress of the installation task. It will take 25-45 minutes for the controll plane to be installed. Wait for it to finish
+
+Step 4.4 Go back to the Ubuntu WLS promt and press -enter- on the next prompt
+
+Step 4.5 Press -enter- on the following prompt:
+
+----------------------SAVE THIS SOMEWHERE or Bookmark------------------------------------\n
+All steps completed successfully. Follow Platform provisioner UI to do following:
+1. Configure admin user
+2. Register DP manually from CP URL and provision capabilities e.g. Flogo, BWCE, EMS, etc.
+----------------------------------------------------------\n
+Access the following URLs:
+Mail URL: https://mail.localhost.dataplanes.pro/
+CP URL: https://admin.cp1-my.localhost.dataplanes.pro/admin/app/home
+Tekton Dashboard at http://localhost:9097/#/about
+Platform Provisioner UI: http://localhost:8080
+----------------------------------------------------------\n
+Deploy TIBCO Data Plane on your docker-desktop cluster using CP
+We can also use the same cluster for TIBCO Data Plane.
+----------------------------------------------------------\n
+To stop the port forwarding, run the following commands:
+kill 22062
+kill 22063
+----------------------------------------------------------\n
+To uninstall the platform provisioner, run the following command:
+cd /home/jurriaan/tibcoplatform/platform-provisioner
+./dev/platform-provisioner-uninstall.sh
+----------------------------------------------------------\n
+
+
+
 
 
