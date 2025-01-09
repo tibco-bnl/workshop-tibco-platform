@@ -1,7 +1,13 @@
 # Install TIBCO Platform Data Plane on Docker Desktop for WSL
 
-This document contains a description on how to install the TIBCO Platform (Control Plane and Data Plane) on a Windows Desktop for WSL. 
+This document contains a description on how to install the TIBCO Platform (Controll Plane and Data Plane) on a Windows Desktop for WSL. 
 
+Requirements:
+Windows 11
+8 processors
+16 GB of Ram
+
+Installation and configuration:
 
 Step A: Install Docker Desktop for WSL [Install Docker Desktop for WSL](install-docker-desktop-on-WSL.md).
 
