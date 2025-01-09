@@ -1,4 +1,4 @@
-# Install the TIBCO control plane + data plane on microK8s on WSL
+# Install the TIBCO control plane + data plane on Docker Desktop on WSL
 
 This document contains a description to install the control plane + data plane on Docker Desktop for WSL
 
