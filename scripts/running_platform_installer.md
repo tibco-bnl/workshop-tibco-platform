@@ -41,9 +41,19 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 sudo usermod -aG docker $USER
 newgrp docker
 ```
+### Start Minikube cluster
+
+Resize below command based on local environment (cpu/memory).
+
+```
+minikube start --cpus 6 --memory 20480 --disk-size "40g" \
+--driver=docker \
+--addons storage-provisioner \
+--kubernetes-version "1.30.5"
+```
 
 
-C### create directory ~/projects/platform-dev
+### create directory ~/projects/platform-dev
 ```
 mkdir -p ~/projects/platform-dev
 cd ~/projects/platform-dev
@@ -85,3 +95,85 @@ cd ~/projects/platform-dev/workshop-tibco-platform/scripts
 ./run_platform_provisioner.sh
 ```
 
+
+
+### Setup port forwarding
+
+To access the Platform Control Plane Admin UI and the MailDev UI portforwarding to the ingress controller is required when running in minikube.
+For this the root user needs to be configured with the kube config.
+
+```
+sudo su -
+```
+
+```
+mkdir -p $HOME/.kube
+cp /home/tibco/.kube/config .kube/config
+exit
+```
+
+```
+sudo kubectl port-forward -n ingress-system --address 0.0.0.0 service/ingress-nginx-controller 80:http 443:https
+```
+
+MailDev can now be access on https://mail.localhost.dataplanes.pro/#/
+
+
+### Configure admin account
+
+
+```
+kubectl port-forward -n cp1-ns service/tp-cp-orchestrator 8833:8833
+```
+
+```
+export HOST="account.cp1-my.localhost.dataplanes.pro"
+export PORT=8833
+```
+
+```
+curl -X POST \
+  "http://localhost:${PORT}/v1/tibco-subscriptions" \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: application/json' \
+  -H "host: ${HOST}" \
+  -H 'x-atmosphere-for-user: foo' \
+  -H 'x-real-ip: 0.0.0.0' \
+  -d '{
+    "externalAccountId": "mySalesForceAccountId",
+    "externalSubscriptionId": "mySalesOrderNumber",
+    "firstName": "User1",
+    "companyName": "Testing",
+    "lastName": "LastName",
+    "phone": "+12015551234",
+    "state": "CA",
+    "country": "US",
+    "email": "admin@tibco.com",
+    "hostPrefix": "admin3",
+    "prefixId":"tib2",
+    "tenantSubscriptionDetails":
+    [
+        {
+            "eula": true,
+            "region": "global",
+            "expiryInMonths": -1,
+            "planId": "TIB_CLD_ADMIN_TIB_CLOUDOPS",
+            "tenantId": "ADMIN",
+            "seats":
+            {
+                "ADMIN":
+                {
+                    "ENGR": -1,
+                    "PM": -1,
+                    "SUPT": -1,
+                    "OPS": -1,
+                    "PROV": -1,
+                    "TSUPT": -1
+                }
+            }
+        }
+    ],
+    "skipEmail": false
+}'
+
+```
