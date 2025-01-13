@@ -104,7 +104,6 @@ echo -e "----------------------------------------------------------"
 echo ""
 
 
-
 # Set environment variable
 export PIPELINE_SKIP_TEKTON_DASHBOARD=false
 # PIPELINE_DOCKER_IMAGE is emtpy to use default platform image from tibcosoftware repository
@@ -160,8 +159,6 @@ yq e -i '.meta.guiEnv.GUI_TP_TLS_CERT=env(TLS_CERT)' $RECIPE_TP_BASE
 yq e -i '.meta.guiEnv.GUI_TP_TLS_KEY=env(TLS_KEY)' $RECIPE_TP_BASE
 yq e -i '.meta.guiEnv.GUI_TP_STORAGE_CLASS=env(STORAGE_CLASS_CLUSTER)' $RECIPE_TP_BASE
 
-# cat $RECIPE_TP_BASE | grep GUI_TP
-# enter_to_continue
 
 #
 # TIBCO PLATFORM Control Plae
@@ -171,8 +168,6 @@ yq e -i '.meta.guiEnv.GUI_CP_CONTAINER_REGISTRY=env(CONTAINER_REGISTRY)' $RECIPE
 yq e -i '.meta.guiEnv.GUI_CP_CONTAINER_REGISTRY_REPOSITORY=env(CONTAINER_REGISTRY_REPOSITORY)' $RECIPE_TP_CP
 yq e -i '.meta.guiEnv.GUI_CP_CONTAINER_REGISTRY_USERNAME=env(CONTAINER_REGISTRY_USERNAME)' $RECIPE_TP_CP
 yq e -i '.meta.guiEnv.GUI_CP_CONTAINER_REGISTRY_PASSWORD=env(CONTAINER_REGISTRY_PASSWORD)' $RECIPE_TP_CP
-# cat $RECIPE_TP_CP | grep GUI_CP_CONTAINER
-# enter_to_continue
 echo "Recipes updated....."
 echo ""
 echo "Ready to deploy provisioner and tekton tooling" 
@@ -215,18 +210,16 @@ echo ""
 echo "Install tp-base recipe"
 export PIPELINE_NAME="helm-install"
 export PIPELINE_INPUT_RECIPE="$WORKSHOP_BASE_DIR/docs/recipes/tp-base/tp-base-on-prem-https-$KUBE_CONTEXT.yaml"
-# echo ""
-# echo -e "Update recipe ${GREEN}${PIPELINE_INPUT_RECIPE}${ENDCOLOR} with correct values GUI_TP_TLS_CERT and GUI_TP_TLS_KEY "
-# enter_to_continue
+
 echo ""
 ./dev/platform-provisioner-pipelinerun.sh
+
 echo ""
 echo "Waiting for helm-install pipeline run to complete..."
 echo ""
 echo "!!! Login to tekton dashboard or Platform provisioner UI >> Status >> press filter button and let the helm-install pipeline run complete and then continue here"
 echo ""
 echo "----------------------------------------------------------\n"
-
 enter_to_continue
 
 #Install TIBCO Platform Control Plane
@@ -272,10 +265,10 @@ echo "Mail URL: https://mail.localhost.dataplanes.pro/"
 echo "CP URL: https://admin.cp1-my.localhost.dataplanes.pro/admin/app/home"
 echo "Tekton Dashboard at http://localhost:9097/#/about"
 echo "Platform Provisioner UI: http://localhost:8080"
-echo "----------------------------------------------------------\n"
-echo "Deploy TIBCO Data Plane on your $KUBE_CONTEXT cluster using CP"
+echo "----------------------------------------------------------------\n"
+echo "Deployed TIBCO Data Plane on your $KUBE_CONTEXT cluster using CP"
 echo "We can also use the same cluster for TIBCO Data Plane."
-echo "----------------------------------------------------------\n"
+echo "-----------------------------------------------------------------\n"
 echo "To stop the port forwarding, run the following commands:"
 echo "kill $(lsof -t -i:8080)"
 echo "kill $(lsof -t -i:9097)"
