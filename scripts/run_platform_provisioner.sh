@@ -66,12 +66,13 @@ mkdir -p $PP_GIT_DIR
 cd $PP_GIT_DIR
 
 if [ ! -d "$PP_DIR" ]; then
-    git clone https://github.com/kulbhushan-tibco/platform-provisioner.git
+    git clone https://github.com/TIBCOSoftware/platform-provisioner.git
+    #git clone https://github.com/kulbhushan-tibco/platform-provisioner.git
     echo ""
 
     ##Following branch has most of the workarounds
     cd platform-provisioner
-    git checkout kul-pp
+    #git checkout kul-pp
     echo ""
 
 else
@@ -279,3 +280,5 @@ echo "./dev/platform-provisioner-uninstall.sh"
 echo "----------------------------------------------------------\n"
 
 enter_to_continue
+
+
