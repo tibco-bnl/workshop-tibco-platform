@@ -47,6 +47,8 @@ PP_DIR=$PP_GIT_DIR/platform-provisioner
         # CONTAINER_REGISTRY_USERNAME=
         # CONTAINER_REGISTRY_PASSWORD
 
+
+## read secrets from .env file and load into environment as env variables
 SECRETS_FILE=$WORKSHOP_BASE_DIR/scripts/secrets.env
 if [ ! -f "$SECRETS_FILE" ]; then
     echo "Secret file $SECRETS_FILE not found. Please correct and restart." 
