@@ -120,7 +120,7 @@ MailDev can now be access on https://mail.localhost.dataplanes.pro/#/
 
 
 ### Configure admin account
-
+This section is work in progress. Most likely not working at this moment.
 
 ```
 kubectl port-forward -n cp1-ns service/tp-cp-orchestrator 8833:8833
