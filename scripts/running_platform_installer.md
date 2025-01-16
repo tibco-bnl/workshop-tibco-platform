@@ -119,61 +119,70 @@ sudo kubectl port-forward -n ingress-system --address 0.0.0.0 service/ingress-ng
 MailDev can now be access on https://mail.localhost.dataplanes.pro/#/
 
 
-### Configure admin account
+### Setup admin user and benelux cp
 This section is work in progress. Most likely not working at this moment.
 
-```
-kubectl port-forward -n cp1-ns service/tp-cp-orchestrator 8833:8833
-```
+Open the maildev app in your browser:
+> https://mail.localhost.dataplanes.pro/
 
-```
-export HOST="account.cp1-my.localhost.dataplanes.pro"
-export PORT=8833
-```
+>Open the email 
+> click on Sign in.
+> Fill out the user details and password for cp-test@tibco user.
 
+> Sign in with default IdP.
+Use cp-test user credentials just entered.
+
+> Goto Subscribtions.
+> Provision via Editor
+
+Use below details:
+(email and hostPrefix should be updated )
 ```
-curl -X POST \
-  "http://localhost:${PORT}/v1/tibco-subscriptions" \
-  -H 'cache-control: no-cache' \
-  -H 'content-type: application/json' \
-  -H "host: ${HOST}" \
-  -H 'x-atmosphere-for-user: foo' \
-  -H 'x-real-ip: 0.0.0.0' \
-  -d '{
-    "externalAccountId": "mySalesForceAccountId",
-    "externalSubscriptionId": "mySalesOrderNumber",
-    "firstName": "User1",
-    "companyName": "Testing",
-    "lastName": "LastName",
-    "phone": "+12015551234",
-    "state": "CA",
-    "country": "US",
+{
+  "userDetails": {
+    "firstName": "TIBCO",
+    "lastName": "Platform",
     "email": "admin@tibco.com",
-    "hostPrefix": "admin3",
-    "prefixId":"tib2",
-    "tenantSubscriptionDetails":
-    [
-        {
-            "eula": true,
-            "region": "global",
-            "expiryInMonths": -1,
-            "planId": "TIB_CLD_ADMIN_TIB_CLOUDOPS",
-            "tenantId": "ADMIN",
-            "seats":
-            {
-                "ADMIN":
-                {
-                    "ENGR": -1,
-                    "PM": -1,
-                    "SUPT": -1,
-                    "OPS": -1,
-                    "PROV": -1,
-                    "TSUPT": -1
-                }
-            }
-        }
-    ],
-    "skipEmail": false
-}'
-
+    "country": "US",
+    "state": "CA"
+  },
+  "subscriptionDetails": {
+    "companyName": "TIBCO",
+    "ownerLimit": 10,
+    "hostPrefix": "benelux",
+    "comment": ""
+  },
+  "useDefaultIDP": true
+}
 ```
+
+> Click Provision.
+
+A new subscribtion is now provisioned and the admin@tibco.com user is created.
+
+>>>> First sign out the current user before progressing !!!!
+
+> Open mailDev tab in browser.
+A new email has been received to inform you on the activation of user admin@tibco.com
+> Open the mail
+> Click sign in
+> Fill out the Activate acocunt details form and submit
+
+Please not the url of the CP page now changes to benelux.cp1-my.localhost.dataplanes.pro.
+
+> Sign in with default IdP.
+Use admin@tibco.com user credentials just entered.
+
+Now a fully configured Control Plane will be opened.
+
+
+#### Assign user permissions
+
+User permission need to be assigned.
+
+> User Managment > Users > admin@tibco.com > + Assign Permission
+
+Grant all permission to this admin user for benelux cp.
+> Next > Update permissions
+
+Go back to the Home page and now the button 'Register a Data Plane' will be enabled.
