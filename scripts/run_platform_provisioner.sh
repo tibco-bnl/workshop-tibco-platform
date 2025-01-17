@@ -86,8 +86,6 @@ else
     echo ""
     git pull
     echo ""
-    git checkout kul-pp
-    echo ""
     git stash apply
     echo ""
 
@@ -109,6 +107,7 @@ echo ""
 export PIPELINE_SKIP_TEKTON_DASHBOARD=false
 # PIPELINE_DOCKER_IMAGE is emtpy to use default platform image from tibcosoftware repository
 export PIPELINE_DOCKER_IMAGE=
+
 
 # List available Kubernetes contexts and ask the user to choose one
 echo "Available Kubernetes contexts:"
