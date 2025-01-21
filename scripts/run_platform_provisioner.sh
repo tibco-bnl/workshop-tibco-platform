@@ -191,8 +191,9 @@ echo "----------------------------------------------------------"
 # Get the Platform Provisioner UI and access via Browser
 echo "Get the Platform Provisioner UI and access via Browser:"
 export POD_NAME=$(kubectl get pods --namespace tekton-tasks -l "app.kubernetes.io/name=platform-provisioner-ui,app.kubernetes.io/instance=platform-provisioner-ui" -o jsonpath="{.items[0].metadata.name}")
+export CONTAINER_PORT=$(kubectl get pod --namespace tekton-tasks $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
 echo "Forwarding ports for the Platform Provisioner UI and Tekton Dashboard"
-nohup kubectl port-forward $POD_NAME 8080:8080 -n tekton-tasks >/dev/null 2>&1 &
+nohup kubectl --namespace tekton-tasks port-forward $POD_NAME 8080:$CONTAINER_PORT >/dev/null 2>&1 &
 nohup kubectl port-forward svc/tekton-dashboard 9097:9097 -n tekton-pipelines >/dev/null 2>&1 &
 echo "----------------------------------------------------------"
 
@@ -253,7 +254,6 @@ echo ""
 ./dev/platform-provisioner-pipelinerun.sh
 echo ""
 echo ""
-
 
 echo "----------------------SAVE THIS SOMEWHERE or Bookmark------------------------------------\n"
 echo "All steps completed successfully. Follow Platform provisioner UI to do following: "
