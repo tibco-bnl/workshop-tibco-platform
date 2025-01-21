@@ -7,41 +7,22 @@ This project is designed to provide a comprehensive workshop on the TIBCO platfo
 | Name | Date |   Version   | Remarks                                                   |
 |:---------------------|----------|:-----------:|:--------------------------------------------------------------|
 | Kulbhushan               | 26/11/2024 | v1  | Initial draft |
+| Jurriaan               | 21/1/2025 | v2  | Rebased and Merged tp_on_minikube and doc branches also cleaned up unwanted documentation |
+
+# TIBCO Platform Workshop
+
+This repository contains a TIBCO Platform Workshop. The material is intended for TIBCO customers and partners who want to create a TIBCO Platform 'sandbox environment'. The aim of this sandbox is to get to learn the platform. A sandbox is intended or supported for production purposes. 
+
+The following sandbox environments can be created:
+
+1) TIBCO Platform on Docker Desktop for WSL. This setup is suitable for users with Windows 11 and Windows Subsystem for Linux (WSL) + Docker Desktop. In this setup the Kubernetes environment of Docker Desktop is used as the base infrastructure.
+
+[See for a description here](install-cp-and-dp-on-dockerdesktop-on-wsl/readme.md).
 
 
-## Contents
-
-- Introduction to TIBCO platform [TODO: Reference link]
-- Installation and setup [TODO: Reference link]
-- Basic concepts and architecture [TODO: Reference link]
-- Hands-on exercises [TODO: Reference link]
-- Advanced topics and best practices [TODO: Reference link]
-
-## Getting Started
-
-[1. Setup K8s Cluster](https://github.com/tibco-bnl/workshop-tibco-platform/tree/main/1.%20Setup%20K8s%20Cluster)
-- [Windows-WSL2-Microk8s](https://github.com/tibco-bnl/workshop-tibco-platform/tree/main/1.%20Setup%20K8s%20Cluster/Windows-WSL2-Microk8s)
-    - [1. Install WSL2 Ubuntu on Windows](https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/1.%20Setup%20K8s%20Cluster/Windows-WSL2-Microk8s/1.%20Install%20WSL2%20Ubuntu%20on%20Windows.md)
-    - [2. Install microK8s on Windows](https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/1.%20Setup%20K8s%20Cluster/Windows-WSL2-Microk8s/2.%20Install%20microK8s%20on%20windows.md)
-    - [3. Add microk8s to your Kubeconfig](https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/1.%20Setup%20K8s%20Cluster/Windows-WSL2-Microk8s/3.%20Add%20microk8s%20to%20your%20Kubeconfig.md)
-    - [4. WSL2 image distribution](1.%20Setup%20K8s%20Cluster/Windows-WSL2-Microk8s/4.%20WSL2%20image%20distribution.md)
-  
-[2. TIBCO Platform](https://github.com/tibco-bnl/workshop-tibco-platform/tree/main/2.%20TIBCO-Platform/Using-Platform-Provisioner)
-- [Using SaaS CP (Easy way)]()
-    - [TODO]()
-- [Using Platform Provisioner](https://github.com/tibco-bnl/workshop-tibco-platform/tree/main/2.%20TIBCO-Platform/Using-Platform-Provisioner)
-    - [1. Building the Platform Provisioner docker image](https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/2.%20TIBCO-Platform/Using-Platform-Provisioner/1.%20Build%20Platform%20provisioner%20Docker%20image.md)
-    - [2. Using Platfomr Provisioner-Win-WSL-Linux.md](https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/2.%20TIBCO-Platform/Using-Platform-Provisioner/2.%20Using%20Platfomr%20Provisioner-Win-WSL-Linux.md)
-    - [2. Using Platform Provisioner-Macbook.md](https://github.com/tibco-bnl/workshop-tibco-platform/blob/main/2.%20TIBCO-Platform/Using-Platform-Provisioner/2.%20Using%20Platform%20Provisioner-Macbook.md)
-
-## Contributing
-
-If you would like to contribute to this project, please follow the guidelines outlined in the CONTRIBUTING.md file.
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for more details.
-
-For any questions or support, please contact the project maintainers.
+2) TIBCO Platform on Minikube Ubuntu on WSL. This setup is suitable for users with Windows 11 and Windows Subsystem for Linux (WSL). The platform is installed on an instance of Minikube on Ubuntu running in WSL.
+[See for a description here](install-cp-and-dp-on-minikube-on-WSL/readme.md).
 
 
+3) TIBCO Plaform on TIBCO Platform on Minikube Ubuntu on AWS. This setup is suitable for departments that want a departemental sandbox. The sandbox is installed on an instance of Minikube on Ubuntu running in AWS.
+[See for a description here](install-cp-and-dp-on-minikube-on-AWS/readme.md).
