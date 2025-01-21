@@ -5,19 +5,24 @@
 # chmod +x minikube-on-ubuntu.sh
 # ./minikube-on-ubuntu.sh
 
-
 # Function to install prerequisites
 install_prerequisites() {
     echo "Installing prerequisites..."
     sudo apt-get update -y
-    sudo apt-get install -y curl wget apt-transport-https
+    sudo apt-get install -y curl wget apt-transport-https ca-certificates
 
     # Install Docker
     if ! command -v docker &> /dev/null; then
         echo "Installing Docker..."
-        curl -fsSL https://get.docker.com -o get-docker.sh
-        sudo sh get-docker.sh
-        rm get-docker.sh
+        sudo install -m 0755 -d /etc/apt/keyrings
+        sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+        sudo chmod a+r /etc/apt/keyrings/docker.asc
+        echo \
+          "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+          $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+          sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        sudo apt-get update
+        sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
         sudo usermod -aG docker $USER
         newgrp docker
     else
@@ -27,9 +32,7 @@ install_prerequisites() {
     # Install kubectl
     if ! command -v kubectl &> /dev/null; then
         echo "Installing kubectl..."
-        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-        sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
-        rm kubectl
+        sudo snap install kubectl --classic
     else
         echo "kubectl is already installed."
     fi
@@ -42,6 +45,22 @@ install_prerequisites() {
         rm minikube-linux-amd64
     else
         echo "Minikube is already installed."
+    fi
+
+    # Install yq
+    if ! command -v yq &> /dev/null; then
+        echo "Installing yq..."
+        sudo snap install yq
+    else
+        echo "yq is already installed."
+    fi
+
+    # Install helm
+    if ! command -v helm &> /dev/null; then
+        echo "Installing helm..."
+        sudo snap install helm --classic
+    else
+        echo "helm is already installed."
     fi
 }
 
