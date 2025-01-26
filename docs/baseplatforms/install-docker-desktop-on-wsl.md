@@ -5,7 +5,7 @@ The following steps need to be taken to install Docker Desktop on WSL:
 
 Prerequisite: 
 1) Have Visual Studio Code installed on Windows. If it is not installed, do so. See for details: https://code.visualstudio.com/download
-2) Have Windows Subsystem 2 for Linux installed. If you don't have it installed / enabled, please do so. See for details: https://learn.microsoft.com/en-us/windows/wsl/install
+2) Have Windows Subsystem 2 for Linux installed. If you don't have it installed / enabled, please do so. See for details [here](install-wsl.md).
 3) Have the WSL extention for Visual Code installed. See for details: https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-wsl
 
 
