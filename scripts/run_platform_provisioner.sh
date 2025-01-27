@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # To run this script, you need to have the following tools installed:
-# - Docker Desktop with Kubernetes enabled or MicroK8s/Minikube
+# - Docker Desktop with Kubernetes enabled (works) or MiniKube (works) or MicroK8s (under testing)
 # - kubectl
 # - git
 # - yq
@@ -10,43 +10,46 @@
 # replace values in file scripts/secrets.env
 # NEVER PUSH this file to git!!!!
 
-
 # To run this script on Mac or Linux follow: 
 # chmod +x run_platform_provisioner.sh
 # ./run_platform_provisioner.sh
 
-
 # function to color text for user input
+
 RED="\e[31m"
-GREEN="\e[32m"
 ENDCOLOR="\e[0m"
 function enter_to_continue() { 
-        echo -e "${RED}Press [Enter] key to continue... ${ENDCOLOR} "
-        read 
-        }
+    echo -e "${RED}Press [Enter] key to continue... or see main options ${ENDCOLOR} "
+    read 
+}
 
-# current directory from which
-WORKSHOP_SCRIPT_DIR=$(pwd)
-WORKSHOP_BASE_DIR=$WORKSHOP_SCRIPT_DIR/..
+# Function to set up directories
+setup_directories() {
+    # current directory from which
+    WORKSHOP_SCRIPT_DIR=$(pwd)
+    WORKSHOP_BASE_DIR=$WORKSHOP_SCRIPT_DIR/..
+    # Clone the platform-provisioner repository
+    PP_GIT_DIR=~/git/tmp
+    PP_DIR=$PP_GIT_DIR/platform-provisioner
+    KUBE_CONTEXT=$(kubectl config current-context)
+}
 
-# Clone the platform-provisioner repository
-PP_GIT_DIR=~/git/tmp
-PP_DIR=$PP_GIT_DIR/platform-provisioner
+# Call the function to set up directories
+setup_directories
 
-        # Typeical variables which are supposed to be changed from the default values.
-        #
-        # Used environment variables to be set in the secrets file:
-        #
-        # TLS_CERT=--
-        # TLS_KEY=--
-        # STORAGE_CLASS_MINIKUBE=standard
-        # STORAGE_CLASS_DOCKERDESKTOP=hostpath
-        # STORAGE_CLASS_MICROK8S=microk8s-hostpath
-        # CONTAINER_REGISTRY=csgprdusw2reposaas.jfrog.io
-        # CONTAINER_REGISTRY_REPOSITORY=tibco-platform-docker-dev
-        # CONTAINER_REGISTRY_USERNAME=
-        # CONTAINER_REGISTRY_PASSWORD
-
+# Typical variables which are supposed to be changed from the default values.
+#
+# Used environment variables to be set in the secrets file:
+#
+# TLS_CERT=--
+# TLS_KEY=--
+# STORAGE_CLASS_MINIKUBE=standard
+# STORAGE_CLASS_DOCKERDESKTOP=hostpath
+# STORAGE_CLASS_MICROK8S=microk8s-hostpath
+# CONTAINER_REGISTRY=csgprdusw2reposaas.jfrog.io
+# CONTAINER_REGISTRY_REPOSITORY=tibco-platform-docker-dev
+# CONTAINER_REGISTRY_USERNAME=
+# CONTAINER_REGISTRY_PASSWORD
 
 ## read secrets from .env file and load into environment as env variables
 SECRETS_FILE=$WORKSHOP_BASE_DIR/scripts/secrets.env
@@ -59,68 +62,19 @@ export $(grep -v '^#' $SECRETS_FILE | xargs)
 #Fix: WARNING: Kubernetes configuration file is group-readable. This is insecure. Location: ~/.kube/config
 chmod 600 ~/.kube/config
 
-echo "Cloning the platform-provisioner repository...Note: This is a forked repository maintained by kulbhushan-tibco with some workarounds."
-echo ""
+ set_kube_context() {
+                # List available Kubernetes contexts and ask the user to choose one
+                echo "Available Kubernetes contexts:"
+                kubectl config get-contexts -o name
+                echo ""
 
-mkdir -p $PP_GIT_DIR
-cd $PP_GIT_DIR
-
-if [ ! -d "$PP_DIR" ]; then
-    git clone https://github.com/TIBCOSoftware/platform-provisioner.git
-    #git clone https://github.com/kulbhushan-tibco/platform-provisioner.git
-    echo ""
-
-    ##Following branch has most of the workarounds
-    cd platform-provisioner
-    #git checkout kul-pp
-    echo ""
-
-else
-    cd $PP_DIR
-    echo "Platform-provisioner directory already exists. Stashing your changes and applying them after pulling from remote..."
-    echo ""
-    git add .
-    git stash
-    echo ""
-    git fetch --all --prune
-    echo ""
-    git pull
-    echo ""
-    git stash apply
-    echo ""
-
-fi
-echo "If error occured, fix git steps manually in another window to keep your changes and continue or run again" 
-echo ""
-enter_to_continue
-
-# Navigate to the platform-provisioner directory
-cd $PP_DIR
-echo ""
-echo -e "---We are working from following git repo ----------------"
-pwd
-echo -e "----------------------------------------------------------"
-echo ""
-
-
-# Set environment variable
-export PIPELINE_SKIP_TEKTON_DASHBOARD=false
-# PIPELINE_DOCKER_IMAGE is emtpy to use default platform image from tibcosoftware repository
-export PIPELINE_DOCKER_IMAGE=
-
-
-# List available Kubernetes contexts and ask the user to choose one
-echo "Available Kubernetes contexts:"
-kubectl config get-contexts -o name
-echo ""
-
-echo -e "${RED}Enter the Kubernetes context you want to use: ${ENDCOLOR} "
-read -p "" KUBE_CONTEXT
-echo ""
-# Switch to the selected Kubernetes context
-echo "Switching to $KUBE_CONTEXT Kubernetes context..."
-kubectl config use-context $KUBE_CONTEXT
-echo ""
+                echo -e "${RED}Enter the Kubernetes context you want to use: ${ENDCOLOR} "
+                read -p "" KUBE_CONTEXT
+                echo ""
+                # Switch to the selected Kubernetes context
+                echo "Switching to $KUBE_CONTEXT Kubernetes context..."
+                kubectl config use-context $KUBE_CONTEXT
+                echo ""
 
 # Detect Kubernetes context and set the context accordingly
 KUBE_CONTEXT=$(kubectl config current-context)
