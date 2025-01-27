@@ -1,1 +1,7 @@
 **/secrets.env
+*.pem
+*.crt
+*.key
+*.srl
+*.csr
+server-tibco-plat-secret.yaml
