@@ -258,11 +258,11 @@ echo ""
 #If KUBE_CONTEXT is minikube, port forward 443 and 80 and it can be done only using root user
 if [[ "$KUBE_CONTEXT" == "minikube" ]]; then
     echo "Port forwarding 443 and 80 for minikube which only root user can do for minikube"
-    sudo su -
-    mkdir -p $HOME/.kube
-    cp /home/tibco/.kube/config .kube/config
-    sudo kubectl port-forward -n ingress-system --address 0.0.0.0 service/ingress-nginx-controller 80:http 443:https &
-    exit
+    echo "If asked please provide password for user $USER to perform sudo action"
+    
+    sudo mkdir -p /root/.kube
+    sudo cp /home/tibco/.kube/config /root/.kube/config
+    sudo nohup kubectl port-forward -n ingress-system --address 0.0.0.0 service/ingress-nginx-controller 80:http 443:https  >/dev/null 2>&1 &
 fi
 
 echo "----------------------SAVE THIS SOMEWHERE or Bookmark------------------------------------\n"
