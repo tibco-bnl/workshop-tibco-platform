@@ -53,8 +53,6 @@ meta:
     TP_DB_TLS_ENABLED: ${GUI_TP_DB_TLS_ENABLED:-"false"}
     TP_INSTALL_CERT_MANAGER: ${GUI_TP_INSTALL_CERT_MANAGER:-true}
     TP_INSTALL_METRICS_SERVER: ${GUI_TP_INSTALL_METRICS_SERVER:-true}
-  tools:
-    yq: '4.40'
 helmCharts:
   - condition: ${TP_INSTALL_CERT_MANAGER}
     name: cert-manager
