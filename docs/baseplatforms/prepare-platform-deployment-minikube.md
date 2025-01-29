@@ -3,13 +3,8 @@
 
 Before installing the TIBCO Platform, a couple of preparations must be carried out: 
 
-## Step 1: Login
-Login to the the VM. 
-For WSL use the userID that was used to create the image.
-For Azure and AWS images, use the 'tibco' user that was specifically created for this purpose.
 
-
-## Step 2: Install minikube
+## Step 1: Install minikube
 Run the following commands to install minikube
 
 ```bash
