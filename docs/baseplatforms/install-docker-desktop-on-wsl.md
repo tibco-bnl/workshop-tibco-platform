@@ -34,41 +34,40 @@ The (standard) Ubuntu image provided as part of WSL will be used to run the inst
 
 Step 3.1: Check if the standard WSL Ubuntu ../images is installed. 
 
-a) Open a windows terminal
-b) Run the following command
+1. Open a windows terminal
+2. Run the following command
 
 ```windows terminal
 wsl -l -v
 ```
-c) Make sure the standard ubuntu image is listed:
+![output](../images/wsl-l-v.png)
 
-NAME              STATE           VERSION
-* Ubuntu            Running         2
-  docker-desktop    Running         2
+1. Make sure the standard ubuntu image is listed:
 
-d) If it is not run the following command
+
+If it is not run the following command
 ```windows terminal
 wsl -l -o
 ```
 
-Make sure Ubuntu is in the list.
+2. Check to make sure Ubuntu is in the list.
 
-e) Install the image with the following command
+Install the image with the following command
 ```windows terminal
 wsl --install -d Ubuntu
 ```
 
 Step 3.2 Login to the Ubuntu WSL image
-a) Run the following command
+1. Run the following command
 ```windows terminal
 wsl -d ubuntu 
 ```
-b) Go to your home directory
+2. Go to your home directory
 ```bash
 cd ~ 
 ```
 
-c) Create a work directory named 'tibcoplatform'
+3. Create a work directory named 'tibcoplatform'
 ```bash
 mkdir tibcoplatform
 cd tibcoplatform 
@@ -76,46 +75,46 @@ cd tibcoplatform
 
 Step 3.3 Install required software
 
-a1) Check if 'git' is installed
+1. Check if 'git' is installed
 ```bash
 git --version
 ```
-a2) If it isn't, install it with the following commands:
+
+2. If it isn't, install it with the following commands:
 ```bash
 sudo apt update
 sudo apt install git
 ```
 
-b1) Check if kubectl is installed
+3. Check if kubectl is installed
 ```bash
 kubectl version
 ```
 
-b2) If it is not installed, install it:
+4. If it is not installed, install it:
 ```bash
 sudo apt update
 sudo apt install kubectl
 ```
 
-c1) Check if helm is installed
+5. Check if helm is installed
 ```bash
 helm version
 ```
 
-c2) If it is not installed, install it:
+6. If it is not installed, install it:
 ```bash
 sudo apt update
 sudo apt install helm
 ```
 
-d1) Check if yq is installed
+7. Check if yq is installed
 ```bash
 yq version
 ```
-d2) If it is not installed, install it:
+
+8. If it is not installed, install it:
 ```bash
 sudo apt update
 sudo apt install yq
-```
-
 ```
