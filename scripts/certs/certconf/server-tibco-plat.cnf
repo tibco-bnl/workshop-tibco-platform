@@ -12,7 +12,7 @@ localityName           = EAST
 organizationName       = TIBCO PLATFORM
 organizationalUnitName = DEV
 commonName             = platform.tibco.plat
-emailAddress           = emailaddress@myemail.com
+emailAddress           = cp-test@tibco.com
 
 [ v3_req ]
 basicConstraints       = CA:false
@@ -31,3 +31,5 @@ DNS.8 = prometheus-internal.o11y.tibco.plat
 DNS.9 = apm.olly.tibco.plat 
 DNS.10 = kibana..o11y.tibco.plat 
 DNS.11 = elastic.o11y.tibco.plat
+DNS.12 = *.localhost.dataplanes.pro
+DNS.13 = *.benelux.cp1-my.localhost.dataplanes.pro
