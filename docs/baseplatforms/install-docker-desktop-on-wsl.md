@@ -45,7 +45,7 @@ wsl -l -v
 1. Make sure the standard ubuntu image is listed:
 
 
-If it is not run the following command
+If it is not, run the following command
 ```windows terminal
 wsl -l -o
 ```
