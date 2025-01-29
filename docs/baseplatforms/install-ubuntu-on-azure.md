@@ -1,6 +1,10 @@
-# Install Ubuntu on AWS
+# Install Ubuntu on Azure
 
 An Ubuntu image on Azure can be used as the base platform for TIBCO platform. This document contains an installation description.
+
+Requirements:
+At least 8 cores
+At least 16 GB of ram
 
 ## Step 1: Login to the Azure portal
 Login to the Azure portal at https://portal.azure.com
