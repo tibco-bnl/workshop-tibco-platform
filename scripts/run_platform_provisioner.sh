@@ -190,11 +190,8 @@ echo ""
 echo "----------------------------------------------------------"
 # Get the Platform Provisioner UI and access via Browser
 echo "Get the Platform Provisioner UI and access via Browser:"
-export POD_NAME=$(kubectl get pods --namespace tekton-tasks -l "app.kubernetes.io/name=platform-provisioner-ui,app.kubernetes.io/instance=platform-provisioner-ui" -o jsonpath="{.items[0].metadata.name}")
-export CONTAINER_PORT=$(kubectl get pod --namespace tekton-tasks $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
-echo "Forwarding ports for the Platform Provisioner UI and Tekton Dashboard"
-nohup kubectl --namespace tekton-tasks port-forward $POD_NAME 8080:$CONTAINER_PORT >/dev/null 2>&1 &
-nohup kubectl port-forward svc/tekton-dashboard 9097:9097 -n tekton-pipelines >/dev/null 2>&1 &
+$WORKSHOP_SCRIPT_DIR/port_forwarder.sh provisioner
+$WORKSHOP_SCRIPT_DIR/port_forwarder.sh tekton
 echo "----------------------------------------------------------"
 
 # Wait for user input to continue
@@ -255,15 +252,7 @@ echo ""
 echo ""
 echo ""
 
-#If KUBE_CONTEXT is minikube, port forward 443 and 80 and it can be done only using root user
-if [[ "$KUBE_CONTEXT" == "minikube" ]]; then
-    echo "Port forwarding 443 and 80 for minikube which only root user can do for minikube"
-    echo "If asked please provide password for user $USER to perform sudo action"
-    
-    sudo mkdir -p /root/.kube
-    sudo cp /home/tibco/.kube/config /root/.kube/config
-    sudo nohup kubectl port-forward -n ingress-system --address 0.0.0.0 service/ingress-nginx-controller 80:http 443:https  >/dev/null 2>&1 &
-fi
+$WORKSHOP_SCRIPT_DIR/port_forwarder.sh ingress $KUBE_CONTEXT
 
 echo "----------------------SAVE THIS SOMEWHERE or Bookmark------------------------------------\n"
 echo "All steps completed successfully. Follow Platform provisioner UI to do following: "
@@ -282,6 +271,7 @@ echo "-----------------------------------------------------------------\n"
 echo "To stop the port forwarding, run the following commands:"
 echo "kill $(lsof -t -i:8080)"
 echo "kill $(lsof -t -i:9097)"
+echo "kill $(lsof -t -i:80)"
 echo "----------------------------------------------------------\n"
 echo "To uninstall the platform provisioner, run the following command:"
 echo "cd $PP_DIR"
