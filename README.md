@@ -20,7 +20,7 @@ In order to setup the platform, four steps are required:
 
 The following sandbox VMs can be used:
 
-1) Docker Desktop for WSL. This setup is suitable for users with Windows 11 and Windows Subsystem for Linux (WSL) + Docker Desktop. In this setup the Kubernetes environment of Docker Desktop is used as the base infrastructure. [See for a description here](docs/baseplatforms/install-dockerdesktop-on-wsl.md).
+1) Docker Desktop for WSL with Kubernetes. This setup is suitable for users with Windows 11 and Windows Subsystem for Linux (WSL) + Docker Desktop including Kubernetes. In this setup the Kubernetes environment of Docker Desktop is used as the base infrastructure. [See for a description here](docs/baseplatforms/install-docker-desktop-on-wsl.md).
 
 
 2) Ubuntu on WSL. This setup is suitable for users with Windows 11 and Windows Subsystem for Linux (WSL). The platform is installed on an instance of Ubuntu running in WSL.
@@ -38,11 +38,9 @@ The following sandbox VMs can be used:
 
 To run the TIBCO platform, a Kubernetes platform is required. Next to that some tools need to be installed. The following flavours of Kubernetes are installed:
 
-1) Minikube. Minikube can be used when using the following base platforms:
+1) ** Work in progress ** Docker Desktop for WSL with Kubernetes.
 
-    1. ** work in progress** Docker Desktop for WSL. To install tooling and minikube, use the following two steps:
-        1. [Login to the Ubuntu image on WSL](docs/baseplatforms/login-to-ubuntu-wsl.md).
-        2. [Prepare the platform deployment with minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md).
+2) Minikube. Minikube can be used when using the following base platforms:
 
     2. Ubuntu on WSL. To install tooling and minikube, use the following two steps:
         1. [Login to the Ubuntu image on WSL](docs/baseplatforms/login-to-ubuntu-wsl.md).
@@ -54,8 +52,6 @@ To run the TIBCO platform, a Kubernetes platform is required. Next to that some 
         1. [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md).
         2. [Prepare the platform deployment with minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md).
 
-
-2) Docker Desktop Kubernetes. When using Docker Desktop for WSL, the included Kubernetes environment can be used. Nevertheless a side-car Ubuntu image need to be setup to install the TIBCO platform. 
 
 ## (C) Deploy the platform
 Once a Kubernetes platform (controlplain and dataplain) is installed the TIBCO platform can be installed. For that the following procedures apply:
