@@ -20,9 +20,7 @@ In order to setup the platform, four steps are required:
 
 The following sandbox VMs can be used:
 
-1) Docker Desktop for WSL. This setup is suitable for users with Windows 11 and Windows Subsystem for Linux (WSL) + Docker Desktop. In this setup the Kubernetes environment of Docker Desktop is used as the base infrastructure.
-
-[See for a description here](docs/baseplatforms/install-dockerdesktop-on-wsl.md).
+1) Docker Desktop for WSL. This setup is suitable for users with Windows 11 and Windows Subsystem for Linux (WSL) + Docker Desktop. In this setup the Kubernetes environment of Docker Desktop is used as the base infrastructure. [See for a description here](docs/baseplatforms/install-dockerdesktop-on-wsl.md).
 
 
 2) Ubuntu on WSL. This setup is suitable for users with Windows 11 and Windows Subsystem for Linux (WSL). The platform is installed on an instance of Ubuntu running in WSL.
@@ -42,7 +40,7 @@ To run the TIBCO platform, a Kubernetes platform is required. Next to that some 
 
 1) Minikube. Minikube can be used when using the following base platforms:
 
-    1. Docker Desktop for WSL. To install tooling and minikube, use the following two steps:
+    1. ** work in progress** Docker Desktop for WSL. To install tooling and minikube, use the following two steps:
         1. [Login to the Ubuntu image on WSL](docs/baseplatforms/login-to-ubuntu-wsl.md).
         2. [Prepare the platform deployment with minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md).
 
