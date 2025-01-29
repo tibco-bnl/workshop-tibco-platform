@@ -2,8 +2,8 @@
 
 In order to be able to login an ubuntu instance on AWS or intall or use the TIBCO platform a Remote Desktop Connection must be used. If Remote Desktop is not installed on your client, install it first:
 
-[Install on Windows](https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/uninstall-remote-desktop-connection?tabs=gui).
-[Install on Mac](https://support.apple.com/en-gb/guide/remote-desktop/apdf49e03a4/mac).
+1. [Install on Windows](https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/clients/uninstall-remote-desktop-connection?tabs=gui).
+2. [Install on Mac](https://support.apple.com/en-gb/guide/remote-desktop/apdf49e03a4/mac).
 
 ## Step 1: Configure Remote Desktop
 A number of configuration settings need to be applied:
@@ -42,6 +42,7 @@ Step 2.1: Connect to the Ubuntu image:
 Remark: Please make sure the IP address to be used is whitelisted in AWS or Azure.
 <br>
 If the following warning is shown, click 'yes'<br>
+
 ![Connect](../images/RDP-warning.png)
 
 Step 2.2: Login with the credentials provided:<br>
