@@ -41,26 +41,21 @@ The following sandbox VMs can be used:
 To run the TIBCO platform, a Kubernetes platform is required. Next to that some tools need to be installed. The following flavours of Kubernetes are installed:
 
 1) Minikube. Minikube can be used when using the following base platforms:
-```
-a) Docker Desktop for WSL. To install tooling and minikube, use the following two steps:
-    i) [Login to the Ubuntu image on WSL](docs/baseplatforms/login-to-ubuntu-wsl.md).
-    ii) [Prepare the platform deployment with minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md).
-```
-```
-a) Ubuntu on WSL. To install tooling and minikube, use the following two steps:
-    i) [Login to the Ubuntu image on WSL](docs/baseplatforms/login-to-ubuntu-wsl.md).
-    ii) [Prepare the platform deployment with minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md).
-```
-```
-b) Ubuntu on AWS. To install tooling and minikube, use the following two steps:
-    i) [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md).
-    ii) [Prepare the platform deployment with minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md).
-```
-```
-c) Ubuntu on Azure. To install tooling and minikube, use the following two steps:
-    i) [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md).
-    ii) [Prepare the platform deployment with minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md).
-```
+
+    1. Docker Desktop for WSL. To install tooling and minikube, use the following two steps:
+        1. [Login to the Ubuntu image on WSL](docs/baseplatforms/login-to-ubuntu-wsl.md).
+        2. [Prepare the platform deployment with minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md).
+
+    2. Ubuntu on WSL. To install tooling and minikube, use the following two steps:
+        1. [Login to the Ubuntu image on WSL](docs/baseplatforms/login-to-ubuntu-wsl.md).
+        2. [Prepare the platform deployment with minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md).
+    3. Ubuntu on AWS. To install tooling and minikube, use the following two steps:
+        1. [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md).
+        2. [Prepare the platform deployment with minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md).
+    4. Ubuntu on Azure. To install tooling and minikube, use the following two steps:
+        1. [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md).
+        2. [Prepare the platform deployment with minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md).
+
 
 2) Docker Desktop Kubernetes. When using Docker Desktop for WSL, the included Kubernetes environment can be used. Nevertheless a side-car Ubuntu image need to be setup to install the TIBCO platform. 
 
