@@ -19,15 +19,15 @@ Step 2.1: Open Docker Desktop and click Click settings --> Kubernetes
 ![](../images/DockerDesktop1.png)
 
 Step 2.2: enable kubernetes
-Set 'enable Kubernetes' en click 'Apply & Restart'
+1. Set 'enable Kubernetes' en click 'Apply & Restart'
 ![](../images/DockerDesktop2.png)
-Wait for Kubernetes to start.
+2. Wait for Kubernetes to start.
 
 Please mind: if you previously used kubernetes, you can refesh the setup by clicking the button 'reset kubernetes cluster'.
 
-Step 2.2: Test kubernetes
-Open a command prompt and type 'kubectl get namespaces'. 
-Check if you get a list of available namespaces.
+Step 2.3: Test kubernetes
+1. Open a command prompt and type 'kubectl get namespaces'. 
+2. Check if you get a list of available namespaces.
 
 ## Step 3: Prepare the Ubuntu image
 The (standard) Ubuntu image provided as part of WSL will be used to run the installation script. In order to do so, a number of modifications need to made.
