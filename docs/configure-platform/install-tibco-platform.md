@@ -124,7 +124,42 @@ Waiting for helm-install pipeline run to complete...
 
 DON'T HIT [enter] AGAIN!! Go back to your browser and monitor the progress of the job. Only progress to step 7 after the helm script finished. Please refresh the browser to get a overview of the running jobs.
 
-## Step 7: xxx
+## Step 7: Do something
+
+Step 7.1: Press [enter] and wait for the following prompt:
+
+```bash
+Update coredns configuration
+
+create tekton generic-runner pipelinerun on-prem-80 for admin
+pipelinerun.tekton.dev/generic-runner-on-prem-80 created
 
 
+Port forwarding 443 and 80 for minikube which only root user can do for minikube
 
+```
+Step 7.2: Enter the requested password
+
+## Step 8: Setup port forwarding (Only for minikube)
+
+To access the Platform Control Plane Admin UI and the MailDev UI portforwarding to the ingress controller is required when running in minikube.
+For this the root user needs to be configured with the kube config.
+
+Step 8.1: su to root
+
+```
+sudo su -
+```
+
+Step 8.1: Run the following script:
+
+```
+mkdir -p $HOME/.kube
+cp /home/tibco/.kube/config .kube/config
+exit
+```
+
+Step 8.2: Setup port forwarding using the following command:
+
+```
+sudo kubectl port-forward -n ingress-system --address 0.0.0.0 service/ingress-nginx-controller 80:http 443:https
