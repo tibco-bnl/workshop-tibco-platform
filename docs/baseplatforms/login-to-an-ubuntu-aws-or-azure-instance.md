@@ -44,10 +44,10 @@ Remark: Please make sure the IP address to be used is whitelisted in AWS or Azur
 If the following warning is shown, click 'yes'<br>
 ![Connect](../images/RDP-warning.png)
 
-Step 2.2: Login with the credentials provided:
+Step 2.2: Login with the credentials provided:<br>
 ![Login](../images/xrdp-login.png)
 
-Step 2.3: Login again
+Step 2.3: Login again <br>
 ![Login](../images/login-again.png)
 
 Step 2.4: Open a terminal 
