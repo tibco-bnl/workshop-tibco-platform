@@ -93,7 +93,18 @@ minikube start --cpus 8 --memory 24576 --disk-size "40g" \
 Please mind: 
 (1) If you have more processors and ram, modify the parameters --cpu and --memory, but always leave 8 GB of ram for other purposes.
 
-## Step 5: Create a work directory
+## Step 5: Increase the maximum number of files for the current user
+
+
+```bash
+sudo sysctl -w fs.inotify.max_user_watches=524288
+sudo sysctl -w fs.inotify.max_user_instances=8192
+sudo sysctl -p
+```
+
+
+
+## Step 6: Create a work directory
 Run the following command to create a workdirectory:
 
 ```bash
