@@ -21,7 +21,7 @@ function forward_ingress() {
         sudo cp /home/tibco/.kube/config /root/.kube/config
     fi
 
-    nohu./p sudo kubectl port-forward -n ingress-system --address 0.0.0.0 service/ingress-nginx-controller 80:http 443:https  >/dev/null 2>&1 &
+    nohup sudo kubectl port-forward -n ingress-system --address 0.0.0.0 service/ingress-nginx-controller 80:http 443:https  >/dev/null 2>&1 &
 }
 
 function forward_tekton() {
