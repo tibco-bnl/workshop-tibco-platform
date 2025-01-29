@@ -30,14 +30,10 @@ Step 2.3: Check if the image is installed by running the following command:
     wsl -l -v
 ```
 
-The list must contain 'tibcoplatform'
 
 ```powershell
 wsl -l -v
   NAME              STATE           VERSION
 * docker-desktop    Stopped         2
   Ubuntu-24.04      Stopped         2
-  tibcoplatform     Stopped         2
-  minikube          Stopped         2
-
   ```
