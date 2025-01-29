@@ -68,7 +68,7 @@ Platform-provisioner is temporary from mcommiss user which includes the recipes 
 
 ```
 cd ~/projects/platform-dev/workshop-tibco-platform
-git switch tp_on_minikube
+git switch main
 code .
 ```
 
