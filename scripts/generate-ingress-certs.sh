@@ -50,7 +50,7 @@ install_prerequisites() {
 
 # Variables
 BASE_DIR="./certs"
-CERT_DIR="${BASE_DIR}/certs"
+#CERT_DIR="${BASE_DIR}/certs"
 CONFIG_DIR="${BASE_DIR}/certconf"
 SECRET_DIR="${BASE_DIR}/secrets"
 INTERMEDIATE_DIR="${BASE_DIR}/intermediate"
@@ -67,7 +67,7 @@ NAMESPACE="ingress-nginx"
 
 # Create directories if they don't exist
 echo "Creating directories if they don't exist..."
-mkdir -p ${CERT_DIR}
+#mkdir -p ${CERT_DIR}
 mkdir -p ${CONFIG_DIR}
 mkdir -p ${SECRET_DIR}
 mkdir -p ${INTERMEDIATE_DIR}
@@ -95,10 +95,12 @@ openssl x509 -req -in ${SERVER_CSR} -CA ${CA_CRT} -CAkey ${CA_KEY} -CAcreateseri
 echo "Combining CA and Server PEM files..."
 cat ${SERVER_PEM} ${CA_PEM} >> ${CHAIN_PEM}
 
-# Create a Kubernetes Secret that will be used by NGINX
+# Create a Kubernetes Secret that will be used by NGINX 
+# Current secret is retrieved like this kubectl -n ingress-system get secret default-certificate
+
 echo "Creating Kubernetes secret to be used by NGINX"
 #kubectl create namespace ${NAMESPACE}
-kubectl create secret tls server-tibco-plat --key ${SERVER_KEY} --cert ${CHAIN_PEM} -n ${NAMESPACE} --dry-run=client -o yaml > ${SECRET_DIR}/server-tibco-plat-secret.yaml
+kubectl create secret tls server-tibco-plat --key ${SERVER_KEY} --cert ${CHAIN_PEM} --dry-run=client -o yaml > ${SECRET_DIR}/server-tibco-plat-secret.yaml
 echo "Kubernetes secret created successfully."
 echo "Apply the secret using the following command:"
 echo "kubectl apply -f ${SECRET_DIR}/server-tibco-plat-secret.yaml -n ${NAMESPACE}"
@@ -117,6 +119,18 @@ echo "kubectl apply -f ${SECRET_DIR}/server-tibco-plat-secret.yaml -n ${NAMESPAC
 
 # Build a Custom Truststore
 #echo "Building a custom truststore..."
+# Install Java if not present 
+#if ! command -v java &> /dev/null; then
+#    echo "Java is not installed. Installing Java..."
+#    if [[ "$OSTYPE" == "darwin"* ]]; then
+#        # Mac OS
+#        brew install openjdk
+#    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+#        # Ubuntu or WSL
+#        sudo apt-get install openjdk
+#    fi
+#fi
+
 #JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
 #cp ${JAVA_HOME}/lib/security/cacerts ${JAVA_HOME}/lib/security/cacertsbackup
 #keytool -import -trustcacerts -alias tibco-plat-test -file ${CA_CRT} -keystore ${JAVA_HOME}/lib/security/cacerts -storepass changeit -noprompt
@@ -124,3 +138,6 @@ echo "kubectl apply -f ${SECRET_DIR}/server-tibco-plat-secret.yaml -n ${NAMESPAC
 
 
 echo "Certificates generated successfully."
+
+echo "openssl command to view .csr file"
+echo "openssl req -in ${SERVER_CSR} -noout -text"
