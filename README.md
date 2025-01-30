@@ -56,16 +56,17 @@ To run the TIBCO platform, a Kubernetes platform is required. Next to that some 
 ## (C) Deploy the platform
 Once a Kubernetes platform (controlplain and dataplain) is installed the TIBCO platform can be installed. For that the following procedures apply:
 
-a) Ubuntu on WSL. To install the TIBCO Platform use the following steps:
-    i) [Login to the Ubuntu image on WSL](docs/configure-platform/login-to-ubuntu-wsl.md).
-    ii) [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md).
-b) Docker Desktop Kubernetes. To install the TIBCO Platform use the following steps:
-    i) [Login to the Ubuntu image on WSL](docs/xxxxxx.md).
-    ii) [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md)
+1. ** Work in progress ** Docker Desktop Kubernetes. To install the TIBCO Platform use the following steps:
+    1. [Login to the Ubuntu image on WSL](docs/xxxxxx.md).
+    2. [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md)
 
-b) Ubuntu on AWS.  To install the TIBCO Platform use the following steps::
-    i) [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md).
-    ii) [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md).
-c) Ubuntu on Azure. To install the TIBCO Platform use the following steps:
-    i) [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md).
-    ii) [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md).
+2. Ubuntu with minikube on WSL. To install the TIBCO Platform use the following steps:
+    1. [Login to the Ubuntu image on WSL](docs/configure-platform/login-to-ubuntu-wsl.md).
+    2. [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md).
+
+3. Ubuntu with minikube on AWS.  To install the TIBCO Platform use the following steps::
+    1. [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md).
+    2. [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md).
+4. Ubuntu with minikube on Azure. To install the TIBCO Platform use the following steps:
+    1. [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md).
+    2. [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md).
