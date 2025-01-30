@@ -8,6 +8,8 @@ This project is designed to provide a comprehensive workshop on the TIBCO platfo
 |:---------------------|----------|:-----------:|:--------------------------------------------------------------|
 | Kulbhushan               | 26/11/2024 | v1  | Initial draft |
 | Jurriaan               | 21/1/2025 | v2  | Rebased and Merged tp_on_minikube and doc branches also cleaned up unwanted documentation |
+| Marco               | 28/1/2025 | v3  | Separated port forwading into a separate script |
+| Kulbhushan               | 29/1/2025 | v4  | Added script to generate self ca signed certificates and tokens |
 
 # TIBCO Platform Workshop
 
