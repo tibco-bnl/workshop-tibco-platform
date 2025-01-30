@@ -41,7 +41,7 @@ The mail server contains a mail to the platform administrator. Open this mail an
 
 ![](../images/firstsignin.png)
 
-Step 2.2: Register the subscription owner<br>
+Step 2.2: Register the platform administrator<br>
 
 Provide the user data from the subscription owner. Please mind: the email address can not be changed.
 Use a password that meets the requirements (for exmple 'Platform@123'). Click the 'submit' button.
@@ -97,7 +97,7 @@ As a next step, it is time to configure the new subscription and to create new u
 
 Step 4.1: Set a password for the administrator created in step 3.<br>
 
-a) Open an NEW browser (use a different browser, not the browser used for step 3) and open https://myorg.cp1-my.localhost.dataplanes.pro/, click on the button 'Sign in with Default IdP'.<br>
+a) Open an NEW browser (use a different browser, not the browser used for step 3, or open a prive browser tab on the broweer used in step 3) and open https://myorg.cp1-my.localhost.dataplanes.pro/, click on the button 'Sign in with Default IdP'.<br>
 
 Please mind: we will use two browser from here on:
 1. A browser for the platform (https://admin.cp1-my.localhost.dataplanes.pro/)
@@ -191,21 +191,25 @@ The Logs Processing menu is used to configure logging. Lead the settings 'as is'
 
 
 ## Step 6: Register the Data Plane
-As a final step the Data Plane needs to be configured.
+As a final step the Data Plane needs to be configured. A number of commands must be run on the K8s cluster of the Data Plane. For this a Linux terminal is required.
 
-Step 6.1: Open the WSL Ubuntu image
-As part of the registration of the Data Plane, the K8s cluster needs to be configured. We will do so from the bash shell in the WLS Ubunti image.
-Therefore do the following:
-1. Open a windows terminal
-2. Run the following command
+Step 6.1: Open a Linux terminal
 
+1. If you are using Ubunutu on WSL:
+
+  1. Open a windows terminal
+  2. Run the following command
 Run the following command:
 ```windows terminal
-wsl -d tibcoplatform
+wsl -d <name of the image used for the platform>
 ```
 
-You now opened the Ubuntu image on Windows.<br>
-c) Go to your home directory by running the following command:
+2. If you are using an AWS or Azure Ubuntu image
+  1. Open a new terminal
+
+
+Step 6.2: go to the home directory by running the following command:
+
 ```bash
 cd ~
 ```
