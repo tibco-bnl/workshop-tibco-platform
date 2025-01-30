@@ -287,5 +287,5 @@ This view shows the status of:
 2. the Monitoring Agent (used to collect logs)
 3. the Observability tooling
 <br>
-All should be in a running (green) status
+All should be in a running (green) status<br>
 ![](../images/infrastructure-compnents.png)
