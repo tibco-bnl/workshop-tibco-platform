@@ -72,6 +72,7 @@ Once the TIBCO platform is installed, a number of configurations are required.
 
 Use [this](docs/configure-platform/configure-tibco-platform.md) description to do the basic configuration of the platform. 
 
+## Doc control
 
 | Name | Date |   Version   | Remarks                                                   |
 |:---------------------|----------|:-----------:|:--------------------------------------------------------------|
