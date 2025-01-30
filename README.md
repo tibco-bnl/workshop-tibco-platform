@@ -13,7 +13,7 @@ In order to setup the platform, four steps are required:
 
 (A) Setup a base VM
 (B) Prepare deployment and deploy kubernetes
-(C) Deploy the platform
+(C) Install the platform
 (D) Configure the platform
 
 ## (A) Setup the base VM
@@ -71,3 +71,9 @@ Once a Kubernetes platform (controlplain and dataplain) is installed the TIBCO p
 4. Ubuntu with minikube on Azure. To install the TIBCO Platform use the following steps:
     1. [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md).
     2. [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md).
+
+
+## (D) Configure the platform
+Once the TIBCO platform is installed, a number of configurations are required.
+
+Use [this](docs/configure-platform/configure-tibco-platform.md) description to do the basic configuration of the platform. 
