@@ -205,7 +205,7 @@ wsl -d <name of the image used for the platform>
 <br>
 If you are using an AWS or Azure Ubuntu image<br>
   1. Open a new terminal
-
+<br>
 
 Step 6.2: go to the home directory by running the following command:
 
@@ -223,7 +223,11 @@ a) Copy the content of the block 'Name Space Creation' to the clipboard.<br>
 b) Go to the Ubuntu terminal and paste the command you just copied. Run it (press -enter-)<br>
 
 The response is supposed to be:
+
+```bash
 namespace/mynamespace created
+```
+
 
 Step 6.3: Create the service account
 Go back to your browser (with the subscription = https://myorg.cp1-my.localhost.dataplanes.pro/)
@@ -235,6 +239,7 @@ a) Copy the content of the block 'Service Account Creation' to the clipboard.<br
 b) Go to the Ubuntu terminal and paste the command you just copied. Run it (press -enter-)<br>
 
 The response is supposed to be something like this:
+```bash
 Namespace mynamespace validation for data plane id cu02omddvvk6v3asjrpg label is successful.
 Network policies creation is disabled by default.
 To enable network policies creation, please use --set networkPolicy.create=true
@@ -242,6 +247,7 @@ Release name: dp-configure-namespace
 To learn more about the release, try:
   $ helm status dp-configure-namespace -n mynamespace
   $ helm get all dp-configure-namespace -n mynamespace
+```
 
 Step 6.3: Cluster registration
 Go back to your browser (with the subscription = https://myorg.cp1-my.localhost.dataplanes.pro/)
@@ -253,6 +259,7 @@ a) Copy the content of the block 'Cluster Registration' to the clipboard.<br>
 b) Go to the Ubuntu terminal and paste the command you just copied. Run it (press -enter-)<br>
 
 The response is supposed to be something like this:
+```bash
 Release "dp-core-infrastructure" does not exist. Installing it now.
 NAME: dp-core-infrastructure
 LAST DEPLOYED: Thu Jan  9 21:31:07 2025
@@ -262,6 +269,7 @@ REVISION: 1
 TEST SUITE: None
 NOTES:
 TIBCO Platform Data Plane Infrastructure.
+```
 
 c) Click the button 'Done'<br>
 ![](../images/done.png)
@@ -278,6 +286,6 @@ This view shows the status of:
 1. the CP Proxy (used for the hybrid connection with the Data Plane)
 2. the Monitoring Agent (used to collect logs)
 3. the Observability tooling
-
+<br>
 All should be in a running (green) status
 ![](../images/infrastructure-compnents.png)
