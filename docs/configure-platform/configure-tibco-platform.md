@@ -4,12 +4,12 @@ This document contains a description on how to configure a sandbox instance of T
 
 The configuration of the platform involves the following steps:
 
-Step 1: Opening of the administrator GUIs
-Step 2: Create a platform administrator
-Step 3: Create a subscription
-Step 4: Create users in the subscription
-Step 5: Configure the Data Plane
-Step 6: Register the Data Plane
+1. Step 1: Opening of the administrator GUIs
+2. Step 2: Create a platform administrator
+3. Step 3: Create a subscription
+4. Step 4: Create users in the subscription
+5. Step 5: Configure the Data Plane
+6. Step 6: Register the Data Plane
 
 
 ## Step 1: Open the administrator GUIs
