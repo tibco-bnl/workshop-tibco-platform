@@ -288,4 +288,5 @@ This view shows the status of:
 3. the Observability tooling
 <br>
 All should be in a running (green) status<br>
-![](../images/infrastructure-compnents.png)
+
+![](../images/infrastructure-components.png)
