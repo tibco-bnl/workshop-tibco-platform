@@ -53,7 +53,7 @@ To run the TIBCO platform, a Kubernetes platform is required. Next to that some 
         2. [Prepare the platform deployment with minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md).
 
 
-## (C) Deploy the platform
+## (C) Install the platform
 Once a Kubernetes platform (controlplain and dataplain) is installed the TIBCO platform can be installed. For that the following procedures apply:
 
 1. ** Work in progress ** Docker Desktop Kubernetes. To install the TIBCO Platform use the following steps:
@@ -67,6 +67,7 @@ Once a Kubernetes platform (controlplain and dataplain) is installed the TIBCO p
 3. Ubuntu with minikube on AWS.  To install the TIBCO Platform use the following steps::
     1. [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md).
     2. [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md).
+
 4. Ubuntu with minikube on Azure. To install the TIBCO Platform use the following steps:
     1. [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md).
     2. [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md).
