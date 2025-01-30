@@ -1,4 +1,4 @@
-# Prepare Platform Deployment
+# Install the TIBCO Platform
 
 The procedure in this document can be used to install a control plane and a data plane (part of the TIBCO Platform) on a single VM.
 

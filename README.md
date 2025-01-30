@@ -61,7 +61,7 @@ Once a Kubernetes platform (controlplain and dataplain) is installed the TIBCO p
     2. [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md)
 
 2. Ubuntu with minikube on WSL. To install the TIBCO Platform use the following steps:
-    1. [Login to the Ubuntu image on WSL](docs/configure-platform/login-to-ubuntu-wsl.md).
+    1. [Login to the Ubuntu image on WSL](docs/baseplatforms/login-to-ubuntu-wsl.md).
     2. [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md).
 
 3. Ubuntu with minikube on AWS.  To install the TIBCO Platform use the following steps::
