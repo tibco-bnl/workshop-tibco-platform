@@ -196,14 +196,12 @@ As a final step the Data Plane needs to be configured. A number of commands must
 Step 6.1: Open a Linux terminal
 
 1. If you are using Ubunutu on WSL:
-
   1. Open a windows terminal
   2. Run the following command
 Run the following command:
 ```windows terminal
 wsl -d <name of the image used for the platform>
 ```
-
 2. If you are using an AWS or Azure Ubuntu image
   1. Open a new terminal
 
