@@ -5,13 +5,6 @@ This repository contains material for the TIBCO Platform Workshop. The material 
 
 In order to setup the platform, four steps are required:
 
-| Name | Date |   Version   | Remarks                                                   |
-|:---------------------|----------|:-----------:|:--------------------------------------------------------------|
-| Kulbhushan               | 26/11/2024 | v1  | Initial draft |
-| Jurriaan               | 21/1/2025 | v2  | Rebased and Merged tp_on_minikube and doc branches also cleaned up unwanted documentation |
-| Marco               | 28/1/2025 | v3  | Separated port forwading into a separate script |
-| Kulbhushan               | 29/1/2025 | v4  | Added script to generate self ca signed certificates and tokens |
-
 (A) Setup a base VM
 (B) Prepare deployment and deploy kubernetes
 (C) Install the platform
@@ -78,3 +71,11 @@ Once a Kubernetes platform (controlplain and dataplain) is installed the TIBCO p
 Once the TIBCO platform is installed, a number of configurations are required.
 
 Use [this](docs/configure-platform/configure-tibco-platform.md) description to do the basic configuration of the platform. 
+
+
+| Name | Date |   Version   | Remarks                                                   |
+|:---------------------|----------|:-----------:|:--------------------------------------------------------------|
+| Kulbhushan               | 26/11/2024 | v1  | Initial draft |
+| Jurriaan               | 21/1/2025 | v2  | Rebased and Merged tp_on_minikube and doc branches also cleaned up unwanted documentation |
+| Marco               | 28/1/2025 | v3  | Separated port forwading into a separate script |
+| Kulbhushan               | 29/1/2025 | v4  | Added script to generate self ca signed certificates and tokens |
