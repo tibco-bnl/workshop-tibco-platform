@@ -1,5 +1,5 @@
 
-#TIBCO Platform Workshop
+# TIBCO Platform Workshop
 
 This repository contains material for the TIBCO Platform Workshop. The material is intended for TIBCO customers and partners who want to create a TIBCO Platform 'sandbox environment' and expiriment with it. The aim of this sandbox is to get to learn the platform. A sandbox is intended or supported for production purposes.
 
