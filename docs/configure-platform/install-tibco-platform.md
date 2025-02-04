@@ -124,7 +124,7 @@ Waiting for helm-install pipeline run to complete...
 
 DON'T HIT [enter] AGAIN!! Go back to your browser and monitor the progress of the job. Only progress to step 7 after the helm script finished. Please refresh the browser to get a overview of the running jobs.
 
-## Step 7: Do something
+## Step 7: Finish the setup
 
 Step 7.1: Press [enter] and wait for the following prompt:
 
@@ -145,18 +145,12 @@ Step 7.2: Enter the requested password
 To access the Platform Control Plane Admin UI and the MailDev UI portforwarding to the ingress controller is required when running in minikube.
 For this the root user needs to be configured with the kube config.
 
-Step 8.1: su to root
-
-```
-sudo su -
-```
 
 Step 8.1: Run the following script:
 
 ```
-mkdir -p $HOME/.kube
-cp /home/tibco/.kube/config .kube/config
-exit
+mkdir -p /root/.kube
+sudo cp ~/.kube/config /root/.kube/config
 ```
 
 Step 8.2: Setup port forwarding using the following command:
