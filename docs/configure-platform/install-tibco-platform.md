@@ -149,7 +149,7 @@ For this the root user needs to be configured with the kube config.
 Step 8.1: Run the following script:
 
 ```
-mkdir -p /root/.kube
+sudo mkdir -p /root/.kube
 sudo cp ~/.kube/config /root/.kube/config
 ```
 
