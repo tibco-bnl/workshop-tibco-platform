@@ -87,6 +87,7 @@ minikube start --cpus 8 --memory 24576 --disk-size "40g" \
 
 Please mind: 
 (1) If you have more processors and ram, modify the parameters --cpu and --memory, but always leave 8 GB of ram for other purposes.
+(2) Make sure you have at least 8 processors an 10 GB of RAM.
 
 ## Step 5: Increase the maximum number of files for the current user
 
