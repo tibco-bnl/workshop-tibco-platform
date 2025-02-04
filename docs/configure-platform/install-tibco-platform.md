@@ -156,4 +156,4 @@ sudo cp ~/.kube/config /root/.kube/config
 Step 8.2: Setup port forwarding using the following command:
 
 ```
-sudo kubectl port-forward -n ingress-system --address 0.0.0.0 service/ingress-nginx-controller 80:http 443:https
+sudo kubectl port-forward -n ingress-system --address 0.0.0.0 service/ingress-nginx-controller 80:http 443:https &
