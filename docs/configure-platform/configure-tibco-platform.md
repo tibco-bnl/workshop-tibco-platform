@@ -142,7 +142,7 @@ Please note that the subscription only has one user (the administrator created i
 
 ![](../images/users-menu.png)
 
-Step 4.2: Update permissions
+Step 4.3: Update permissions
 
 a) Select the dots behind the administrator and select 'update permissions.<br>
 
