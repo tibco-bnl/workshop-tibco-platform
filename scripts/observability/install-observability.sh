@@ -72,7 +72,7 @@ EOF
 
 install_prometheus() {
     echo "Install Prometheus Stack"
-    envsubst '${TP_DOMAIN},${TP_INGRESS_CLASS}' <<EOF | helm upgrade --install --wait --create-namespace --reuse-values \
+    cat <<EOF | envsubst '${TP_DOMAIN},${TP_INGRESS_CLASS}' | helm upgrade --install --wait --create-namespace --reuse-values \
         -n prometheus-system kube-prometheus-stack kube-prometheus-stack \
         --labels layer=2 \
         --repo "https://prometheus-community.github.io/helm-charts" --version "48.3.4" -f -
