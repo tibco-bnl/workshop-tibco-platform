@@ -42,6 +42,7 @@ install_prerequisites() {
 }
 
 
+
 # Usage:
 # 1. Run the script
 # chmod +x generate-ingress-certs.sh
@@ -95,46 +96,74 @@ openssl x509 -req -in ${SERVER_CSR} -CA ${CA_CRT} -CAkey ${CA_KEY} -CAcreateseri
 echo "Combining CA and Server PEM files..."
 cat ${SERVER_PEM} ${CA_PEM} >> ${CHAIN_PEM}
 
-# Create a Kubernetes Secret that will be used by NGINX 
-# Current secret is retrieved like this kubectl -n ingress-system get secret default-certificate
+create_k8s_secret() {
+    echo "Creating Kubernetes secret to be used by NGINX"
+    kubectl create secret tls server-tibco-plat --key ${SERVER_KEY} --cert ${CHAIN_PEM} --dry-run=client -o yaml > ${SECRET_DIR}/server-tibco-plat-secret.yaml
+    echo "Kubernetes secret created successfully."
+    echo "Apply the secret using the following command:"
+    echo "kubectl apply -f ${SECRET_DIR}/server-tibco-plat-secret.yaml -n ${NAMESPACE}"
+    echo "Restart the ingress pod to apply the new certificate."
+}
 
-echo "Creating Kubernetes secret to be used by NGINX"
-#kubectl create namespace ${NAMESPACE}
-kubectl create secret tls server-tibco-plat --key ${SERVER_KEY} --cert ${CHAIN_PEM} --dry-run=client -o yaml > ${SECRET_DIR}/server-tibco-plat-secret.yaml
-echo "Kubernetes secret created successfully."
-echo "Apply the secret using the following command:"
-echo "kubectl apply -f ${SECRET_DIR}/server-tibco-plat-secret.yaml -n ${NAMESPACE}"
+update_secrets_env() {
+    # Extract TLS cert and key from the local files
+    TLS_CERT=$(cat ${CHAIN_PEM})
+    TLS_KEY=$(cat ${SERVER_KEY})
 
-# Add the CA certificate to your OS
-#if [[ "$OSTYPE" == "darwin"* ]]; then
-    #echo "Adding CA certificate to Mac OS trust store..."
-    # Mac OS
-    #sudo security add-trusted-cert -d -r trustRoot -p ssl -k /Library/Keychains/System.keychain ${CA_PEM}
-#elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    #echo "Adding CA certificate to Linux trust store..."
-    # Ubuntu or WSL
-    #sudo cp ${CA_PEM} /usr/local/share/ca-certificates/ca-tibco-plat.crt
-    #sudo update-ca-certificates
-#fi
+    # Create or update secrets.env file
+    if [ ! -f secrets.env ]; then
+        cp secrets.envEmpty secrets.env
+    fi
 
-# Build a Custom Truststore
-#echo "Building a custom truststore..."
-# Install Java if not present 
-#if ! command -v java &> /dev/null; then
-#    echo "Java is not installed. Installing Java..."
-#    if [[ "$OSTYPE" == "darwin"* ]]; then
-#        # Mac OS
-#        brew install openjdk
-#    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-#        # Ubuntu or WSL
-#        sudo apt-get install openjdk
-#    fi
-#fi
+    # Backup secrets.env before updating
+    cp secrets.env secrets.env.old
+    # Replace placeholders in secrets.env
+    sed -i.bak "s|TLS_CERT=.*|TLS_CERT=${TLS_CERT}|g" secrets.env
+    sed -i.bak "s|TLS_KEY=.*|TLS_KEY=${TLS_KEY}|g" secrets.env
 
-#JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
-#cp ${JAVA_HOME}/lib/security/cacerts ${JAVA_HOME}/lib/security/cacertsbackup
-#keytool -import -trustcacerts -alias tibco-plat-test -file ${CA_CRT} -keystore ${JAVA_HOME}/lib/security/cacerts -storepass changeit -noprompt
-#echo "Custom truststore built successfully."
+    # Clean up backup file created by sed
+    rm secrets.env.bak
+
+    echo "secrets.env file has been updated with the TLS certificate and key."
+}
+
+create_k8s_secret
+#update_secrets_env
+
+add_ca_to_os_trust_store() {
+    echo "Adding CA certificate to your OS trust store..."
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "Adding CA certificate to Mac OS trust store..."
+        sudo security add-trusted-cert -d -r trustRoot -p ssl -k /Library/Keychains/System.keychain ${CA_PEM}
+    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        echo "Adding CA certificate to Linux trust store..."
+        sudo cp ${CA_PEM} /usr/local/share/ca-certificates/ca-tibco-plat.crt
+        sudo update-ca-certificates
+    fi
+}
+
+build_custom_truststore() {
+    echo "Building a custom truststore..."
+    # Install Java if not present 
+    if ! command -v java &> /dev/null; then
+        echo "Java is not installed. Installing Java..."
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            # Mac OS
+            brew install openjdk
+        elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+            # Ubuntu or WSL
+            sudo apt-get install openjdk
+        fi
+    fi
+
+    JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
+    cp ${JAVA_HOME}/lib/security/cacerts ${JAVA_HOME}/lib/security/cacertsbackup
+    keytool -import -trustcacerts -alias tibco-plat-test -file ${CA_CRT} -keystore ${JAVA_HOME}/lib/security/cacerts -storepass changeit -noprompt
+    echo "Custom truststore built successfully."
+}
+
+#add_ca_to_os_trust_store
+#build_custom_truststore
 
 
 echo "Certificates generated successfully."
