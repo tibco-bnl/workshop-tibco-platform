@@ -72,56 +72,57 @@ EOF
 
 install_prometheus() {
     echo "Install Prometheus Stack"
-    cat <<EOF | envsubst '${TP_DOMAIN},${TP_INGRESS_CLASS}' | helm upgrade --install --wait --create-namespace --reuse-values \
-        -n prometheus-system kube-prometheus-stack kube-prometheus-stack \
-        --labels layer=2 \
-        --repo "https://prometheus-community.github.io/helm-charts" --version "48.3.4" -f -
+helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
+  -n prometheus-system kube-prometheus-stack kube-prometheus-stack \
+  --labels layer=2 \
+  --repo "https://prometheus-community.github.io/helm-charts" --version "48.3.4" -f <(envsubst '${TP_DOMAIN}, ${TP_INGRESS_CLASS}' <<'EOF'
 grafana:
-    plugins:
-        - grafana-piechart-panel
-    ingress:
-        enabled: true
-        ingressClassName: ${TP_INGRESS_CLASS}
-        hosts:
-        - grafana.${TP_DOMAIN}
+  plugins:
+    - grafana-piechart-panel
+  ingress:
+    enabled: true
+    ingressClassName: ${TP_INGRESS_CLASS}
+    hosts:
+    - grafana.${TP_DOMAIN}
 prometheus:
-    prometheusSpec:
-        enableRemoteWriteReceiver: true
-        remoteWriteDashboards: true
-        additionalScrapeConfigs:
-        - job_name: otel-collector
-          kubernetes_sd_configs:
-          - role: pod
-          relabel_configs:
-          - action: keep
-            regex: "true"
-            source_labels:
-            - __meta_kubernetes_pod_label_prometheus_io_scrape
-          - action: keep
-            regex: "infra"
-            source_labels:
-            - __meta_kubernetes_pod_label_platform_tibco_com_workload_type
-          - action: keepequal
-            source_labels: [__meta_kubernetes_pod_container_port_number]
-            target_label: __meta_kubernetes_pod_label_prometheus_io_port
-          - action: replace
-            regex: ([^:]+)(?::\d+)?;(\d+)
-            replacement: $1:$2
-            source_labels:
-            - __address__
-            - __meta_kubernetes_pod_label_prometheus_io_port
-            target_label: __address__
-          - source_labels: [__meta_kubernetes_pod_label_prometheus_io_path]
-            action: replace
-            target_label: __metrics_path__
-            regex: (.+)
-            replacement: /$1
-    ingress:
-        enabled: true
-        ingressClassName: ${TP_INGRESS_CLASS}
-        hosts:
-        - prometheus-internal.${TP_DOMAIN}
+  prometheusSpec:
+    enableRemoteWriteReceiver: true
+    remoteWriteDashboards: true
+    additionalScrapeConfigs:
+    - job_name: otel-collector
+      kubernetes_sd_configs:
+      - role: pod
+      relabel_configs:
+      - action: keep
+        regex: "true"
+        source_labels:
+        - __meta_kubernetes_pod_label_prometheus_io_scrape
+      - action: keep
+        regex: "infra"
+        source_labels:
+        - __meta_kubernetes_pod_label_platform_tibco_com_workload_type
+      - action: keepequal
+        source_labels: [__meta_kubernetes_pod_container_port_number]
+        target_label: __meta_kubernetes_pod_label_prometheus_io_port
+      - action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        source_labels:
+        - __address__
+        - __meta_kubernetes_pod_label_prometheus_io_port
+        target_label: __address__
+      - source_labels: [__meta_kubernetes_pod_label_prometheus_io_path]
+        action: replace
+        target_label: __metrics_path__
+        regex: (.+)
+        replacement: /$1
+  ingress:
+    enabled: true
+    ingressClassName: ${TP_INGRESS_CLASS}
+    hosts:
+    - prometheus-internal.${TP_DOMAIN}
 EOF
+)
 
     echo "Use this command to get the host URL for Kibana"
     kubectl get ingress -n prometheus-system kube-prometheus-stack-grafana -oyaml | yq eval '.spec.rules[0].host' && echo
