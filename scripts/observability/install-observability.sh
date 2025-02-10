@@ -122,7 +122,6 @@ prometheus:
         hosts:
         - prometheus-internal.${TP_DOMAIN}
 EOF
-    )
 
     echo "Use this command to get the host URL for Kibana"
     kubectl get ingress -n prometheus-system kube-prometheus-stack-grafana -oyaml | yq eval '.spec.rules[0].host' && echo
