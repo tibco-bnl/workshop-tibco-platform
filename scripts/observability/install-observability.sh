@@ -1,3 +1,5 @@
+#!/bin/bash
+
 ## Cluster configuration specific variables
 export TP_CLUSTER_NAME="minikube" # name of the cluster to be provisioned, used for chart deployment
 #export KUBECONFIG=`pwd`/${TP_CLUSTER_NAME}.yaml # kubeconfig saved as cluster name yaml
@@ -19,20 +21,21 @@ export TP_NETWORK_POLICY="" # possible values "" (to disable network policy), "c
 #export TP_STORAGE_ACCOUNT_NAME="" # replace with name of existing storage account to be used for azure file shares
 #export TP_STORAGE_ACCOUNT_RESOURCE_GROUP="" # replace with name of storage account resource group
 
-echo "Install nginx ingress controller if not installed already"
-kubectl get pods -n ingress-system | grep nginx-ingress-controller || helm upgrade --install --wait --timeout 1h --create-namespace -n ingress-system nginx ingress-nginx --repo "https://kubernetes.github.io/ingress-nginx" --version "4.0.0"
+install_nginx() {
+    echo "Install nginx ingress controller if not installed already"
+    kubectl get pods -n ingress-system | grep nginx-ingress-controller || helm upgrade --install --wait --create-namespace -n ingress-system nginx ingress-nginx --repo "https://kubernetes.github.io/ingress-nginx" --version "4.10.1"
+    kubectl get ingressclass -A
+}
 
-kubectl get ingressclass -A
+install_elastic() {
+    echo "Install Elastic stack"
+    helm upgrade --install --wait --labels layer=1 --create-namespace -n elastic-system eck-operator eck-operator --repo "https://helm.elastic.co" --version "2.9.0"
 
-echo "Install Elastic stack"
-
-helm upgrade --install --wait --timeout 1h --labels layer=1 --create-namespace -n elastic-system eck-operator eck-operator --repo "https://helm.elastic.co" --version "2.9.0"
-
-# install dp-config-es
-helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
-    -n elastic-system ${TP_ES_RELEASE_NAME} dp-config-es \
-    --labels layer=2 \
-    --repo "${TP_TIBCO_HELM_CHART_REPO}" --version "1.0.17" -f - <<EOF
+    # install dp-config-es
+    helm upgrade --install --wait --create-namespace --reuse-values \
+        -n elastic-system ${TP_ES_RELEASE_NAME} dp-config-es \
+        --labels layer=2 \
+        --repo "${TP_TIBCO_HELM_CHART_REPO}" --version "1.0.17" -f - <<EOF
 domain: ${TP_DOMAIN}
 es:
     version: "8.9.1"
@@ -54,27 +57,25 @@ apm:
         service: ${TP_ES_RELEASE_NAME}-apm-http
 EOF
 
-echo "Kibana URL"
-kubectl get ingress -n elastic-system ${TP_ES_RELEASE_NAME}-kb-http -o jsonpath='{.spec.rules[0].host}' && echo
+    echo "Kibana URL"
+    kubectl get ingress -n elastic-system ${TP_ES_RELEASE_NAME}-kb-http -o jsonpath='{.spec.rules[0].host}' && echo
 
-echo "Elasticsearch Username"
-kubectl get secret -n elastic-system ${TP_ES_RELEASE_NAME}-es-elastic-user -o jsonpath='{.data.elastic}' | base64 --decode && echo
+    echo "Elasticsearch Username"
+    kubectl get secret -n elastic-system ${TP_ES_RELEASE_NAME}-es-elastic-user -o jsonpath='{.data.elastic}' | base64 --decode && echo
 
-echo "Elasticsearch Password"
-kubectl get secret -n elastic-system ${TP_ES_RELEASE_NAME}-es-elastic-user -o jsonpath='{.data.password}' | base64 --decode && echo
+    echo "Elasticsearch Password"
+    kubectl get secret -n elastic-system ${TP_ES_RELEASE_NAME}-es-elastic-user -o jsonpath='{.data.password}' | base64 --decode && echo
 
-echo "APM URL"
-kubectl get ingress -n elastic-system ${TP_ES_RELEASE_NAME}-apm-http -o jsonpath='{.spec.rules[0].host}' && echo
+    echo "APM URL"
+    kubectl get ingress -n elastic-system ${TP_ES_RELEASE_NAME}-apm-http -o jsonpath='{.spec.rules[0].host}' && echo
+}
 
-echo "\n"
-echo "-----------------------------"
-echo "Install Prometheus Stack"
-
-# install prometheus stack
-helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
-    -n prometheus-system kube-prometheus-stack kube-prometheus-stack \
-    --labels layer=2 \
-    --repo "https://prometheus-community.github.io/helm-charts" --version "48.3.4" -f <(envsubst '${TP_DOMAIN}, ${TP_INGRESS_CLASS}' <<'EOF'
+install_prometheus() {
+    echo "Install Prometheus Stack"
+    helm upgrade --install --wait --create-namespace --reuse-values \
+        -n prometheus-system kube-prometheus-stack kube-prometheus-stack \
+        --labels layer=2 \
+        --repo "https://prometheus-community.github.io/helm-charts" --version "48.3.4" -f <(envsubst '${TP_DOMAIN}, ${TP_INGRESS_CLASS}' <<'EOF'
 grafana:
     plugins:
         - grafana-piechart-panel
@@ -121,13 +122,52 @@ prometheus:
         hosts:
         - prometheus-internal.${TP_DOMAIN}
 EOF
-)
+    )
 
-echo "Use this command to get the host URL for Kibana"
-kubectl get ingress -n prometheus-system kube-prometheus-stack-grafana -oyaml | yq eval '.spec.rules[0].host' && echo
+    echo "Use this command to get the host URL for Kibana"
+    kubectl get ingress -n prometheus-system kube-prometheus-stack-grafana -oyaml | yq eval '.spec.rules[0].host' && echo
 
-echo "The username is admin. And Prometheus Operator use fixed password: prom-operator."
+    echo "The username is admin. And Prometheus Operator use fixed password: prom-operator."
 
-echo "You can get BASE_FQDN (fully qualified domain name) by running the following command:"
+    echo "You can get BASE_FQDN (fully qualified domain name) by running the following command:"
+    kubectl get ingress -n ingress-system nginx |  awk 'NR==2 { print $3 }' && echo
+}
 
-kubectl get ingress -n ingress-system nginx |  awk 'NR==2 { print $3 }' && echo
+port_forward() {
+    # Port forward Elastic, Kibana, Grafana, Prometheus
+    echo "Port forward Elastic, Kibana, Grafana, Prometheus"
+    kubectl port-forward -n elastic-system svc/${TP_ES_RELEASE_NAME}-es-http 9200:9200 &
+    kubectl port-forward -n elastic-system svc/${TP_ES_RELEASE_NAME}-kb-http 5601:5601 &
+    kubectl port-forward -n prometheus-system svc/kube-prometheus-stack-grafana 3000:80 &
+    kubectl port-forward -n prometheus-system svc/kube-prometheus-stack-prometheus 9090:9090 &
+
+    echo "All URLS: "
+    echo "Elasticsearch: http://localhost:9200"
+    echo "Kibana: http://localhost:5601"
+    echo "Grafana: http://localhost:3000"
+    echo "Prometheus: http://localhost:9090"
+}
+
+case "$1" in
+    all)
+        install_nginx
+        install_elastic
+        install_prometheus
+        ;;
+    nginx)
+        install_nginx
+        ;;
+    elastic)
+        install_elastic
+        ;;
+    prometheus)
+        install_prometheus
+        ;;
+    port-forward)
+        port_forward
+        ;;
+    *)
+        echo "Usage: $0 {all|nginx|elastic|prometheus|port-forward}"
+        exit 1
+        ;;
+esac
