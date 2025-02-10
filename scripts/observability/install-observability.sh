@@ -90,32 +90,32 @@ prometheus:
         remoteWriteDashboards: true
         additionalScrapeConfigs:
         - job_name: otel-collector
-            kubernetes_sd_configs:
-            - role: pod
-            relabel_configs:
-            - action: keep
-                regex: "true"
-                source_labels:
-                - __meta_kubernetes_pod_label_prometheus_io_scrape
-            - action: keep
-                regex: "infra"
-                source_labels:
-                - __meta_kubernetes_pod_label_platform_tibco_com_workload_type
-            - action: keepequal
-                source_labels: [__meta_kubernetes_pod_container_port_number]
-                target_label: __meta_kubernetes_pod_label_prometheus_io_port
-            - action: replace
-                regex: ([^:]+)(?::\d+)?;(\d+)
-                replacement: $1:$2
-                source_labels:
-                - __address__
-                - __meta_kubernetes_pod_label_prometheus_io_port
-                target_label: __address__
-            - source_labels: [__meta_kubernetes_pod_label_prometheus_io_path]
-                action: replace
-                target_label: __metrics_path__
-                regex: (.+)
-                replacement: /$1
+          kubernetes_sd_configs:
+          - role: pod
+          relabel_configs:
+          - action: keep
+            regex: "true"
+            source_labels:
+            - __meta_kubernetes_pod_label_prometheus_io_scrape
+          - action: keep
+            regex: "infra"
+            source_labels:
+            - __meta_kubernetes_pod_label_platform_tibco_com_workload_type
+          - action: keepequal
+            source_labels: [__meta_kubernetes_pod_container_port_number]
+            target_label: __meta_kubernetes_pod_label_prometheus_io_port
+          - action: replace
+            regex: ([^:]+)(?::\d+)?;(\d+)
+            replacement: $1:$2
+            source_labels:
+            - __address__
+            - __meta_kubernetes_pod_label_prometheus_io_port
+            target_label: __address__
+          - source_labels: [__meta_kubernetes_pod_label_prometheus_io_path]
+            action: replace
+            target_label: __metrics_path__
+            regex: (.+)
+            replacement: /$1
     ingress:
         enabled: true
         ingressClassName: ${TP_INGRESS_CLASS}
