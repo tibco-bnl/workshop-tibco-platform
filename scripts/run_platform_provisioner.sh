@@ -249,8 +249,23 @@ echo ""
 echo "Update coredns configuration"
 echo ""
 ./dev/platform-provisioner-pipelinerun.sh
+echo "Done"
+echo "Next step: Install Observability"
+
+enter_to_continue
+
+# Install Observability 
+export PIPELINE_NAME="helm-install"
+export PIPELINE_INPUT_RECIPE="$WORKSHOP_BASE_DIR/docs/recipes/observability/tp-observability-$KUBE_CONTEXT.yaml"
 echo ""
 echo ""
+echo "Install Observability ... "
+echo ""
+./dev/platform-provisioner-pipelinerun.sh
+echo "Done"
+echo "Next Step: Port forward. For observability portforwarnding you can use script scripts/observability/port_forward.sh with right option."
+
+enter_to_continue
 
 $WORKSHOP_SCRIPT_DIR/port_forwarder.sh ingress $KUBE_CONTEXT
 
