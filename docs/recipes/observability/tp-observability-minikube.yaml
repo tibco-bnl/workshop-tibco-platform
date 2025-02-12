@@ -1,0 +1,169 @@
+apiVersion: v1
+kind: helm-install
+meta:
+  guiEnv:
+    note: deploy-o11y-stack
+    GUI_TP_CHART_REPO: https://tibcosoftware.github.io/tp-helm-charts
+    GUI_TP_CHART_REPO_USER_NAME: ''
+    GUI_TP_CHART_REPO_TOKEN: ''
+    GUI_TP_INGRESS_CLASS: nginx
+    GUI_TP_DOMAIN: localhost.dataplanes.pro
+    GUI_TP_STORAGE_CLASS: standard
+    GUI_TP_CONFIG_ES_NAMESPACE: elastic-system
+    GUI_TP_ES_RELEASE_NAME: dp-config-es
+    GUI_TP_ECK_VERSION: 2.16.0
+    GUI_TP_CONFIG_ES_VERSION: 8.17.0
+    GUI_TP_CONFIG_CHART_VERSION: ^1.0.0
+    GUI_TP_CONFIG_ES_KIBANA_COUNT: 1
+    GUI_TP_KUBE_PROMETHEUS_STACK_VERSION: 67.5.0
+    GUI_TP_KUBE_PROMETHEUS_STACK_ENABLE_GRAFANA: false
+    GUI_TP_DEPLOY_ECK: true
+    GUI_TP_DEPLOY_PROMETHEUS_STACK: true
+    GUI_TP_DEPLOY_OPEN_TELEMETRY_COLLECTOR: true
+    GUI_PIPELINE_LOG_DEBUG: true
+  globalEnvVariable:
+    REPLACE_RECIPE: true
+    PIPELINE_LOG_DEBUG: ${GUI_PIPELINE_LOG_DEBUG:-false}
+    PIPELINE_CHECK_DOCKER_STATUS: false
+    TP_CHART_REPO: ${GUI_TP_CHART_REPO:-https://tibcosoftware.github.io/tp-helm-charts}
+    TP_CHART_REPO_USER_NAME: ${GUI_TP_CHART_REPO_USER_NAME}
+    TP_CHART_REPO_TOKEN: ${GUI_TP_CHART_REPO_TOKEN}
+    TP_DOMAIN: ${GUI_TP_DOMAIN}
+    TP_INGRESS_CLASS: ${GUI_TP_INGRESS_CLASS}
+    TP_STORAGE_CLASS: ${GUI_TP_STORAGE_CLASS}
+    TP_ES_RELEASE_NAME: ${GUI_TP_ES_RELEASE_NAME:-dp-config-es}
+    TP_CONFIG_CHART_VERSION: ${GUI_TP_CONFIG_CHART_VERSION}
+    TP_CONFIG_ES_VERSION: ${GUI_TP_CONFIG_ES_VERSION}
+    TP_CONFIG_ES_NAMESPACE: ${GUI_TP_CONFIG_ES_NAMESPACE}
+    TP_CONFIG_ES_KIBANA_COUNT: ${GUI_TP_CONFIG_ES_KIBANA_COUNT:-0}
+    TP_ECK_VERSION: ${GUI_TP_ECK_VERSION}
+    TP_KUBE_PROMETHEUS_STACK_VERSION: ${GUI_TP_KUBE_PROMETHEUS_STACK_VERSION}
+    TP_KUBE_PROMETHEUS_STACK_ENABLE_GRAFANA: ${GUI_TP_KUBE_PROMETHEUS_STACK_ENABLE_GRAFANA:-false}
+    TP_DEPLOY_ECK: ${GUI_TP_DEPLOY_ECK:-true}
+    TP_DEPLOY_PROMETHEUS_STACK: ${GUI_TP_DEPLOY_PROMETHEUS_STACK:-true}
+    TP_DEPLOY_OPEN_TELEMETRY_COLLECTOR: ${GUI_TP_DEPLOY_OPEN_TELEMETRY_COLLECTOR:-true}
+  tools:
+    yq: '4.40'
+helmCharts:
+  - name: eck-operator
+    version: ${TP_ECK_VERSION}
+    condition: ${TP_DEPLOY_ECK}
+    namespace: elastic-system
+    releaseName: eck-operator
+    repo:
+      helm:
+        url: https://helm.elastic.co
+    cluster:
+      names:
+        - ${TP_CLUSTER_NAME}
+    flags:
+      wait: true
+      timeout: 1h
+      createNamespace: true
+  - name: dp-config-es
+    version: ${TP_CONFIG_CHART_VERSION}
+    condition: ${TP_DEPLOY_ECK}
+    namespace: elastic-system
+    releaseName: ${TP_ES_RELEASE_NAME}
+    repo:
+      helm:
+        url: ${TP_CHART_REPO}
+        username: ${TP_CHART_REPO_USER_NAME}
+        password: ${TP_CHART_REPO_TOKEN}
+    values:
+      keepPrevious: true
+      content: |
+        domain: ${TP_DOMAIN}
+        es:
+          version: "${TP_CONFIG_ES_VERSION}"
+          ingress:
+            ingressClassName: ${TP_INGRESS_CLASS}
+            service: ${TP_ES_RELEASE_NAME}-es-http
+          storage:
+            name: ${TP_STORAGE_CLASS}
+        kibana:
+          count: ${TP_CONFIG_ES_KIBANA_COUNT}
+          version: "${TP_CONFIG_ES_VERSION}"
+          ingress:
+            ingressClassName: ${TP_INGRESS_CLASS}
+            service: ${TP_ES_RELEASE_NAME}-kb-http
+        apm:
+          enabled: true
+          version: "${TP_CONFIG_ES_VERSION}"
+          ingress:
+            ingressClassName: ${TP_INGRESS_CLASS}
+            service: ${TP_ES_RELEASE_NAME}-apm-http
+    cluster:
+      names:
+        - ${TP_CLUSTER_NAME}
+    flags:
+      wait: true
+      timeout: 1h
+      createNamespace: true
+  - name: kube-prometheus-stack
+    version: ${TP_KUBE_PROMETHEUS_STACK_VERSION}
+    condition: ${TP_DEPLOY_PROMETHEUS_STACK}
+    releaseName: kube-prometheus-stack
+    namespace: prometheus-system
+    repo:
+      helm:
+        url: https://prometheus-community.github.io/helm-charts
+    values:
+      keepPrevious: true
+      content: |
+        grafana:
+          enabled: ${TP_KUBE_PROMETHEUS_STACK_ENABLE_GRAFANA}
+          plugins:
+            - grafana-piechart-panel
+          ingress:
+            enabled: true
+            ingressClassName: ${TP_INGRESS_CLASS}
+            hosts:
+            - grafana.${TP_DOMAIN}
+        prometheus-node-exporter:
+          hostRootFsMount: 
+            enabled: false
+        prometheus:
+          prometheusSpec:
+            enableRemoteWriteReceiver: true
+            remoteWriteDashboards: true
+            additionalScrapeConfigs:
+            - job_name: otel-collector
+              kubernetes_sd_configs:
+              - role: pod
+              relabel_configs:
+              - action: keep
+                regex: "true"
+                source_labels:
+                - __meta_kubernetes_pod_label_prometheus_io_scrape
+              - action: keep
+                regex: "infra"
+                source_labels:
+                - __meta_kubernetes_pod_label_platform_tibco_com_workload_type
+              - action: keepequal
+                source_labels: [__meta_kubernetes_pod_container_port_number]
+                target_label: __meta_kubernetes_pod_label_prometheus_io_port
+              - action: replace
+                regex: ([^:]+)(?::\d+)?;(\d+)
+                replacement: $1:$2
+                source_labels:
+                - __address__
+                - __meta_kubernetes_pod_label_prometheus_io_port
+                target_label: __address__
+              - source_labels: [__meta_kubernetes_pod_label_prometheus_io_path]
+                action: replace
+                target_label: __metrics_path__
+                regex: (.+)
+                replacement: /$1
+          ingress:
+            enabled: true
+            ingressClassName: ${TP_INGRESS_CLASS}
+            hosts:
+            - prometheus-internal.${TP_DOMAIN}
+    cluster:
+      names:
+        - ${TP_CLUSTER_NAME}
+    flags:
+      wait: true
+      timeout: 1h
+      createNamespace: true

@@ -136,16 +136,31 @@ EOF
 port_forward() {
     # Port forward Elastic, Kibana, Grafana, Prometheus
     echo "Port forward Elastic, Kibana, Grafana, Prometheus"
-    kubectl port-forward -n elastic-system svc/${TP_ES_RELEASE_NAME}-es-http 9200:9200 &
-    kubectl port-forward -n elastic-system svc/${TP_ES_RELEASE_NAME}-kb-http 5601:5601 &
-    kubectl port-forward -n prometheus-system svc/kube-prometheus-stack-grafana 3000:80 &
-    kubectl port-forward -n prometheus-system svc/kube-prometheus-stack-prometheus 9090:9090 &
+
+     nohup sudo kubectl port-forward -n elastic-system --address 0.0.0.0 svc/${TP_ES_RELEASE_NAME}-es-http 9200:9200 &  >/dev/null 2>&1 &
+     nohup sudo kubectl port-forward -n elastic-system --address 0.0.0.0 svc/${TP_ES_RELEASE_NAME}-kb-http 5601:5601 &  >/dev/null 2>&1 &
+     nohup sudo kubectl port-forward -n prometheus-system --address 0.0.0.0 svc/kube-prometheus-stack-grafana 3000:80 & >/dev/null 2>&1 &
+     nohub sudo kubectl port-forward -n prometheus-system --address 0.0.0.0 svc/kube-prometheus-stack-prometheus 9090:9090 & >/dev/null 2>&1 &
 
     echo "All URLS: "
     echo "Elasticsearch: http://localhost:9200"
     echo "Kibana: http://localhost:5601"
     echo "Grafana: http://localhost:3000"
     echo "Prometheus: http://localhost:9090"
+
+    echo "To stop the port forwarding, run the following commands:"
+    echo "kill elastic $(lsof -t -i:9200)"
+    echo "kill kibana $(lsof -t -i:5601)"
+    echo "kill grafana $(sudo lsof -t -i:3000)"
+    echo "kill prometheus $(sudo lsof -t -i:9090)"
+
+     echo "Elastic url to use in DP: https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200"
+    echo "For Kibana username is elastic and password "
+    kubectl get secret -n elastic-system dp-config-es-es-elastic-user -o jsonpath='{.data.elastic}' | base64 --decode && echo
+
+    echo "For Prometheus username password"
+    echo "Username: admin"
+    echo "Password: prom-operator"
 }
 
 case "$1" in
