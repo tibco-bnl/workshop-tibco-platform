@@ -65,7 +65,7 @@ a) Click (in the navigator on the left) on 'subscriptions' and click the button 
 
 ![](../images/provision-subscription.png)
 
-b) Enter the data of the administrator (this is an other administrator than the one you created for the control plane!!) of the subscription and click the button 'next'. Make note of the email address used.<br>
+b) Enter the data of the administrator of the subscription and click the button 'next'. Make note of the email address used.<br>
 
 ![](../images/subscription1.png)
 
@@ -142,7 +142,7 @@ Please note that the subscription only has one user (the administrator created i
 
 ![](../images/users-menu.png)
 
-Step 4.3: Update permissions
+Step 4.2: Update permissions
 
 a) Select the dots behind the administrator and select 'update permissions.<br>
 

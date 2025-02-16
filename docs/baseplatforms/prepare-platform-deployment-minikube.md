@@ -13,7 +13,9 @@ sudo install minikube-linux-amd64 /usr/local/bin/minikube && rm minikube-linux-a
 ```
 
 ## Step 2: Install required software
-Run the following commands to install required software:
+Install required software.
+
+Step 2.1: Run the following commands to install required software:
 
 ```bash
 sudo snap install yq
@@ -21,6 +23,21 @@ sudo snap install helm --classic
 sudo snap install kubectl --classic
 sudo snap install code --classic
 ```
+
+Step 2.2: Install Visual Studio. 
+
+For AWS and Azure run the following command:
+
+```bash
+sudo snap install code --classic
+```
+
+For WSL install Visual Code install:
+1. Visual Studio Code (for Windows or Mac). See [here](https://code.visualstudio.com/download).
+2. Startup Visual Studio Code and install the plugins 'Kubernetes Plugin'. 
+
+![Install the plugin](../images/vs-extensions.png)
+
 
 ## Step 3: Install docker engine
 
@@ -87,15 +104,13 @@ minikube start --cpus 8 --memory 24576 --disk-size "40g" \
 
 Please mind: 
 (1) If you have more processors and ram, modify the parameters --cpu and --memory, but always leave 8 GB of ram for other purposes.
-(2) Make sure you have at least 8 processors an 10 GB of RAM.
 
 ## Step 5: Increase the maximum number of files for the current user
 
 
 ```bash
-sudo sysctl -w fs.inotify.max_user_watches=524288
-sudo sysctl -w fs.inotify.max_user_instances=8192
-sudo sysctl -p
+sudo sh -c 'echo "fs.inotify.max_user_watches = 524288\nfs.inotify.max_user_instances = 8192" > /etc/sysctl.d/inotify.conf && sysctl -p /etc/sysctl.d/inotify.conf'
+sudo sysctl -p /etc/sysctl.d/inotify.conf
 ```
 
 

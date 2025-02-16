@@ -78,7 +78,10 @@ DON'T HIT [enter] AGAIN!! Proceed to step 5 (first).
 ## Step 5: Monitor progress of the installation
 The progress of the installation process can be monitored via the GUI of the platform provisioner. Use this tool to check progress before proceeding. 
 
-Step 5.1: Open the firefox browser in the remote desktop session. When using wsl, open a browser on you laptap.
+Step 5.1: Open a browser
+
+For WSL: Open a browser on your host machine
+For Azure and AWS: Open the firefox browser in the remote desktop session. When using wsl, open a browser on you laptap.
 
 Step 5.2: Open the following URL 
 ```bash
@@ -124,7 +127,7 @@ Waiting for helm-install pipeline run to complete...
 
 DON'T HIT [enter] AGAIN!! Go back to your browser and monitor the progress of the job. Only progress to step 7 after the helm script finished. Please refresh the browser to get a overview of the running jobs.
 
-## Step 7: Finish the setup
+## Step 7: Do something
 
 Step 7.1: Press [enter] and wait for the following prompt:
 
@@ -145,15 +148,21 @@ Step 7.2: Enter the requested password
 To access the Platform Control Plane Admin UI and the MailDev UI portforwarding to the ingress controller is required when running in minikube.
 For this the root user needs to be configured with the kube config.
 
+Step 8.1: su to root
+
+```
+sudo su -
+```
 
 Step 8.1: Run the following script:
 
 ```
-sudo mkdir -p /root/.kube
-sudo cp ~/.kube/config /root/.kube/config
+mkdir -p $HOME/.kube
+cp /home/tibco/.kube/config .kube/config
+exit
 ```
 
 Step 8.2: Setup port forwarding using the following command:
 
 ```
-sudo kubectl port-forward -n ingress-system --address 0.0.0.0 service/ingress-nginx-controller 80:http 443:https &
+sudo kubectl port-forward -n ingress-system --address 0.0.0.0 service/ingress-nginx-controller 80:http 443:https
