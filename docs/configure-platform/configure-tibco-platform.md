@@ -19,7 +19,10 @@ Step 1.1: Open the mail environment<br>
 During the configuration of the platform a number of mails are sent (to newly created users). In order to facilitate this process in the sandbox environment a mail server is provisioned.
 
 
-Open the following URL in a webbrowser in Windows: https://mail.localhost.dataplanes.pro/
+Open the following URL chrome: https://mail.localhost.dataplanes.pro/
+
+
+PLEASE MIND: you may get a warning that the TLS certificate is not trusted. This is the case if you use a self-signed certificate. If that is the case click anywhere on the webpage and type 'thisisunsafe'. 
 
 ![](../images/mailserver.png)
 
