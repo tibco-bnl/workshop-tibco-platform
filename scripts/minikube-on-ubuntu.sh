@@ -67,7 +67,7 @@ install_prerequisites() {
 # Function to start Minikube
 start_minikube() {
     echo "Starting Minikube..."
-    minikube start --cpus 8 --memory 15360 --disk-size "40g" --driver=docker --addons storage-provisioner --kubernetes-version "1.30.0 --extra-config=kubelet.max-pods=500" 
+    minikube start --cpus 8 --memory 15360 --disk-size "40g" --driver=docker --addons storage-provisioner --kubernetes-version "1.30.0" --extra-config=kubelet.max-pods=500
 }
 
 # Function to display common Minikube commands
