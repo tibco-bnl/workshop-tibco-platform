@@ -19,25 +19,36 @@ git clone https://github.com/tibco-bnl/workshop-tibco-platform
 
 ## Step 3: Provide security keys
 
-Step 3.1: Open the secrets file
+Step 3.1 Set the TLS certificates (to be used for the network tunnel between the Control Plane and the Data Plane).
+
+Run the following to set the TLS certidicates 
 ```bash
 cd ~/projects/platform-dev/workshop-tibco-platform/scripts
 cp secrets.envEmpty secrets.env
+cd ~/projects/platform-dev
+chmod +x ~/projects/platform-dev/workshop-tibco-platform/scripts/generate_cert.sh
+./workshop-tibco-platform/scripts/generate_cert.sh
+```
+
+
+Step 3.2: Open the secrets file in ~/projects/platform-dev/workshop-tibco-platform/scripts with visual code:
+```bash
 cd ~/projects/platform-dev/workshop-tibco-platform
 code .
 ```
 
-Step 3.2
-a) Edit the file scripts-->secrets.env
-b) Replace the variables 
-- TLS_CERT
-- TLS_KEY
-- CONTAINER_REGISTRY_PASSWORD
+
+Step 3.3: 
+
+a) Set the variable: CONTAINER_REGISTRY_PASSWORD
 
 Values can be found in document https://docs.google.com/document/d/1f39d0_L6iRpEPjJggYFJrL3oVAtDyPdVbOnjmzU7E0E/edit?tab=t.l6dihjhx60qc#heading=h.8ir76m4dmdxu  (only for TIBCO staff)
 
-c) save the file
-d) exit Visual Code
+Remark: alternatively it is possible to use publicly signed certificates instead if self signed certificates generated in step 3.1. The publicly signed certificates can be found in: https://docs.google.com/document/d/1f39d0_L6iRpEPjJggYFJrL3oVAtDyPdVbOnjmzU7E0E/edit?tab=t.l6dihjhx60qc#heading=h.8ir76m4dmdxu (TIBCO STAFF ONLY)
+
+
+b) save the file
+c) exit Visual Code
 
 
 ![Login](../images/replace.png)
@@ -78,7 +89,10 @@ DON'T HIT [enter] AGAIN!! Proceed to step 5 (first).
 ## Step 5: Monitor progress of the installation
 The progress of the installation process can be monitored via the GUI of the platform provisioner. Use this tool to check progress before proceeding. 
 
-Step 5.1: Open the firefox browser in the remote desktop session. When using wsl, open a browser on you laptap.
+Step 5.1: Open a browser
+
+For WSL: Open a browser on your host machine
+For Azure and AWS: Open the firefox browser in the remote desktop session. When using wsl, open a browser on you laptap.
 
 Step 5.2: Open the following URL 
 ```bash
@@ -96,6 +110,14 @@ This will provide the log of the running job. Wait until the job finished succes
 ![Filter](../images/progresslog.png)
 
 When the job is finished, go back the console and go to step 6.
+
+Remark: if anything goes wrong please go to the Tekton dashboard at:
+
+```bash
+http://localhost:9097/
+```
+
+
 
 ## Step 6: Install the Control Plane
 
@@ -124,36 +146,71 @@ Waiting for helm-install pipeline run to complete...
 
 DON'T HIT [enter] AGAIN!! Go back to your browser and monitor the progress of the job. Only progress to step 7 after the helm script finished. Please refresh the browser to get a overview of the running jobs.
 
-## Step 7: Finish the setup
-
+## Step 7: Configure DNS and install observability
 Step 7.1: Press [enter] and wait for the following prompt:
 
 ```bash
 Update coredns configuration
 
-create tekton generic-runner pipelinerun on-prem-80 for admin
-pipelinerun.tekton.dev/generic-runner-on-prem-80 created
-
-
-Port forwarding 443 and 80 for minikube which only root user can do for minikube
-
+create tekton generic-runner pipelinerun on-prem-34 for admin
+pipelinerun.tekton.dev/generic-runner-on-prem-34 created
+Done
+Next step: Install Observability
 ```
-Step 7.2: Enter the requested password
+
+Step 7.2: Go back to your browser and monitor the progress of the job. Only progress to the next step after the helm script finished. Please refresh the browser to get a overview of the running jobs.
+
+Step 7.3: Press [enter] and wait for the following prompt:
+```bash
+Install Observability ...
+
+create tekton helm-install pipelinerun on-prem-20 for admin
+pipelinerun.tekton.dev/helm-install-on-prem-20 created
+Done
+Next Step: Port forward. For observability portforwarnding you can use script scripts/observability/port_forward.sh with right option.
+Press [Enter] key to continue...
+```
+
+Step 7.4: Go back to your browser and monitor the progress of the job. Only progress to the next step after the helm script finished. Please refresh the browser to get a overview of the running jobs.
+
+Step 7.5: Press [enter] and wait for the following prompt:
+```bash
+Install Observability ...
+
+create tekton helm-install pipelinerun on-prem-20 for admin
+pipelinerun.tekton.dev/helm-install-on-prem-20 created
+Done
+Next Step: Port forward. For observability portforwarnding you can use script scripts/observability/port_forward.sh with right option.
+Press [Enter] key to continue...
+```
+
+Step 7.5: Press [enter], provide your password and press [enter] again.
+This will finish the script.
+
 
 ## Step 8: Setup port forwarding (Only for minikube)
 
 To access the Platform Control Plane Admin UI and the MailDev UI portforwarding to the ingress controller is required when running in minikube.
 For this the root user needs to be configured with the kube config.
 
+Step 8.1: su to root
+
+```bash
+sudo su -
+```
 
 Step 8.1: Run the following script:
 
-```
-sudo mkdir -p /root/.kube
-sudo cp ~/.kube/config /root/.kube/config
+Replace <userid> with the userID that you used to login. For AWS and Azure this will be 'tibco'. For WSL it may be another user.
+
+```bash
+mkdir -p $HOME/.kube
+cp /home/<userid>/.kube/config .kube/config
+exit
 ```
 
 Step 8.2: Setup port forwarding using the following command:
 
+```bash
+sudo kubectl port-forward -n ingress-system --address 0.0.0.0 service/ingress-nginx-controller 80:http 443:https
 ```
-sudo kubectl port-forward -n ingress-system --address 0.0.0.0 service/ingress-nginx-controller 80:http 443:https &
