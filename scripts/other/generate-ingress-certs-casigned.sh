@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # This script uses Certbot to obtain a properly signed certificate from a CA for use with NGINX Ingress Controller.
 # The script also creates a Kubernetes secret that will be used by NGINX Ingress Controller to serve HTTPS traffic.
 # The script also adds the CA certificate to the OS trust store.
@@ -64,7 +66,7 @@ rm -rf ${CERT_DIR}/* ${SECRET_DIR}/*
 
 # Obtain certificates using Certbot
 echo "Obtaining certificates using Certbot..."
-certbot certonly --manual --preferred-challenges dns -d ${DOMAIN} --agree-tos --manual-public-ip-logging-ok --register-unsafely-without-email --work-dir ${CERT_DIR} --config-dir ${CERT_DIR} --logs-dir ${CERT_DIR}
+certbot certonly --manual --preferred-challenges dns -d ${DOMAIN} --agree-tos --register-unsafely-without-email --work-dir ${CERT_DIR} --config-dir ${CERT_DIR} --logs-dir ${CERT_DIR}
 
 # Combine the fullchain and private key into a single file
 echo "Combining fullchain and private key into a single file..."
