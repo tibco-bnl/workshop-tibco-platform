@@ -49,16 +49,10 @@ Resize below command based on local environment (cpu/memory).
 minikube start --cpus 8 --memory 20480 --disk-size "40g" \
 --driver=docker \
 --addons storage-provisioner \
---kubernetes-version "1.30.5"
-```
-If there is an issue in minikube for ulimit 
-```
-minikube start --cpus 8 --memory 20480 --disk-size "40g" \
---driver=docker \
---addons storage-provisioner \
 --kubernetes-version "1.30.5" \
---extra-config=kubelet.max-open-files=524288
+--extra-config=kubelet.max-pods=500
 ```
+
 
 ### create directory ~/projects/platform-dev
 ```

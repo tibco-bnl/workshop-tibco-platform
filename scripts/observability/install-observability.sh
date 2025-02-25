@@ -136,11 +136,11 @@ EOF
 port_forward() {
     # Port forward Elastic, Kibana, Grafana, Prometheus
     echo "Port forward Elastic, Kibana, Grafana, Prometheus"
-
+    echo "Release name: ${TP_ES_RELEASE_NAME}"
      nohup sudo kubectl port-forward -n elastic-system --address 0.0.0.0 svc/${TP_ES_RELEASE_NAME}-es-http 9200:9200 &  >/dev/null 2>&1 &
      nohup sudo kubectl port-forward -n elastic-system --address 0.0.0.0 svc/${TP_ES_RELEASE_NAME}-kb-http 5601:5601 &  >/dev/null 2>&1 &
      nohup sudo kubectl port-forward -n prometheus-system --address 0.0.0.0 svc/kube-prometheus-stack-grafana 3000:80 & >/dev/null 2>&1 &
-     nohub sudo kubectl port-forward -n prometheus-system --address 0.0.0.0 svc/kube-prometheus-stack-prometheus 9090:9090 & >/dev/null 2>&1 &
+     nohup sudo kubectl port-forward -n prometheus-system --address 0.0.0.0 svc/kube-prometheus-stack-prometheus 9090:9090 & >/dev/null 2>&1 &
 
     echo "All URLS: "
     echo "Elasticsearch: http://localhost:9200"

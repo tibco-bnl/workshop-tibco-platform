@@ -19,7 +19,10 @@ Step 1.1: Open the mail environment<br>
 During the configuration of the platform a number of mails are sent (to newly created users). In order to facilitate this process in the sandbox environment a mail server is provisioned.
 
 
-Open the following URL in a webbrowser in Windows: https://mail.localhost.dataplanes.pro/
+Open the following URL chrome: https://mail.localhost.dataplanes.pro/
+
+
+PLEASE MIND: you may get a warning that the TLS certificate is not trusted. This is the case if you use a self-signed certificate. If that is the case click anywhere on the webpage and type 'thisisunsafe'. 
 
 ![](../images/mailserver.png)
 
@@ -65,7 +68,7 @@ a) Click (in the navigator on the left) on 'subscriptions' and click the button 
 
 ![](../images/provision-subscription.png)
 
-b) Enter the data of the administrator (this is an other administrator than the one you created for the control plane!!) of the subscription and click the button 'next'. Make note of the email address used.<br>
+b) Enter the data of the administrator of the subscription and click the button 'next'. Make note of the email address used.<br>
 
 ![](../images/subscription1.png)
 
@@ -142,7 +145,7 @@ Please note that the subscription only has one user (the administrator created i
 
 ![](../images/users-menu.png)
 
-Step 4.3: Update permissions
+Step 4.2: Update permissions
 
 a) Select the dots behind the administrator and select 'update permissions.<br>
 
