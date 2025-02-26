@@ -26,7 +26,7 @@ Run the following to set the TLS certidicates
 cd ~/projects/platform-dev/workshop-tibco-platform/scripts
 cp secrets.envEmpty secrets.env
 cd ~/projects/platform-dev
-chmod +x ~/projects/platform-dev/workshop-tibco-platform/scripts/generate_cert.sh
+chmod +x ~/projects/platform-dev/workshop-tibco-platform/scripts/generate_certs.sh
 ./workshop-tibco-platform/scripts/generate_cert.sh
 ```
 
@@ -199,7 +199,7 @@ Step 8.1: su to root
 sudo su -
 ```
 
-Step 8.1: Run the following script:
+Step 8.2: Run the following script:
 
 Replace <userid> with the userID that you used to login. For AWS and Azure this will be 'tibco'. For WSL it may be another user.
 
@@ -209,7 +209,7 @@ cp /home/<userid>/.kube/config .kube/config
 exit
 ```
 
-Step 8.2: Setup port forwarding using the following command:
+Step 8.3: Setup port forwarding using the following command:
 
 ```bash
 sudo kubectl port-forward -n ingress-system --address 0.0.0.0 service/ingress-nginx-controller 80:http 443:https
