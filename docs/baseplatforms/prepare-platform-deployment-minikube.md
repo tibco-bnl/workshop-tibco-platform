@@ -104,9 +104,6 @@ minikube start --cpus 8 --memory 24576 --disk-size "40g" \
 Please mind: 
 (1) If you have more processors and ram, modify the parameters --cpu and --memory, but always leave 8 GB of ram for other purposes.
 
---- replace step 1-5 -----
-run ./minikube-on-ubuntu.sh in scripts directory from repository.
--------
 
 
 ## Step 5: Increase the maximum number of files for the current user
