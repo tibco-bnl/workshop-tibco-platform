@@ -17,7 +17,7 @@
 
 
 # function to color text for user input
-RED="\e[31m"
+RED="\e[32m" # Red 31 is green 32 now as well for better visibility
 GREEN="\e[32m"
 ENDCOLOR="\e[0m"
 function enter_to_continue() { 
