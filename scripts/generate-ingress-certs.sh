@@ -56,14 +56,15 @@ CONFIG_DIR="${BASE_DIR}/certconf"
 SECRET_DIR="${BASE_DIR}/secrets"
 INTERMEDIATE_DIR="${BASE_DIR}/intermediate"
 FINAL_DIR="${BASE_DIR}/final"
-CA_KEY="${INTERMEDIATE_DIR}/ca-tibco-plat.key"
-CA_CRT="${INTERMEDIATE_DIR}/ca-tibco-plat.crt"
-CA_PEM="${INTERMEDIATE_DIR}/ca-tibco-plat.pem"
-SERVER_KEY="${INTERMEDIATE_DIR}/server-tibco-plat.key"
-SERVER_CSR="${INTERMEDIATE_DIR}/server-tibco-plat.csr"
-SERVER_PEM="${INTERMEDIATE_DIR}/server-tibco-plat.pem"
-SECRET_SECRET="${SECRET_DIR}/server-tibco-plat-secret.yaml"
-CHAIN_PEM="${FINAL_DIR}/server-tibco-plat-chain.pem"
+DNS_DOMAIN="localhost.dataplanes.pro"
+CA_KEY="${INTERMEDIATE_DIR}/ca-${DNS_DOMAIN}.key"
+CA_CRT="${INTERMEDIATE_DIR}/ca-${DNS_DOMAIN}.crt"
+CA_PEM="${INTERMEDIATE_DIR}/ca-${DNS_DOMAIN}.pem"
+SERVER_KEY="${INTERMEDIATE_DIR}/server-${DNS_DOMAIN}.key"
+SERVER_CSR="${INTERMEDIATE_DIR}/server-${DNS_DOMAIN}.csr"
+SERVER_PEM="${INTERMEDIATE_DIR}/server-${DNS_DOMAIN}.pem"
+SECRET_SECRET="${SECRET_DIR}/default-certificate-secret.yaml"
+CHAIN_PEM="${FINAL_DIR}/server-${DNS_DOMAIN}-chain.pem"
 NAMESPACE="ingress-nginx"
 
 # Create directories if they don't exist
@@ -89,20 +90,23 @@ openssl x509 -in ${CA_CRT} -inform DER -out ${CA_PEM} -outform PEM
 # Create Server Certificate
 echo "Creating Server certificate..."
 openssl genrsa -out ${SERVER_KEY} 4096
-openssl req -new -config ${CONFIG_DIR}/server-tibco-plat.cnf -key ${SERVER_KEY} -out ${SERVER_CSR} -outform PEM
-openssl x509 -req -in ${SERVER_CSR} -CA ${CA_CRT} -CAkey ${CA_KEY} -CAcreateserial -outform PEM -out ${SERVER_PEM} -days 825 -extfile ${CONFIG_DIR}/server-tibco-plat.ext
+openssl req -new -config ${CONFIG_DIR}/server.cnf -key ${SERVER_KEY} -out ${SERVER_CSR} -outform PEM
+openssl x509 -req -in ${SERVER_CSR} -CA ${CA_CRT} -CAkey ${CA_KEY} -CAcreateserial -outform PEM -out ${SERVER_PEM} -days 825 -extfile ${CONFIG_DIR}/server.ext
 
 # Combine the CA Authority and Server PEM files
 echo "Combining CA and Server PEM files..."
 cat ${SERVER_PEM} ${CA_PEM} >> ${CHAIN_PEM}
 
 create_k8s_secret() {
-    echo "Creating Kubernetes secret to be used by NGINX"
-    kubectl create secret tls server-tibco-plat --key ${SERVER_KEY} --cert ${CHAIN_PEM} --dry-run=client -o yaml > ${SECRET_DIR}/server-tibco-plat-secret.yaml
+    echo "Creating Kubernetes secret to be used by NGINX with name 'default-certificate'..."
+    kubectl create secret generic default-certificate --from-file=tls.crt=${CHAIN_PEM} --from-file=tls.key=${SERVER_KEY} --type=Opaque --dry-run=client -o yaml > ${SECRET_DIR}/default-certificate-secret.yaml 
     echo "Kubernetes secret created successfully."
     echo "Apply the secret using the following command:"
-    echo "kubectl apply -f ${SECRET_DIR}/server-tibco-plat-secret.yaml -n ${NAMESPACE}"
+    echo "kubectl apply -f ${SECRET_DIR}/default-certificate-secret.yaml -n ${NAMESPACE}"
     echo "Restart the ingress pod to apply the new certificate."
+    echo "You must specify the secret name when registering a data plane."
+    echo "Refer: https://docs.tibco.com/pub/platform-cp/latest/doc/html/Default.htm#UserGuide/using-custom-certificate.htm"
+    echo "Refer: https://github.com/tibcofield/tp-poc/tree/main"
 }
 
 update_secrets_env() {
@@ -137,7 +141,7 @@ add_ca_to_os_trust_store() {
         sudo security add-trusted-cert -d -r trustRoot -p ssl -k /Library/Keychains/System.keychain ${CA_PEM}
     elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
         echo "Adding CA certificate to Linux trust store..."
-        sudo cp ${CA_PEM} /usr/local/share/ca-certificates/ca-tibco-plat.crt
+        sudo cp ${CA_PEM} /usr/local/share/ca-certificates/ca-${DNS_DOMAIN}.crt
         sudo update-ca-certificates
     fi
 }
@@ -158,7 +162,7 @@ build_custom_truststore() {
 
     JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
     cp ${JAVA_HOME}/lib/security/cacerts ${JAVA_HOME}/lib/security/cacertsbackup
-    keytool -import -trustcacerts -alias tibco-plat-test -file ${CA_CRT} -keystore ${JAVA_HOME}/lib/security/cacerts -storepass changeit -noprompt
+    keytool -import -trustcacerts -alias ${DNS_DOMAIN}-test -file ${CA_CRT} -keystore ${JAVA_HOME}/lib/security/cacerts -storepass changeit -noprompt
     echo "Custom truststore built successfully."
 }
 
