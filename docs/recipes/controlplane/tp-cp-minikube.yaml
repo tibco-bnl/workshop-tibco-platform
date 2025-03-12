@@ -85,8 +85,7 @@ meta:
     CP_CHART_REPO_USER_NAME: ${GUI_CP_CHART_REPO_USER_NAME:-"cp-test"}
     CP_CHART_REPO_TOKEN: ${GUI_CP_CHART_REPO_TOKEN:-""}
     DP_CHART_REPO_HOST: ${GUI_DP_CHART_REPO_HOST:-"https://tibcosoftware.github.io"}
-    DP_CHART_REPO_PATH: ${GUI_DP_CHART_REPO_PATH:-"tp-helm-charts"}
-																						 
+    DP_CHART_REPO_PATH: ${GUI_DP_CHART_REPO_PATH:-"tp-helm-charts"}																						 
     DP_CHART_REPO_USER_NAME: ${GUI_DP_CHART_REPO_USER_NAME:-"cp-test"}
     DP_CHART_REPO_TOKEN: ${GUI_DP_CHART_REPO_TOKEN:-""}
     CP_CONTAINER_REGISTRY: ${GUI_CP_CONTAINER_REGISTRY:-"csgprduswrepoedge.jfrog.io"}
