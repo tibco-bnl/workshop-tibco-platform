@@ -387,8 +387,7 @@ helmCharts:
           enabled: ${CP_INSTALL_MAILDEV_INGRESS}
           labels:
             app.cloud.tibco.com/created-by: pipeline
-          annotations:
-																
+          annotations:																
             nginx.ingress.kubernetes.io/proxy-buffer-size: 16k
           spec:
             ingressClassName: ${CP_INGRESS_CLASSNAME}
