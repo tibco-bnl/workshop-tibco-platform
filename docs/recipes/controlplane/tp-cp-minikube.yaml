@@ -7,8 +7,7 @@ meta:
     GUI_CP_CHART_REPO_USER_NAME: cp-test
     GUI_CP_CHART_REPO_TOKEN: ''
     GUI_DP_CHART_REPO_HOST: https://tibcosoftware.github.io
-    GUI_DP_CHART_REPO_PATH: tp-helm-charts
-																	 
+    GUI_DP_CHART_REPO_PATH: tp-helm-charts																	 
     GUI_DP_CHART_REPO_USER_NAME: cp-test
     GUI_DP_CHART_REPO_TOKEN: ''
     GUI_CP_CONTAINER_REGISTRY: csgprdusw2reposaas.jfrog.io
