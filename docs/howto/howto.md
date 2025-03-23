@@ -11,5 +11,5 @@ The procedure in this document can be used to install a control plane and a data
 ### How to remove minikube
 [answer](how-to-remove-minikube.md)
 
-### How to install seperate platform components
-[answer](how-to-install-seperate-platform-components.md)
+### How to run the platfrom provisioner again
+[answer](how-to-run-the-platform-provisioner-again.md)
