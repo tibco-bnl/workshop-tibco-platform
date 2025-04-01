@@ -6,9 +6,10 @@ subjectAltName = @alt_names
 [alt_names]
 DNS.1 = admin.cp1-my.localhost.dataplanes.pro
 DNS.2 = *.localhost.dataplanes.pro
-DNS.3 = *.cp1-my.localhost.dataplanes.pro
-DNS.4 = *.cp1-tunnel.localhost.dataplanes.pro
-DNS.5 = *.o11y.localhost.dataplanes.pro 
+DNS.3 = *.o11y.localhost.dataplanes.pro 
+DNS.4 = *.cp1-my.localhost.dataplanes.pro
+DNS.5 = *.cp1-tunnel.localhost.dataplanes.pro
 DNS.6 = *.benelux.cp1-my.localhost.dataplanes.pro
 DNS.7 = *.cp.localhost.dataplanes.pro
-DNS.8 = *.benelux.cp.localhost.dataplanes.pro
+DNS.8 = *.tunnel.localhost.dataplanes.pro
+DNS.9 = *.benelux.cp.localhost.dataplanes.pro
