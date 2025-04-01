@@ -17,9 +17,9 @@
 
 
 # function to color text for user input
-RED="\e[32m" # Red 31 is green 32 now as well for better visibility
-GREEN="\e[32m"
-ENDCOLOR="\e[0m"
+RED="\033[32m" # Red 31 is green 32 now as well for better visibility
+GREEN="\033[32m"
+ENDCOLOR="\033[0m"
 function enter_to_continue() { 
         echo -e "${RED}Press [Enter] key to continue... ${ENDCOLOR} "
         read 
@@ -161,7 +161,7 @@ yq e -i '.meta.guiEnv.GUI_TP_STORAGE_CLASS=env(STORAGE_CLASS_CLUSTER)' $RECIPE_T
 
 
 #
-# TIBCO PLATFORM Control Plae
+# TIBCO PLATFORM Control Plane
 RECIPE_TP_CP=$WORKSHOP_BASE_DIR/docs/recipes/controlplane/tp-cp-$KUBE_CONTEXT.yaml
 #replace values in the recipes
 yq e -i '.meta.guiEnv.GUI_CP_CONTAINER_REGISTRY=env(CONTAINER_REGISTRY)' $RECIPE_TP_CP
