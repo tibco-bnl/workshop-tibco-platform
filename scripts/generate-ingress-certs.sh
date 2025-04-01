@@ -105,6 +105,10 @@ create_k8s_secret() {
     echo "kubectl apply -f ${SECRET_DIR}/default-certificate-secret.yaml -n ${NAMESPACE}"
     echo "Restart the ingress pod to apply the new certificate."
     echo "You must specify the secret name when registering a data plane."
+    echo "Restart tibtunnel, cp-proxy, and OAuth2 proxy deployments, which can be done by using the following three commands:"
+    echo "kubectl rollout restart -n <namespace> deployment/tp-tibtunnel"
+    echo "kubectl rollout restart -n <namespace> deployment/tp-cp-proxy"
+    echo "kubectl rollout restart -n <namespace> deployment/oauth2-proxy"
     echo "Refer: https://docs.tibco.com/pub/platform-cp/latest/doc/html/Default.htm#UserGuide/using-custom-certificate.htm"
     echo "Refer: https://github.com/tibcofield/tp-poc/tree/main"
 }
@@ -174,3 +178,9 @@ echo "Certificates generated successfully."
 
 echo "openssl command to view .csr file"
 echo "openssl req -in ${SERVER_CSR} -noout -text"
+
+
+#/etc/hosts minikube tp, provided subscription is benelux
+#127.0.0.1 mail.localhost.dataplanes.pro provisioner.localhost.dataplanes.pro tekton.localhost.dataplanes.pro
+#127.0.0.1 admin.cp1-my.localhost.dataplanes.pro benelux.cp1-my.localhost.dataplanes.pro
+#127.0.0.1 bwce.cp1-my.localhost.dataplanes.pro flogo.cp1-my.localhost.dataplanes.pro
