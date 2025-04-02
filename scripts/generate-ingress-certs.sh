@@ -5,58 +5,25 @@
 # The script also adds the CA certificate to the OS trust store.
 # The script also builds a custom truststore for Java applications.
 
-# Prerequisites:
-# 1. OpenSSL
-# 2. kubectl
-# 3. The script assumes that the NGINX Ingress Controller is installed in the "ingress-nginx" namespace.
-
-#Add a function to install prequisites, openssl and kubectl
-install_prerequisites() {
-    # Install OpenSSL
-    if ! command -v openssl &> /dev/null; then
-        echo "OpenSSL is not installed. Installing OpenSSL..."
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-            # Mac OS
-            brew install openssl
-        elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-            # Ubuntu or WSL
-            sudo apt-get install openssl
-        fi
-    fi
-
-    # Install kubectl
-    if ! command -v kubectl &> /dev/null; then
-        echo "kubectl is not installed. Installing kubectl..."
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-            # Mac OS
-            brew install kubectl
-        elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-            # Ubuntu or WSL
-            if command -v snap &> /dev/null; then
-                sudo snap install kubectl --classic
-            else
-                sudo apt-get install kubectl
-            fi
-        fi
-    fi
-}
-
-
-
 # Usage:
-# 1. Run the script
-# chmod +x generate-ingress-certs.sh
-# ./generate-ingress-certs.sh
+# ./generate-ingress-certs.sh <DNS_DOMAIN>
+# Example:
+# ./generate-ingress-certs.sh localhost.dataplanes.pro
 
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <DNS_DOMAIN>"
+    echo "Example: $0 localhost.dataplanes.pro"
+    exit 1
+fi
+
+DNS_DOMAIN="$1"
 
 # Variables
 BASE_DIR="./certs"
-#CERT_DIR="${BASE_DIR}/certs"
 CONFIG_DIR="${BASE_DIR}/certconf"
 SECRET_DIR="${BASE_DIR}/secrets"
 INTERMEDIATE_DIR="${BASE_DIR}/intermediate"
 FINAL_DIR="${BASE_DIR}/final"
-DNS_DOMAIN="localhost.dataplanes.pro"
 CA_KEY="${INTERMEDIATE_DIR}/ca-${DNS_DOMAIN}.key"
 CA_CRT="${INTERMEDIATE_DIR}/ca-${DNS_DOMAIN}.crt"
 CA_PEM="${INTERMEDIATE_DIR}/ca-${DNS_DOMAIN}.pem"
@@ -69,7 +36,6 @@ NAMESPACE="ingress-nginx"
 
 # Create directories if they don't exist
 echo "Creating directories if they don't exist..."
-#mkdir -p ${CERT_DIR}
 mkdir -p ${CONFIG_DIR}
 mkdir -p ${SECRET_DIR}
 mkdir -p ${INTERMEDIATE_DIR}
@@ -113,74 +79,9 @@ create_k8s_secret() {
     echo "Refer: https://github.com/tibcofield/tp-poc/tree/main"
 }
 
-update_secrets_env() {
-    # Extract TLS cert and key from the local files
-    TLS_CERT=$(cat ${CHAIN_PEM})
-    TLS_KEY=$(cat ${SERVER_KEY})
-
-    # Create or update secrets.env file
-    if [ ! -f secrets.env ]; then
-        cp secrets.envEmpty secrets.env
-    fi
-
-    # Backup secrets.env before updating
-    cp secrets.env secrets.env.old
-    # Replace placeholders in secrets.env
-    sed -i.bak "s|TLS_CERT=.*|TLS_CERT=${TLS_CERT}|g" secrets.env
-    sed -i.bak "s|TLS_KEY=.*|TLS_KEY=${TLS_KEY}|g" secrets.env
-
-    # Clean up backup file created by sed
-    rm secrets.env.bak
-
-    echo "secrets.env file has been updated with the TLS certificate and key."
-}
-
 create_k8s_secret
-#update_secrets_env
-
-add_ca_to_os_trust_store() {
-    echo "Adding CA certificate to your OS trust store..."
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        echo "Adding CA certificate to Mac OS trust store..."
-        sudo security add-trusted-cert -d -r trustRoot -p ssl -k /Library/Keychains/System.keychain ${CA_PEM}
-    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        echo "Adding CA certificate to Linux trust store..."
-        sudo cp ${CA_PEM} /usr/local/share/ca-certificates/ca-${DNS_DOMAIN}.crt
-        sudo update-ca-certificates
-    fi
-}
-
-build_custom_truststore() {
-    echo "Building a custom truststore..."
-    # Install Java if not present 
-    if ! command -v java &> /dev/null; then
-        echo "Java is not installed. Installing Java..."
-        if [[ "$OSTYPE" == "darwin"* ]]; then
-            # Mac OS
-            brew install openjdk
-        elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-            # Ubuntu or WSL
-            sudo apt-get install openjdk
-        fi
-    fi
-
-    JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
-    cp ${JAVA_HOME}/lib/security/cacerts ${JAVA_HOME}/lib/security/cacertsbackup
-    keytool -import -trustcacerts -alias ${DNS_DOMAIN}-test -file ${CA_CRT} -keystore ${JAVA_HOME}/lib/security/cacerts -storepass changeit -noprompt
-    echo "Custom truststore built successfully."
-}
-
-#add_ca_to_os_trust_store
-#build_custom_truststore
-
 
 echo "Certificates generated successfully."
 
 echo "openssl command to view .csr file"
 echo "openssl req -in ${SERVER_CSR} -noout -text"
-
-
-#/etc/hosts minikube tp, provided subscription is benelux
-#127.0.0.1 mail.localhost.dataplanes.pro provisioner.localhost.dataplanes.pro tekton.localhost.dataplanes.pro
-#127.0.0.1 admin.cp1-my.localhost.dataplanes.pro benelux.cp1-my.localhost.dataplanes.pro
-#127.0.0.1 bwce.cp1-my.localhost.dataplanes.pro flogo.cp1-my.localhost.dataplanes.pro
