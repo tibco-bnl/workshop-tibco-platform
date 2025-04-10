@@ -17,7 +17,7 @@ The configuration of the platform involves the following steps:
 
 During the configuration of the platform, a number of mails are sent (to newly created users). In order to facilitate this process in the sandbox environment a mail server is provisioned.
 
-Open the following URL: <https://mail.localhost.dataplanes.pro/>
+Open the following URL: <https://mail.azure.nl.eu.abnamro.com/>
 
 **Please mind**: You may get a warning that the TLS certificate is not trusted. This is the case if you use a self-signed certificate. If that is the case click anywhere on the webpage and type '**thisisunsafe**'.
 
@@ -27,7 +27,7 @@ Open the following URL: <https://mail.localhost.dataplanes.pro/>
 
 The Control Plane has a web GUI.
 
-Open the following URL in a webbrowser in Windows: <https://admin.cp1-my.localhost.dataplanes.pro/>
+Open the following URL in a webbrowser in Windows: <https://admin-tacp.azure.nl.eu.abnamro.com/>
 
 ![cpgui](../images/cpgui.png)
 
@@ -98,12 +98,12 @@ As a next step, it is time to configure the new subscription and to create new u
 
 **Step 4.1**: Set a password for the administrator created in step 3.
 
-**a)** Open an **NEW** browser (use a different browser, not the browser used for step 3, or open a private browser tab on the browser used in step 3) and open <https://myorg.cp1-my.localhost.dataplanes.pro/>, click on the button '**Sign in with Default IdP**'.
+**a)** Open an **NEW** browser (use a different browser, not the browser used for step 3, or open a private browser tab on the browser used in step 3) and open <https://myorg.cp1-my.azure.nl.eu.abnamro.com/>, click on the button '**Sign in with Default IdP**'.
 
 **Please mind**: we will use two browser from here on:
 
-1. A browser for the platform (<https://admin.cp1-my.localhost.dataplanes.pro/>)
-2. A browser for the subscription (<https://myorg.cp1-my.localhost.dataplanes.pro/>)
+1. A browser for the platform (<https://admin-tacp.azure.nl.eu.abnamro.com/>)
+2. A browser for the subscription (<https://myorg.cp1-my.azure.nl.eu.abnamro.com/>)
 
 Don't mix these two environments in one browser!
 
@@ -121,7 +121,7 @@ Don't mix these two environments in one browser!
 
 ![reset-password-mail](../images/reset-password-mail.png)
 
-**e)** Go back the subscription browser in which you opened <https://myorg.cp1-my.localhost.dataplanes.pro/>.
+**e)** Go back the subscription browser in which you opened <https://myorg.cp1-my.azure.nl.eu.abnamro.com/>.
 
 **f)** Create a new tab and open the link you copied in step (d).
 
@@ -131,7 +131,7 @@ Enter a new password (twice) and click the button '**Reset Password**'.
 
 **Step 4.2**: Login to the subscription.
 
-**a)** Open <https://myorg.cp1-my.localhost.dataplanes.pro/> in the browser window. Click on the button '**Sign in with Default IdP**'.
+**a)** Open <https://myorg.cp1-my.azure.nl.eu.abnamro.com/> in the browser window. Click on the button '**Sign in with Default IdP**'.
 
 ![sign-in-to-subscription](../images/sign-in-to-subscription.png)
 
@@ -223,7 +223,7 @@ cd ~
 
 **Step 6.3**: Create a namespace in the Data Plane.
 
-Go back to your browser (with the subscription = <https://myorg.cp1-my.localhost.dataplanes.pro/>)
+Go back to your browser (with the subscription = <https://myorg.cp1-my.azure.nl.eu.abnamro.com/>)
 
 **a)** Copy the content of the block '**Namespace creation**' to the clipboard.
 
@@ -239,7 +239,7 @@ namespace/mynamespace created
 
 **Step 6.4**: Create the service account.
 
-Go back to your browser (with the subscription = <https://myorg.cp1-my.localhost.dataplanes.pro/>)
+Go back to your browser (with the subscription = <https://myorg.cp1-my.azure.nl.eu.abnamro.com/>)
 
 **a)** Copy the content of the block '**Service Account creation**' to the clipboard.
 
@@ -261,7 +261,7 @@ To learn more about the release, try:
 
 **Step 6.5**: Cluster registration.
 
-Go back to your browser (with the subscription = <https://myorg.cp1-my.localhost.dataplanes.pro/>)
+Go back to your browser (with the subscription = <https://myorg.cp1-my.azure.nl.eu.abnamro.com/>)
 
 **a)** Copy the content of the block '**Cluster Registration**' to the clipboard.
 

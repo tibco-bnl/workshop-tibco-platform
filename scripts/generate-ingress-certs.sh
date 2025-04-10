@@ -8,11 +8,11 @@
 # Usage:
 # ./generate-ingress-certs.sh <DNS_DOMAIN>
 # Example:
-# ./generate-ingress-certs.sh localhost.dataplanes.pro
+# ./generate-ingress-certs.sh azure.nl.eu.abnamro.com
 
 if [ "$#" -ne 1 ]; then
     echo "Usage: $0 <DNS_DOMAIN>"
-    echo "Example: $0 localhost.dataplanes.pro"
+    echo "Example: $0 azure.nl.eu.abnamro.com"
     exit 1
 fi
 

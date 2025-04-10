@@ -117,14 +117,14 @@ exit
 sudo kubectl port-forward -n ingress-system --address 0.0.0.0 service/ingress-nginx-controller 80:http 443:https
 ```
 
-MailDev can now be access on https://mail.localhost.dataplanes.pro/#/
+MailDev can now be access on https://mail.azure.nl.eu.abnamro.com/#/
 
 
 ### Setup admin user and benelux cp
 This section is work in progress. Most likely not working at this moment.
 
 Open the maildev app in your browser:
-> https://mail.localhost.dataplanes.pro/
+> https://mail.azure.nl.eu.abnamro.com/
 
 >Open the email 
 > click on Sign in.
@@ -169,7 +169,7 @@ A new email has been received to inform you on the activation of user admin@tibc
 > Click sign in
 > Fill out the Activate acocunt details form and submit
 
-Please not the url of the CP page now changes to benelux.cp1-my.localhost.dataplanes.pro.
+Please not the url of the CP page now changes to benelux.cp1-my.azure.nl.eu.abnamro.com.
 
 > Sign in with default IdP.
 Use admin@tibco.com user credentials just entered.
