@@ -6,7 +6,7 @@ We do have a Platform Provisioner UI which will open source soon. The UI will he
 ## Basic information and assumptions
 
 ### Domain
-For the on-perm use case, we create a domain `*.localhost.dataplanes.pro` which point to `0.0.0.0` and use it as the domain for the TIBCO Platform.
+For the on-perm use case, we create a domain `*.azure.nl.eu.abnamro.com` which point to `0.0.0.0` and use it as the domain for the TIBCO Platform.
 
 ### Environment variables
 In the recipe the section `meta.guiEnv` is used to set environment variables for the recipe. The environment variables starts with `GUI_`. It is designed to work with Platform Provisioner UI.

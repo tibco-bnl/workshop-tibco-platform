@@ -6,13 +6,13 @@ req_extensions         = v3_req
 
 
 [ req_distinguished_name ]
-countryName            = GB
-stateOrProvinceName    = LONDON
-localityName           = EAST
-organizationName       = TIBCO PLATFORM
+countryName            = NL
+stateOrProvinceName    = NORTH HOLLAND
+localityName           = NORTH
+organizationName       = ABN AMRP Bank N.V.
 organizationalUnitName = DEV
-commonName             = platform.localhost.dataplanes.pro
-emailAddress           = cp-test@tibco.com
+commonName             = tacp.azure.nl.eu.abnamro.com
+emailAddress           = cp-test@abnamro.com
 
 [ v3_req ]
 basicConstraints       = CA:false
@@ -20,12 +20,9 @@ extendedKeyUsage       = serverAuth
 subjectAltName         = @sans
 
 [ sans ]
-DNS.1 = admin.cp1-my.localhost.dataplanes.pro
-DNS.2 = *.localhost.dataplanes.pro
-DNS.3 = *.o11y.localhost.dataplanes.pro 
-DNS.4 = *.cp1-my.localhost.dataplanes.pro
-DNS.5 = *.cp1-tunnel.localhost.dataplanes.pro
-DNS.6 = *.benelux.cp1-my.localhost.dataplanes.pro
-DNS.7 = *.cp.localhost.dataplanes.pro
-DNS.8 = *.tunnel.localhost.dataplanes.pro
-DNS.9 = *.benelux.cp.localhost.dataplanes.pro
+DNS.1 = admin.tacp.azure.nl.eu.abnamro.com
+DNS.2 = *.azure.nl.eu.abnamro.com
+DNS.3 = *.o11y.azure.nl.eu.abnamro.com 
+DNS.4 = *.tacp.azure.nl.eu.abnamro.com
+DNS.5 = *.tacp-tunnel-d.azure.nl.eu.abnamro.com
+DNS.6 = *.admin-sub-tacp.azure.nl.eu.abnamro.com

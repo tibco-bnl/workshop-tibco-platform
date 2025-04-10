@@ -126,18 +126,23 @@ echo ""
 KUBE_CONTEXT=$(kubectl config current-context)
 if [[ "$KUBE_CONTEXT" == "docker-desktop" ]]; then
     echo ""
-    echo "Using Docker Desktop Kubernetes context"
-    kubectl config use-context docker-desktop
+    echo "Using $KUBE_CONTEXT Kubernetes context"
+    kubectl config use-context $KUBE_CONTEXT
     export STORAGE_CLASS_CLUSTER=$STORAGE_CLASS_DOCKERDESKTOP
+    alias k='kubectl'
     echo ""
 elif [[ "$KUBE_CONTEXT" == "microk8s" ]]; then
-    echo "Using MicroK8s Kubernetes context"
+    echo "Using $KUBE_CONTEXT Kubernetes context"
     alias kubectl='microk8s kubectl'
+    alias k='kubectl'
+    kubectl config use-context $KUBE_CONTEXT
     export STORAGE_CLASS_CLUSTER=$STORAGE_CLASS_MICROK8S
     echo ""
 elif [[ "$KUBE_CONTEXT" == "minikube" ]]; then
-    echo "Using MiniKube Kubernetes context"
+    echo "Using $KUBE_CONTEXT Kubernetes context"
     alias kubectl='minikube kubectl'
+    alias k='kubectl'
+    kubectl config use-context $KUBE_CONTEXT
     export STORAGE_CLASS_CLUSTER=$STORAGE_CLASS_MINIKUBE
     echo ""
 else
@@ -196,8 +201,7 @@ echo "----------------------------------------------------------"
 
 # Wait for user input to continue
 echo "Next steps include: "
-echo "- Install TP Base"
-echo "- Install TIBCO Platform Control Plane"
+echo "- Install TP Base (cert-manager, metrics-server, nginx ingress, etc.)"
 echo " You can stop this script here and create both from Platform provisioner UI as well.. which is more interactive and works well"
 echo "----------------------------------------------------------"
 echo ""
@@ -275,8 +279,8 @@ echo "1. Configure admin user"
 echo "2. Register DP manually from CP URL and provision capabilities e.g. Flogo, BWCE, EMS, etc."
 echo "----------------------------------------------------------\n"
 echo "Access the following URLs:"
-echo "Mail URL: https://mail.localhost.dataplanes.pro/"
-echo "CP URL: https://admin.cp1-my.localhost.dataplanes.pro/admin/app/home"
+echo "Mail URL: https://mail.azure.nl.eu.abnamro.com/"
+echo "CP URL: https://admin-tacp.azure.nl.eu.abnamro.com/admin/app/home"
 echo "Tekton Dashboard at http://localhost:9097/#/about"
 echo "Platform Provisioner UI: http://localhost:8080"
 echo "----------------------------------------------------------------\n"
@@ -286,12 +290,13 @@ echo "-----------------------------------------------------------------\n"
 echo "To stop the port forwarding, run the following commands:"
 echo "kill $(lsof -t -i:8080)"
 echo "kill $(lsof -t -i:9097)"
-echo "kill $(sudo lsof -t -i:80)"
+echo "kill $(sudo lsof -t -i:80) >> if blank, you might have done minikube tunnel or the script $WORKSHOP_SCRIPT_DIR/port_forwarder.sh ingress didnt work due to sudo or other issues"
 echo "----------------------------------------------------------\n"
 echo "To uninstall the platform provisioner, run the following command:"
 echo "cd $PP_DIR"
 echo "./dev/platform-provisioner-uninstall.sh"
 echo "----------------------------------------------------------\n"
+echo "-------------------We are done here! Check email, create subscription, activate new user and then create a new DP--------------\n"
 
 enter_to_continue
 

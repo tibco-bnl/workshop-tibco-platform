@@ -7,7 +7,7 @@ meta:
     GUI_TP_CHART_REPO_USER_NAME: ''
     GUI_TP_CHART_REPO_TOKEN: ''
     GUI_TP_INGRESS_CLASS: nginx
-    GUI_TP_DOMAIN: localhost.dataplanes.pro
+    GUI_TP_DOMAIN: azure.nl.eu.abnamro.com
     GUI_TP_STORAGE_CLASS: standard
     GUI_TP_CONFIG_ES_NAMESPACE: elastic-system
     GUI_TP_ES_RELEASE_NAME: dp-config-es
