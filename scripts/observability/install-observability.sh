@@ -9,7 +9,7 @@ export TP_CLUSTER_NAME="minikube" # name of the cluster to be provisioned, used 
 
 ## Tooling specific variables
 export TP_TIBCO_HELM_CHART_REPO=https://tibcosoftware.github.io/tp-helm-charts # location of charts repo url
-export TP_DOMAIN="localhost.dataplanes.pro" # domain to be used
+export TP_DOMAIN="azure.nl.eu.abnamro.com" # domain to be used
 export TP_DISK_ENABLED="true" # to enable azure disk storage class
 export TP_DISK_STORAGE_CLASS="standard" # name of azure disk storage class
 export TP_FILE_ENABLED="true" # to enable azure files storage class

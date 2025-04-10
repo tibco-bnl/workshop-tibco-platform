@@ -5,11 +5,14 @@ meta:
     note: config-coredns
     GUI_PIPELINE_LOG_DEBUG: false
     GUI_TARGET_SERVICE: ingress-nginx-controller.ingress-system.svc.cluster.local
-    GUI_REGEX_PATTERN_BASE64: KC4qKVwubG9jYWxob3N0XC5kYXRhcGxhbmVzXC5wcm8K
+    #(.*)\.localhost\.dataplanes\.pro
+    #GUI_REGEX_PATTERN_BASE64: KC4qKVwubG9jYWxob3N0XC5kYXRhcGxhbmVzXC5wcm8K
+    #(.*)\.azure\.nl\.eu\.abnamro\.com
+    GUI_REGEX_PATTERN_BASE64: KC4qKVwuYXp1cmVcLm5sXC5ldVwuYWJuYW1yb1wuY29t
   globalEnvVariable:
     REPLACE_RECIPE: true
     PIPELINE_LOG_DEBUG: ${GUI_PIPELINE_LOG_DEBUG:-false}
-    REGEX_PATTERN_BASE64: ${GUI_REGEX_PATTERN_BASE64:-"KC4qKVwubG9jYWxob3N0XC5kYXRhcGxhbmVzXC5wcm8K"}
+    REGEX_PATTERN_BASE64: ${GUI_REGEX_PATTERN_BASE64:-"KC4qKVwuYXp1cmVcLm5sXC5ldVwuYWJuYW1yb1wuY29t"}
     TARGET_SERVICE: ${GUI_TARGET_SERVICE:-"ingress-nginx-controller.ingress-system.svc.cluster.local"}
 tasks:
   - condition: true
