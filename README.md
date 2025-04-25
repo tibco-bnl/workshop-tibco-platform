@@ -1,7 +1,7 @@
 
 # TIBCO Platform Workshop
 
-This repository contains material for the TIBCO Platform Workshop. The material is intended for TIBCO customers and partners who want to create a TIBCO Platform 'sandbox environment' and expiriment with it. The aim of this sandbox is to get to learn the platform. A sandbox is intended or supported for production purposes.
+This repository contains material for the TIBCO Platform Workshop. The material is intended for TIBCO customers and partners who want to create a TIBCO Platform 'sandbox environment' and expiriment with it. The aim of this sandbox is to get to learn the platform. A sandbox is NOT intended or supported for production purposes.
 
 In order to setup the platform, four steps are required:
 
@@ -48,7 +48,7 @@ To run the TIBCO platform, a Kubernetes platform is required. Next to that some 
 
 
 ## (C) Install the platform
-Once a Kubernetes platform (controlplain and dataplain) is installed the TIBCO platform can be installed. For that the following procedures apply:
+Once a Kubernetes platform (Control Plane and Data Plane) is installed the TIBCO platform can be installed. For that the following procedures apply:
 
 1. ** Work in progress ** Docker Desktop Kubernetes. To install the TIBCO Platform use the following steps:
     1. [Login to the Ubuntu image on WSL](docs/xxxxxx.md).
