@@ -5,8 +5,9 @@ subjectAltName = @alt_names
 
 [alt_names]
 DNS.1 = admin.tacp.azure.nl.eu.abnamro.com
-DNS.2 = *.azure.nl.eu.abnamro.com
-DNS.3 = *.o11y.azure.nl.eu.abnamro.com 
-DNS.4 = *.tacp.azure.nl.eu.abnamro.com
-DNS.5 = *.tacp-tunnel-d.azure.nl.eu.abnamro.com
-DNS.6 = *.admin-sub-tacp.azure.nl.eu.abnamro.com
+DNS.2 = *.admin.tacp.azure.nl.eu.abnamro.com
+DNS.3 = subscription.tacp.azure.nl.eu.abnamro.com
+DNS.4 = *.subscription.tacp.azure.nl.eu.abnamro.com
+DNS.5 = *.tacp.azure.nl.eu.abnamro.com
+DNS.6 = tacp-tunnel.azure.nl.eu.abnamro.com
+DNS.7 = *.tacp-tunnel.azure.nl.eu.abnamro.com

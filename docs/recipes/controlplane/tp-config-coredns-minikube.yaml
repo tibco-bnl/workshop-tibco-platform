@@ -8,11 +8,13 @@ meta:
     #(.*)\.localhost\.dataplanes\.pro
     #GUI_REGEX_PATTERN_BASE64: KC4qKVwubG9jYWxob3N0XC5kYXRhcGxhbmVzXC5wcm8K
     #(.*)\.azure\.nl\.eu\.abnamro\.com
-    GUI_REGEX_PATTERN_BASE64: KC4qKVwuYXp1cmVcLm5sXC5ldVwuYWJuYW1yb1wuY29t
+    #echo "(.*)\.tacp\.azure\.nl\.eu\.abnamro\.com" | base64
+    #KC4qKVwudGFjcFwuYXp1cmVcLm5sXC5ldVwuYWJuYW1yb1wuY29tCg==
+    GUI_REGEX_PATTERN_BASE64: KC4qKVwudGFjcFwuYXp1cmVcLm5sXC5ldVwuYWJuYW1yb1wuY29tCg==
   globalEnvVariable:
     REPLACE_RECIPE: true
     PIPELINE_LOG_DEBUG: ${GUI_PIPELINE_LOG_DEBUG:-false}
-    REGEX_PATTERN_BASE64: ${GUI_REGEX_PATTERN_BASE64:-"KC4qKVwuYXp1cmVcLm5sXC5ldVwuYWJuYW1yb1wuY29t"}
+    REGEX_PATTERN_BASE64: ${GUI_REGEX_PATTERN_BASE64:-"KC4qKVwudGFjcFwuYXp1cmVcLm5sXC5ldVwuYWJuYW1yb1wuY29tCg=="}
     TARGET_SERVICE: ${GUI_TARGET_SERVICE:-"ingress-nginx-controller.ingress-system.svc.cluster.local"}
 tasks:
   - condition: true

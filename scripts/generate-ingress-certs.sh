@@ -8,11 +8,11 @@
 # Usage:
 # ./generate-ingress-certs.sh <DNS_DOMAIN>
 # Example:
-# ./generate-ingress-certs.sh azure.nl.eu.abnamro.com
+# ./generate-ingress-certs.sh tacp.azure.nl.eu.abnamro.com
 
 if [ "$#" -ne 1 ]; then
     echo "Usage: $0 <DNS_DOMAIN>"
-    echo "Example: $0 azure.nl.eu.abnamro.com"
+    echo "Example: $0 tacp.azure.nl.eu.abnamro.com"
     exit 1
 fi
 
@@ -79,7 +79,27 @@ create_k8s_secret() {
     echo "Refer: https://github.com/tibcofield/tp-poc/tree/main"
 }
 
+trust_certificate_os_level() {
+    echo "Trusting CA certificate at the OS level..."
+
+    # For Ubuntu WSL
+    if grep -q Microsoft /proc/version; then
+        echo "Detected WSL. Adding CA certificate to Ubuntu trust store..."
+        sudo cp ${CA_PEM} /usr/local/share/ca-certificates/ca-${DNS_DOMAIN}.crt
+        sudo update-ca-certificates
+        echo "CA certificate added to Ubuntu trust store successfully."
+    fi
+
+    # For macOS
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "Detected macOS. Adding CA certificate to macOS trust store..."
+        sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ${CA_PEM}
+        echo "CA certificate added to macOS trust store successfully."
+    fi
+}
+
 create_k8s_secret
+trust_certificate_os_level
 
 echo "Certificates generated successfully."
 

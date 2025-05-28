@@ -29,7 +29,7 @@ meta:
     GUI_CP_GLOBAL_ENABLE_RESOURCE_CONSTRAINTS: true
     GUI_CP_GLOBAL_USE_SINGLE_NAMESPACE: true
     GUI_CP_EXT_NAMESPACE: tibco-ext
-    GUI_CP_DNS_DOMAIN: azure.nl.eu.abnamro.com
+    GUI_CP_DNS_DOMAIN: tacp.azure.nl.eu.abnamro.com
     GUI_TP_TLS_CERT: ''
     GUI_TP_TLS_KEY: ''
     GUI_CP_INGRESS_CLASSNAME: nginx
@@ -95,7 +95,7 @@ meta:
     CP_PROXY_HTTP_PROXY: ${GUI_CP_PROXY_HTTP_PROXY:-""}
     CP_PROXY_HTTPS_PROXY: ${GUI_CP_PROXY_HTTPS_PROXY:-""}
     CP_PROXY_NO_PROXY: ${GUI_CP_PROXY_NO_PROXY:-""}
-    CP_CLUSTER_NAME: ${GUI_CP_CLUSTER_NAME:-"cp-cluster"}
+    CP_CLUSTER_NAME: ${GUI_CP_CLUSTER_NAME:-"tacp"}
     CP_INSTANCE_ID: ${GUI_CP_INSTANCE_ID:-"tacp"}
     CP_NAMESPACE: ${GUI_CP_NAMESPACE:-"${CP_INSTANCE_ID}-ns"}
     CP_ADMIN_EMAIL: ${GUI_CP_ADMIN_EMAIL:-"cp-test@gmail.com"}
@@ -109,8 +109,8 @@ meta:
     CP_DNS_DOMAIN: ${GUI_CP_DNS_DOMAIN:-"azure.nl.eu.abnamro.com"}
     #CP_SERVICE_DNS_DOMAIN: ${CP_INSTANCE_ID}-my.${CP_DNS_DOMAIN}
     #CP_TUNNEL_DNS_DOMAIN: ${CP_INSTANCE_ID}-tunnel.${CP_DNS_DOMAIN}
-    CP_SERVICE_DNS_DOMAIN: admin-sub-tacp.azure.nl.eu.abnamro.com
-    CP_TUNNEL_DNS_DOMAIN: tacp-tunnel-d.azure.nl.eu.abnamro.com
+    CP_SERVICE_DNS_DOMAIN: tacp.azure.nl.eu.abnamro.com
+    CP_TUNNEL_DNS_DOMAIN: tacp-tunnel.azure.nl.eu.abnamro.com
     CP_STORAGE_CLASS: ${GUI_CP_STORAGE_CLASS:-"standard"}
     CP_STORAGE_PV_NAME: ${GUI_CP_STORAGE_PV_NAME}
     CP_STORAGE_PV_SIZE: ${GUI_CP_STORAGE_PV_SIZE:-10Gi}
@@ -229,19 +229,7 @@ helmCharts:
         - ${CP_CLUSTER_NAME}
     values:
       keepPrevious: true
-      content: |
-        certificate:
-          enabled: ${TP_GENERATE_CERTIFICATES}
-          name: ${TP_GENERATE_CERTIFICATE_NAME}
-          spec:
-            secretName: ${TP_GENERATE_CERTIFICATE_NAME}
-            issuerRef:
-              name: ${TP_CERTIFICATE_CLUSTER_ISSUER}
-              kind: ClusterIssuer
-            dnsNames:
-              - '*.azure.nl.eu.abnamro.com'
-              - '*.tacp-tunnel-d.azure.nl.eu.abnamro.com'
-              - '*.admin-sub-tacp.azure.nl.eu.abnamro.com'
+      content: "certificate:\n  enabled: ${TP_GENERATE_CERTIFICATES}\n  name: ${TP_GENERATE_CERTIFICATE_NAME}\n  spec:\n    secretName: ${TP_GENERATE_CERTIFICATE_NAME}\n    issuerRef:\n      name: ${TP_CERTIFICATE_CLUSTER_ISSUER}\n      kind: ClusterIssuer\n    dnsNames:\n      - admin.tacp.azure.nl.eu.abnamro.com\n      - '*.tacp.azure.nl.eu.abnamro.com'\n      - '*.tacp-tunnel.azure.nl.eu.abnamro.com'\n      - '*.subscription.tacp.azure.nl.eu.abnamro.com'\n      \n"
     flags:
       createNamespace: true
       timeout: 1h
@@ -376,16 +364,11 @@ helmCharts:
             ingress:
               enabled: ${CP_BOOTSTRAP_INGRESS_HYBRID_PROXY}
               annotations:
-                external-dns.alpha.kubernetes.io/hostname: "tacp-tunnel-d.azure.nl.eu.abnamro.com"
+                external-dns.alpha.kubernetes.io/hostname: "*.${CP_TUNNEL_DNS_DOMAIN}"
                 nginx.ingress.kubernetes.io/proxy-buffer-size: 16k
               ingressClassName: ${CP_INGRESS_CLASSNAME}
               hosts:
-                - host: 'tacp-tunnel-d.azure.nl.eu.abnamro.com'
-                  paths:
-                    - path: /
-                      pathType: Prefix
-                      port: 105
-                - host: '*.tacp-tunnel-d.azure.nl.eu.abnamro.com'
+                - host: '*.${CP_TUNNEL_DNS_DOMAIN}'
                   paths:
                     - path: /
                       pathType: Prefix
@@ -402,22 +385,12 @@ helmCharts:
             ingress:
               enabled: ${CP_BOOTSTRAP_INGRESS_ROUTER}
               annotations:
-                external-dns.alpha.kubernetes.io/hostname: "admin-sub-tacp.azure.nl.eu.abnamro.com"
+                external-dns.alpha.kubernetes.io/hostname: "*.${CP_SERVICE_DNS_DOMAIN}"
                 nginx.ingress.kubernetes.io/proxy-buffer-size: 16k
                 nginx.ingress.kubernetes.io/proxy-body-size: 200m # set to 200m to allow large file upload PCP-7954
               ingressClassName: ${CP_INGRESS_CLASSNAME}
               hosts:
-                - host: 'admin-sub-tacp.azure.nl.eu.abnamro.com'
-                  paths:
-                    - path: /
-                      pathType: Prefix
-                      port: 100
-                - host: '*.azure.nl.eu.abnamro.com'
-                  paths:
-                    - path: /
-                      pathType: Prefix
-                      port: 100
-                - host: '*.admin-sub-tacp.azure.nl.eu.abnamro.com'
+                - host: '*.${CP_SERVICE_DNS_DOMAIN}'
                   paths:
                     - path: /
                       pathType: Prefix
@@ -439,8 +412,8 @@ helmCharts:
               nodeCIDR: ${CP_NODE_CIDR}
               podCIDR: ${CP_POD_CIDR}
               serviceCIDR: ${CP_SERVICE_CIDR}
-            dnsDomain: admin-sub-tacp.azure.nl.eu.abnamro.com
-            dnsTunnelDomain: tacp-tunnel-d.azure.nl.eu.abnamro.com
+            dnsDomain: ${CP_SERVICE_DNS_DOMAIN}
+            dnsTunnelDomain: ${CP_TUNNEL_DNS_DOMAIN}
             storage:
               resources:
                 requests:
@@ -479,7 +452,7 @@ helmCharts:
         ignoreErrors: false
         base64Encoded: false
         skip: false
-        content: "# optional chart values fields\ntouch tls_values.yaml\nif [[ -n \"${TP_TLS_CERT}\" || \"${TP_GENERATE_CERTIFICATES}\" == \"true\" ]]; then\n  export _star_service_dns=\"'admin-sub-tacp.azure.nl.eu.abnamro.com'\"\n  export _star_tunnel_dns=\"'tacp-tunnel-d.azure.nl.eu.abnamro.com'\"\n  export _tp_generate_certificate_name=\"${TP_GENERATE_CERTIFICATE_NAME}\"\n  yq eval '\n    (.tp-cp-bootstrap.router-operator.ingress.tls[0].secretName = env(_tp_generate_certificate_name)) |\n    (.tp-cp-bootstrap.router-operator.ingress.tls[0].hosts[0] = env(_star_service_dns)) |\n    (.tp-cp-bootstrap.router-operator.ingress.tls[0].hosts[0] style=\"single\") |\n    (.tp-cp-bootstrap.hybrid-proxy.ingress.tls[0].secretName = env(_tp_generate_certificate_name)) |\n    (.tp-cp-bootstrap.hybrid-proxy.ingress.tls[0].hosts[0] = env(_star_tunnel_dns)) |\n    (.tp-cp-bootstrap.hybrid-proxy.ingress.tls[0].hosts[0] style=\"single\")\n    ' tls_values.yaml > tls_values.yaml\n  \n  echo \"TLS values:\"\n  cat tls_values.yaml\nfi\ntouch volume_values.yaml\nif [[ \"${CP_STORAGE_PV_NAME}\" != \"\" ]]; then\n  yq eval '.global.external.storage.volumeName = env(CP_STORAGE_PV_NAME)' volume_values.yaml > volume_values.yaml\n  echo \"Volume values:\"\n  cat volume_values.yaml\nfi\n"
+        content: "# optional chart values fields\ntouch tls_values.yaml\nif [[ -n \"${TP_TLS_CERT}\" || \"${TP_GENERATE_CERTIFICATES}\" == \"true\" ]]; then\n  export _star_service_dns=\"'tacp.azure.nl.eu.abnamro.com'\"\n  export _star_tunnel_dns=\"'tacp-tunnel.azure.nl.eu.abnamro.com'\"\n  export _tp_generate_certificate_name=\"${TP_GENERATE_CERTIFICATE_NAME}\"\n  yq eval '\n    (.tp-cp-bootstrap.router-operator.ingress.tls[0].secretName = env(_tp_generate_certificate_name)) |\n    (.tp-cp-bootstrap.router-operator.ingress.tls[0].hosts[0] = env(_star_service_dns)) |\n    (.tp-cp-bootstrap.router-operator.ingress.tls[0].hosts[0] style=\"single\") |\n    (.tp-cp-bootstrap.hybrid-proxy.ingress.tls[0].secretName = env(_tp_generate_certificate_name)) |\n    (.tp-cp-bootstrap.hybrid-proxy.ingress.tls[0].hosts[0] = env(_star_tunnel_dns)) |\n    (.tp-cp-bootstrap.hybrid-proxy.ingress.tls[0].hosts[0] style=\"single\")\n    ' tls_values.yaml > tls_values.yaml\n  \n  echo \"TLS values:\"\n  cat tls_values.yaml\nfi\ntouch volume_values.yaml\nif [[ \"${CP_STORAGE_PV_NAME}\" != \"\" ]]; then\n  yq eval '.global.external.storage.volumeName = env(CP_STORAGE_PV_NAME)' volume_values.yaml > volume_values.yaml\n  echo \"Volume values:\"\n  cat volume_values.yaml\nfi\n"
   - name: platform-base
     version: ${CP_PLATFORM_BASE_VERSION}
     condition: ${CP_INSTALL_PLATFORM_BASE}
