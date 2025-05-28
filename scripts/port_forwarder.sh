@@ -53,13 +53,13 @@ function forward_provisioner() {
 
 case $1 in
     "tekton")
-        forward_tekton
+        forward_tekton &
         ;;
     "provisioner")
-        forward_provisioner
+        forward_provisioner &
         ;;
     "ingress")
-        forward_ingress
+        forward_ingress &
         ;;
     "all")
         echo "Enabling all port-forwards"

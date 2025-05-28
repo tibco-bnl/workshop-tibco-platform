@@ -117,14 +117,21 @@ exit
 sudo kubectl port-forward -n ingress-system --address 0.0.0.0 service/ingress-nginx-controller 80:http 443:https
 ```
 
-MailDev can now be access on https://mail.azure.nl.eu.abnamro.com/#/
+## Update etc hosts file
+
+# minikube abn amro
+127.0.0.1 mail.tacp.azure.nl.eu.abnamro.com provisioner.tacp.azure.nl.eu.abnamro.com tekton.tacp.azure.nl.eu.abnamro.com
+127.0.0.1 admin.tacp.azure.nl.eu.abnamro.com subscription.tacp.azure.nl.eu.abnamro.com
+127.0.0.1 bwce-d.tacp.azure.nl.eu.abnamro.com flogo-d.tacp.azure.nl.eu.abnamro.com
+
+MailDev can now be access on https://mail.tacp.azure.nl.eu.abnamro.com/#/
 
 
 ### Setup admin user and benelux cp
 This section is work in progress. Most likely not working at this moment.
 
 Open the maildev app in your browser:
-> https://mail.azure.nl.eu.abnamro.com/
+> https://mail.tacp.azure.nl.eu.abnamro.com/
 
 >Open the email 
 > click on Sign in.
@@ -150,7 +157,7 @@ Use below details:
   "subscriptionDetails": {
     "companyName": "TIBCO",
     "ownerLimit": 10,
-    "hostPrefix": "benelux",
+    "hostPrefix": "subscription",
     "comment": ""
   },
   "useDefaultIDP": true
@@ -169,7 +176,7 @@ A new email has been received to inform you on the activation of user admin@tibc
 > Click sign in
 > Fill out the Activate acocunt details form and submit
 
-Please not the url of the CP page now changes to benelux.cp1-my.azure.nl.eu.abnamro.com.
+Please not the url of the CP page now changes to subscription.tacp.azure.nl.eu.abnamro.com.
 
 > Sign in with default IdP.
 Use admin@tibco.com user credentials just entered.

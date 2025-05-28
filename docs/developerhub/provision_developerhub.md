@@ -40,7 +40,7 @@ Addin the host section the IP-Address found above with the dns name of the devel
 
 (example)
 ```
-192.168.49.2 devhub.benelux.cp1-my.azure.nl.eu.abnamro.com
+192.168.49.2 devhub.subscription.tacp.azure.nl.eu.abnamro.com
 ```
 
 ![alt text](images/image_dns2.png)

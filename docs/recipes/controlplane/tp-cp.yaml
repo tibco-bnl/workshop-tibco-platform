@@ -41,7 +41,7 @@ meta:
     CP_RESOURCES_REQUEST_MEMORY: ${GUI_CP_RESOURCES_REQUEST_MEMORY:-"50Mi"} # 37 pods * 50Mi = 1850Mi
 
     # domain
-    CP_DNS_DOMAIN: ${GUI_CP_DNS_DOMAIN:-"azure.nl.eu.abnamro.com"}
+    CP_DNS_DOMAIN: ${GUI_CP_DNS_DOMAIN:-"tacp.azure.nl.eu.abnamro.com"}
     CP_SERVICE_DNS_DOMAIN: ${CP_INSTANCE_ID}-my.${CP_DNS_DOMAIN}
     CP_TUNNEL_DNS_DOMAIN: ${CP_INSTANCE_ID}-tunnel.${CP_DNS_DOMAIN}
     # storage

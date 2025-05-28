@@ -36,7 +36,7 @@ Now we can use the recipe `tp-base-on-prem-https.yaml` to install third party to
 meta:
   guiEnv:
     note: "deploy-tp-base-on-prem-cert"
-    GUI_TP_DNS_DOMAIN: azure.nl.eu.abnamro.com
+    GUI_TP_DNS_DOMAIN: tacp.tacp.azure.nl.eu.abnamro.com
     GUI_TP_TLS_CERT: ""
     GUI_TP_TLS_KEY: ""
     GUI_TP_INSTALL_NGINX_INGRESS: true
@@ -103,7 +103,7 @@ export PIPELINE_INPUT_RECIPE="docs/recipes/controlplane/tp-cp.yaml"
 ./dev/platform-provisioner-pipelinerun.sh
 ```
 
-By default; maildev will be installed. You can access maildev using: http://mail.azure.nl.eu.abnamro.com
+By default; maildev will be installed. You can access maildev using: http://mail.tacp.azure.nl.eu.abnamro.com
 
 ## Deploy TIBCO Data Plane on minikube
 
