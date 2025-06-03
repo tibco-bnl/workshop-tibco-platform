@@ -186,7 +186,8 @@ This will delete the existing PVC created by the provisioning of the capability.
 
 ### Create Persistent Volume Claim
 
-```yaml
+```
+echo "
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -199,10 +200,7 @@ spec:
   resources:
     requests:
       storage: 10Gi
-```
-
-```bash
-kubectl apply -f -
+" | kubectl apply -f -
 ```
 
 ### Final Deployment Steps
