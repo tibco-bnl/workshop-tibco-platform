@@ -1,98 +1,120 @@
 # TIBCO Platform Workshop
 
-This repository contains material for the TIBCO Platform Workshop. The material is intended for TIBCO customers and partners who want to create a TIBCO Platform 'sandbox environment' and expiriment with it. The aim of this sandbox is to get to learn the platform. A sandbox is NOT intended or supported for production purposes.
+This repository contains material for the TIBCO Platform Workshop. The material is intended for TIBCO customers and partners who want to create a TIBCO Platform sandbox environment and experiment with it. The aim of this sandbox is to help users learn the platform. **A sandbox is NOT intended or supported for production purposes.**
 
-In order to setup the platform, four steps are required:
+## Table of Contents
 
-(A) Setup a base VM
-(B) Prepare deployment and deploy kubernetes
-(C) Install the platform
-(D) Configure the platform
+1. [Setup the Base VM](#a-setup-the-base-vm)
+2. [Prepare Deployment and Deploy Kubernetes](#b-prepare-deployment-and-deploy-kubernetes)
+3. [Install the Platform](#c-install-the-platform)
+4. [Configure the Platform](#d-configure-the-platform)
+5. [Documentation Index](#documentation-index)
+6. [Doc Control](#doc-control)
 
-## (A) Setup the base VM
+---
+
+## (A) Setup the Base VM
 
 The following sandbox VMs can be used:
 
-1) Docker Desktop for WSL with Kubernetes. This setup is suitable for users with Windows 11 and Windows Subsystem for Linux (WSL) + Docker Desktop including Kubernetes. In this setup the Kubernetes environment of Docker Desktop is used as the base infrastructure. [See for a description here](docs/baseplatforms/install-docker-desktop-on-wsl.md).
+1. **Docker Desktop for WSL with Kubernetes**  
+    Suitable for users with Windows 11 and Windows Subsystem for Linux (WSL) + Docker Desktop including Kubernetes. In this setup, the Kubernetes environment of Docker Desktop is used as the base infrastructure.  
+    [See description here](docs/baseplatforms/install-docker-desktop-on-wsl.md)
 
+2. **Ubuntu on WSL**  
+    Suitable for users with Windows 11 and WSL. The platform is installed on an instance of Ubuntu running in WSL.  
+    [See description here](docs/baseplatforms/install-ubuntu-on-wsl.md)
 
-2) Ubuntu on WSL. This setup is suitable for users with Windows 11 and Windows Subsystem for Linux (WSL). The platform is installed on an instance of Ubuntu running in WSL.
-[See for a description here](docs/baseplatforms/install-ubuntu-on-wsl.md).
+3. **Ubuntu on AWS**  
+    Suitable for departments that want a departmental sandbox. The sandbox is installed on a shared instance of Ubuntu running on AWS.  
+    [See description here](docs/baseplatforms/install-ubuntu-on-aws.md)
 
+4. **Ubuntu on Azure**  
+    Suitable for departments that want a departmental sandbox. The sandbox is installed on a shared instance of Ubuntu running on Azure.  
+    [See description here](docs/baseplatforms/install-ubuntu-on-azure.md)
 
-3) Ubuntu on AWS. This setup is suitable for departments that want a departemental sandbox. The sandbox is installed on an a shared instance of Ubuntu running on AWS.
-[See for a description here](docs/baseplatforms/install-ubuntu-on-aws.md).
+---
 
-4) Ubuntu on Azure. This setup is suitable for departments that want a departemental sandbox. The sandbox is installed on an a shared instance of Ubuntu running on Azure.
-[See for a description here](docs/baseplatforms/install-ubuntu-on-azure.md).
+## (B) Prepare Deployment and Deploy Kubernetes
 
+To run the TIBCO platform, a Kubernetes platform is required. Some tools also need to be installed. The following Kubernetes flavors are supported:
 
-## (B) Prepare deployment and deploy kubernetes
+1. **Docker Desktop for WSL with Kubernetes**  
+    *Work in progress.*
 
-To run the TIBCO platform, a Kubernetes platform is required. Next to that some tools need to be installed. The following flavours of Kubernetes are installed:
+2. **Minikube**  
+    Minikube can be used with the following base platforms:
 
-1) ** Work in progress ** Docker Desktop for WSL with Kubernetes.
+    - **Ubuntu on WSL**  
+      1. [Login to the Ubuntu image on WSL](docs/baseplatforms/login-to-ubuntu-wsl.md)
+      2. [Prepare the platform deployment with Minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md)
 
-2) Minikube. Minikube can be used when using the following base platforms:
+    - **Ubuntu on AWS**  
+      1. [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md)
+      2. [Prepare the platform deployment with Minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md)
 
-    2. Ubuntu on WSL. To install tooling and minikube, use the following two steps:
-        1. [Login to the Ubuntu image on WSL](docs/baseplatforms/login-to-ubuntu-wsl.md).
-        2. [Prepare the platform deployment with minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md).
-    3. Ubuntu on AWS. To install tooling and minikube, use the following two steps:
-        1. [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md).
-        2. [Prepare the platform deployment with minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md).
-    4. Ubuntu on Azure. To install tooling and minikube, use the following two steps:
-        1. [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md).
-        2. [Prepare the platform deployment with minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md).
+    - **Ubuntu on Azure**  
+      1. [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md)
+      2. [Prepare the platform deployment with Minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md)
 
+---
 
-## (C) Install the platform
-Once a Kubernetes platform (Control Plane and Data Plane) is installed the TIBCO platform can be installed. For that the following procedures apply:
+## (C) Install the Platform
 
-1. ** Work in progress ** Docker Desktop Kubernetes. To install the TIBCO Platform use the following steps:
-    1. [Login to the Ubuntu image on WSL](docs/xxxxxx.md).
+Once a Kubernetes platform (Control Plane and Data Plane) is installed, the TIBCO platform can be installed. Use the following procedures:
+
+1. **Docker Desktop Kubernetes**  
+    *Work in progress.*  
+    1. [Login to the Ubuntu image on WSL](docs/xxxxxx.md)  
     2. [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md)
 
-2. Ubuntu with minikube on WSL. To install the TIBCO Platform use the following steps:
-    1. [Login to the Ubuntu image on WSL](docs/baseplatforms/login-to-ubuntu-wsl.md).
-    2. [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md).
+2. **Ubuntu with Minikube on WSL**  
+    1. [Login to the Ubuntu image on WSL](docs/baseplatforms/login-to-ubuntu-wsl.md)
+    2. [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md)
 
-3. Ubuntu with minikube on AWS.  To install the TIBCO Platform use the following steps::
-    1. [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md).
-    2. [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md).
+3. **Ubuntu with Minikube on AWS**  
+    1. [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md)
+    2. [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md)
 
-4. Ubuntu with minikube on Azure. To install the TIBCO Platform use the following steps:
-    1. [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md).
-    2. [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md).
+4. **Ubuntu with Minikube on Azure**  
+    1. [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md)
+    2. [Install the TIBCO Platform](docs/configure-platform/install-tibco-platform.md)
 
+---
 
-## (D) Configure the platform
+## (D) Configure the Platform
+
 Once the TIBCO platform is installed, a number of configurations are required.
 
-Use [this](docs/configure-platform/configure-tibco-platform.md) description to do the basic configuration of the platform. 
+Use [this guide](docs/configure-platform/configure-tibco-platform.md) to perform the basic configuration of the platform.
+
+---
 
 ## Documentation Index
 
 Below is a list of documentation files in this repository for quick reference:
 
 - [README.md](README.md): TIBCO Platform Workshop
-- [docs/baseplatforms/install-docker-desktop-on-wsl.md](docs/baseplatforms/install-docker-desktop-on-wsl.md): Install Docker Desktop on WSL
-- [docs/baseplatforms/install-ubuntu-on-wsl.md](docs/baseplatforms/install-ubuntu-on-wsl.md): Install Ubuntu on WSL
-- [docs/baseplatforms/install-ubuntu-on-aws.md](docs/baseplatforms/install-ubuntu-on-aws.md): Install Ubuntu on AWS
-- [docs/baseplatforms/install-ubuntu-on-azure.md](docs/baseplatforms/install-ubuntu-on-azure.md): Install Ubuntu on Azure
-- [docs/baseplatforms/login-to-ubuntu-wsl.md](docs/baseplatforms/login-to-ubuntu-wsl.md): Login to Ubuntu WSL
-- [docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md): Login to an Ubuntu AWS or Azure instance
-- [docs/baseplatforms/prepare-platform-deployment-minikube.md](docs/baseplatforms/prepare-platform-deployment-minikube.md): Prepare Platform Deployment Minikube
-- [docs/configure-platform/install-tibco-platform.md](docs/configure-platform/install-tibco-platform.md): Install TIBCO Platform
-- [docs/configure-platform/configure-tibco-platform.md](docs/configure-platform/configure-tibco-platform.md): Configure TIBCO Platform
-- [docs/howto/how-to-dp-openshift-aro-aks-setup-guide.md](docs/howto/how-to-dp-openshift-aro-aks-setup-guide.md): How to Set Up Azure Red Hat OpenShift (ARO) Cluster and Deploy TIBCO Platform Data Plane
+- [Install Docker Desktop on WSL](docs/baseplatforms/install-docker-desktop-on-wsl.md)
+- [Install Ubuntu on WSL](docs/baseplatforms/install-ubuntu-on-wsl.md)
+- [Install Ubuntu on AWS](docs/baseplatforms/install-ubuntu-on-aws.md)
+- [Install Ubuntu on Azure](docs/baseplatforms/install-ubuntu-on-azure.md)
+- [Login to Ubuntu WSL](docs/baseplatforms/login-to-ubuntu-wsl.md)
+- [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md)
+- [Prepare Platform Deployment Minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md)
+- [Install TIBCO Platform](docs/configure-platform/install-tibco-platform.md)
+- [Configure TIBCO Platform](docs/configure-platform/configure-tibco-platform.md)
+- [How to Set Up Azure Red Hat OpenShift (ARO) Cluster and Deploy TIBCO Platform Data Plane](docs/howto/how-to-dp-openshift-aro-aks-setup-guide.md)
 
-## Doc control
+---
 
-| Name | Date |   Version   | Remarks                                                   |
-|:---------------------|----------|:-----------:|:--------------------------------------------------------------|
-| Kulbhushan               | 26/11/2024 | v1  | Initial draft |
-| Jurriaan               | 21/1/2025 | v2  | Rebased and Merged tp_on_minikube and doc branches also cleaned up unwanted documentation |
-| Marco               | 28/1/2025 | v3  | Separated port forwading into a separate script |
-| Kulbhushan               | 29/1/2025 | v4  | Added script to generate self ca signed certificates and tokens |
-| Kulbhushan               | 03/06/2025 | v4  | Added ARO setup guide for 1.7 version |
+## Doc Control
+
+| Name        | Date       | Version | Remarks                                                                                  |
+|:------------|:-----------|:-------:|:-----------------------------------------------------------------------------------------|
+| Kulbhushan  | 26/11/2024 | v1      | Initial draft                                                                            |
+| Jurriaan    | 21/1/2025  | v2      | Rebased and merged tp_on_minikube and doc branches; cleaned up unwanted documentation     |
+| Marco       | 28/1/2025  | v3      | Separated port forwarding into a separate script                                          |
+| Kulbhushan  | 29/1/2025  | v4      | Added script to generate self-signed CA certificates and tokens                           |
+| Kulbhushan  | 03/06/2025 | v4      | Added ARO setup guide for 1.7 version                                                    |
+
