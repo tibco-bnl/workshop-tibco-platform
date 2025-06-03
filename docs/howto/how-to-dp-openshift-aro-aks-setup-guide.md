@@ -47,6 +47,17 @@ This guide provides step-by-step instructions to set up an Azure Red Hat OpenShi
 
 ---
 
+## Clone tp-helm-charts repo
+
+To clone the `tp-helm-charts` repository, run:
+
+```bash
+git clone https://github.com/TIBCOSoftware/tp-helm-charts.git
+cd tp-helm-charts
+```
+
+This will download the latest charts and scripts required for the setup.
+
 ## Using a Prebuilt Docker Container for CLI Tools
 
 All CLI commands in this guide can be executed inside a prebuilt Docker container that includes the required tools. This approach ensures a consistent environment and avoids local installation issues.
