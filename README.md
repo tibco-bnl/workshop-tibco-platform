@@ -96,17 +96,14 @@ Use [this guide](docs/configure-platform/configure-tibco-platform.md) to perform
 
 Below is a list of documentation files in this repository for quick reference:
 
-- [README.md](README.md): TIBCO Platform Workshop
-- [Install Docker Desktop on WSL](docs/baseplatforms/install-docker-desktop-on-wsl.md)
-- [Install Ubuntu on WSL](docs/baseplatforms/install-ubuntu-on-wsl.md)
-- [Install Ubuntu on AWS](docs/baseplatforms/install-ubuntu-on-aws.md)
-- [Install Ubuntu on Azure](docs/baseplatforms/install-ubuntu-on-azure.md)
-- [Login to Ubuntu WSL](docs/baseplatforms/login-to-ubuntu-wsl.md)
-- [Login to an Ubuntu AWS or Azure instance](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md)
-- [Prepare Platform Deployment Minikube](docs/baseplatforms/prepare-platform-deployment-minikube.md)
-- [Install TIBCO Platform](docs/configure-platform/install-tibco-platform.md)
-- [Configure TIBCO Platform](docs/configure-platform/configure-tibco-platform.md)
+- [Install TIBCO Platform on Minikube or Docker Desktop kubernetes](/scripts/running_platform_installer.md)
+- [How to Set Up EKS Fargate EFS and Deploy TIBCO Data Plane](docs/howto/how-to-dp-eks-fargate-efs-setup-guide.md)
 - [How to Set Up Azure Red Hat OpenShift (ARO) Cluster and Deploy TIBCO Platform Data Plane](docs/howto/how-to-dp-openshift-aro-aks-setup-guide.md)
+- [How to Configure Ingress for TIBCO Platform](docs/howto/how-to-configure-ingress.md)
+- [How to Enable SSL for TIBCO Platform](docs/howto/how-to-enable-ssl.md)
+- [How to Generate Self-Signed Certificates](docs/howto/how-to-generate-self-signed-certificates.md)
+- [How to Set Up External Database](docs/howto/how-to-setup-external-database.md)
+- [How to Use Port Forwarding](docs/howto/how-to-use-port-forwarding.md)
 
 ---
 
@@ -118,5 +115,6 @@ Below is a list of documentation files in this repository for quick reference:
 | Jurriaan    | 21/1/2025  | v2      | Rebased and merged tp_on_minikube and doc branches; cleaned up unwanted documentation     |
 | Marco       | 28/1/2025  | v3      | Separated port forwarding into a separate script                                          |
 | Kulbhushan  | 29/1/2025  | v4      | Added script to generate self-signed CA certificates and tokens                           |
-| Kulbhushan  | 03/06/2025 | v4      | Added ARO setup guide for 1.7 version                                                    |
+| Kulbhushan  | 03/06/2025 | v5      | Added ARO setup guide for 1.7 version                                                    |
+| Marco  | 03/06/2025 | v5      | Added How to Set Up EKS Fargate EFS and Deploy TIBCO Data Plane for 1.7 version                                                    |
 
