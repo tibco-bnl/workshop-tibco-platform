@@ -1,4 +1,4 @@
- Open WSL Ubuntu
+# Install platform on minikube
  
  
  #### Install minikube
