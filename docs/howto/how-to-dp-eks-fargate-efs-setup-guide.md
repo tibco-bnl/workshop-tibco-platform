@@ -173,6 +173,9 @@ spec:
 Provision a capability (Flogo or BWCE) which require persistent storage.
 Use 'efs-sc' as storage class
 
+---
+## The below section may not be required if artifactmanager pod is going into a running state after a while.
+
 ### Reset Persistent Volume claim
 
 Once artifactmanager is deployed (it will never run) execute:
