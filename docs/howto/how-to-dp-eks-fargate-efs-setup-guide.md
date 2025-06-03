@@ -165,7 +165,7 @@ spec:
     volumeHandle: $EKS_EFS_FS_ID::$EKS_EFS_AP
 " | kubectl apply -f -
 ```
-
+If the PV already exists and following step (capability provisioning) is failing it will help to first delete the existing PV, recreated with above command and then continue.
 ---
 
 ## Provision Capabiity
@@ -188,7 +188,6 @@ This will delete the existing PVC created by the provisioning of the capability.
 
 
 ### Create Persistent Volume Claim
-
 ```
 echo "
 apiVersion: v1
