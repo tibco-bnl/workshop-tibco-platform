@@ -1,4 +1,3 @@
-
 # TIBCO Platform Workshop
 
 This repository contains material for the TIBCO Platform Workshop. The material is intended for TIBCO customers and partners who want to create a TIBCO Platform 'sandbox environment' and expiriment with it. The aim of this sandbox is to get to learn the platform. A sandbox is NOT intended or supported for production purposes.
@@ -72,6 +71,22 @@ Once the TIBCO platform is installed, a number of configurations are required.
 
 Use [this](docs/configure-platform/configure-tibco-platform.md) description to do the basic configuration of the platform. 
 
+## Documentation Index
+
+Below is a list of documentation files in this repository for quick reference:
+
+- [README.md](README.md): TIBCO Platform Workshop
+- [docs/baseplatforms/install-docker-desktop-on-wsl.md](docs/baseplatforms/install-docker-desktop-on-wsl.md): Install Docker Desktop on WSL
+- [docs/baseplatforms/install-ubuntu-on-wsl.md](docs/baseplatforms/install-ubuntu-on-wsl.md): Install Ubuntu on WSL
+- [docs/baseplatforms/install-ubuntu-on-aws.md](docs/baseplatforms/install-ubuntu-on-aws.md): Install Ubuntu on AWS
+- [docs/baseplatforms/install-ubuntu-on-azure.md](docs/baseplatforms/install-ubuntu-on-azure.md): Install Ubuntu on Azure
+- [docs/baseplatforms/login-to-ubuntu-wsl.md](docs/baseplatforms/login-to-ubuntu-wsl.md): Login to Ubuntu WSL
+- [docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md](docs/baseplatforms/login-to-an-ubuntu-aws-or-azure-instance.md): Login to an Ubuntu AWS or Azure instance
+- [docs/baseplatforms/prepare-platform-deployment-minikube.md](docs/baseplatforms/prepare-platform-deployment-minikube.md): Prepare Platform Deployment Minikube
+- [docs/configure-platform/install-tibco-platform.md](docs/configure-platform/install-tibco-platform.md): Install TIBCO Platform
+- [docs/configure-platform/configure-tibco-platform.md](docs/configure-platform/configure-tibco-platform.md): Configure TIBCO Platform
+- [docs/howto/how-to-dp-openshift-aro-aks-setup-guide.md](docs/howto/how-to-dp-openshift-aro-aks-setup-guide.md): How to Set Up Azure Red Hat OpenShift (ARO) Cluster and Deploy TIBCO Platform Data Plane
+
 ## Doc control
 
 | Name | Date |   Version   | Remarks                                                   |
@@ -80,3 +95,4 @@ Use [this](docs/configure-platform/configure-tibco-platform.md) description to d
 | Jurriaan               | 21/1/2025 | v2  | Rebased and Merged tp_on_minikube and doc branches also cleaned up unwanted documentation |
 | Marco               | 28/1/2025 | v3  | Separated port forwading into a separate script |
 | Kulbhushan               | 29/1/2025 | v4  | Added script to generate self ca signed certificates and tokens |
+| Kulbhushan               | 03/06/2025 | v4  | Added ARO setup guide for 1.7 version |
