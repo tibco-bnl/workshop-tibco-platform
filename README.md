@@ -2,12 +2,14 @@
 
 This repository contains material for the TIBCO Platform Workshop. The material is intended for TIBCO customers and partners who want to create a TIBCO Platform sandbox environment and experiment with it. The aim of this sandbox is to help users learn the platform. **A sandbox is NOT intended or supported for production purposes.**
 
-## Table of Contents
+## Table of Contents: In order to setup the platform, four steps are required:
 
-1. [Setup the Base VM](#a-setup-the-base-vm)
-2. [Prepare Deployment and Deploy Kubernetes](#b-prepare-deployment-and-deploy-kubernetes)
-3. [Install the Platform](#c-install-the-platform)
-4. [Configure the Platform](#d-configure-the-platform)
+1. [(A) Setup the Base VM](#a-setup-the-base-vm)
+2. [(B) Prepare Deployment and Deploy Kubernetes](#b-prepare-deployment-and-deploy-kubernetes)
+3. [(C) Install the Platform](#c-install-the-platform)
+4. [(D) Configure the Platform](#d-configure-the-platform)
+
+## Other documentation in this repo: 
 5. [Documentation Index](#documentation-index)
 6. [Doc Control](#doc-control)
 
