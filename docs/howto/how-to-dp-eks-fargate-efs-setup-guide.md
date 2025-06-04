@@ -106,6 +106,7 @@ echo "EKS_EFS_AP= $EKS_EFS_AP"
 ```
 
 ### Create Security Group and Add Ingress
+The EKS cluster resources require access to the fargate services volumes. For this port 2049 is allowed in the vpc ingress.
 
 ```bash
 EKS_EFS_SG_ID=$(aws ec2 create-security-group   --description eks-on-fargate-ingress   --group-name eks-on-fargate   --vpc-id $EKS_VPC_ID   --region $EKS_AWS_REGION   --query 'GroupId' --output text)
