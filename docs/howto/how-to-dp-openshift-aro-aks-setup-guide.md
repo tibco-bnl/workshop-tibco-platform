@@ -3,6 +3,9 @@
 ## Original documentation can be found and referred in future here: 
 [ARO docs from tp-helm-charts](https://github.com/TIBCOSoftware/tp-helm-charts/tree/main/docs/workshop/aro%20(Azure%20Red%20Hat%20OpenShift))
 
+This document is with extra details while following the above document and make all the things working. 
+
+
 ## Table of Contents
 <!-- TOC -->
 - [Introduction](#introduction)
