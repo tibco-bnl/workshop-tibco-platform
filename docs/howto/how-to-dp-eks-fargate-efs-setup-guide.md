@@ -18,6 +18,10 @@
 - Use **both public and private subnets**. Public subnets allow access to the Kubernetes API from local machines.
 
 
+## Architecture
+
+![alt text](../images/eks-fargate-efs.png)
+
 ---
 
 ## Environment Variables
@@ -32,6 +36,7 @@ EKS_FARGATE_PROFILE=dp-on-fargate-profile
 POD_EXECUTION_ROLE_ARN="arn:aws:iam::075021648303:role/EMEA_EKS-FARGATE-PODS"  ## role Provides access to other AWS service resources that are required to run Amazon EKS pods on AWS Fargates
 EKS_FARGATE_NAMESPACES="namespace=default namespace=kube-system namespace=external-dns namespace=dp1" ## list of namespaces in which pods will be deployed using Fargate.
 ```
+
 
 ---
 
@@ -89,6 +94,8 @@ kubectl rollout restart -n external-dns deployment external-dns
 ## EFS Setup
 This section describes the setup of the persistent storage based on EFS. EFS is the required type of storage on Fargate.
 Only static assigned storage is permitted on Fargate.
+
+
 
 ### Create EFS File System
 
