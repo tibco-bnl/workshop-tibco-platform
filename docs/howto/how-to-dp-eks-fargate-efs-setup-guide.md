@@ -119,6 +119,8 @@ aws ec2 describe-security-groups --group-ids $EKS_EFS_SG_ID
 
 ### Create Mount Targets
 
+An EFS mount target is an NFSv4 endpoint that allows EC2 instances or Fargate tasks within a VPC to access the EFS file system.
+
 ```bash
 for subnet in $(aws eks describe-fargate-profile   --cluster-name $EKS_EKS_CLUSTER   --fargate-profile-name $EKS_FARGATE_PROFILE   --region $EKS_AWS_REGION   --query "fargateProfile.subnets" --output text); do
     aws efs create-mount-target       --file-system-id $EKS_EFS_FS_ID       --subnet-id $subnet       --security-group $EKS_EFS_SG_ID       --region $EKS_AWS_REGION
