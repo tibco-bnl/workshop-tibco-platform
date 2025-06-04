@@ -387,9 +387,9 @@ oc adm policy add-scc-to-user privileged -z sa -n dp1
 
 *This step allows pods running under these service accounts to use the `privileged` SCC, which may be required for some TIBCO Platform components.*
 
-## Step 9: (Optional) Configure Observability
+## Step 9: Configure Observability
 
-Note 1: Optional because if you already have your observability stack we can configure to use yours.
+Note 1: This is optional because if you already have your observability stack we can configure to use yours.
 For logs and traces DP needs Elastic. 
 For metrics DP needs prometheus
 
