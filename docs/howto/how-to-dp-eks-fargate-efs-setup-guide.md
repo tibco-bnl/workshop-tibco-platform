@@ -70,7 +70,7 @@ aws eks create-fargate-profile     \
    --cluster-name $EKS_EKS_CLUSTER \
    --fargate-profile-name $EKS_FARGATE_PROFILE  \
    --pod-execution-role-arn $POD_EXECUTION_ROLE_ARN  \
-   --subnets $EKS_VPC_PRIVATE_SUBNETIDS
+   --subnets $EKS_VPC_PRIVATE_SUBNETIDS \
    --selectors $EKS_FARGATE_NAMESPACES
 ```
 
