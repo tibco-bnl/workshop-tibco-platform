@@ -5,6 +5,7 @@
 
 This document is with extra details while following the above document and make all the things working. 
 
+Note: This document is copy of gh-pages doc from [here:](https://tibco-bnl.github.io/workshop-tibco-platform/docs/howto/how-to-dp-openshift-aro-aks-setup-guide.html#get-openshift-ingress-domain) hence links in table of contents will not work if you are viewing in google docs. 
 
 ## Table of Contents
 <!-- TOC -->
