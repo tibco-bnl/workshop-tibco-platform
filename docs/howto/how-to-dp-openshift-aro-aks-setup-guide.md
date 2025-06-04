@@ -364,8 +364,18 @@ EOF
 ```
 
 ---
+## Grant Privileged SCC to Service Accounts
 
-## Step 9: Configure Observability
+To ensure certain workloads have the necessary permissions, grant the `privileged` Security Context Constraint (SCC) to the default and `sa` service accounts in the `dp1` namespace:
+
+```bash
+oc adm policy add-scc-to-user privileged -z default -n dp1
+oc adm policy add-scc-to-user privileged -z sa -n dp1
+```
+
+*This step allows pods running under these service accounts to use the `privileged` SCC, which may be required for some TIBCO Platform components.*
+
+## Step 9: (Optional) Configure Observability
 
 ### 9.1. Elastic Stack
 
@@ -374,9 +384,11 @@ Install ECK via OperatorHub:
 
 ### 9.2. Prometheus
 
+**Note:** There is already a prometheus provisioned in the ARO cluster. For DP we will provision our own prometheus in the namespace mentioned below. 
+
 Prometheus is pre-installed. To scrape metrics from Data Plane, create a ServiceMonitor:
 
-```bash
+```
 export DP_NAMESPACE="dp1" # Replace with your namespace
 kubectl apply -f - <<EOF
 apiVersion: monitoring.coreos.com/v1
