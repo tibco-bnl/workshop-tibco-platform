@@ -136,16 +136,21 @@ chmod +x pull-secret.txt
 
 Navigate to your scripts directory and run the pre-cluster script:
 
+This script prepares the Azure environment (resource group, VNet, subnets) needed before deploying an ARO cluster, ensuring all required network infrastructure is in place.
+
+E.g. It creates openshiftvnet with master and worker subnets.
+
 ```bash
 cd "aro (Azure Red Hat OpenShift)/scripts"
 ./pre-aro-cluster-script.sh
 ```
 
-This creates the resource group, VNet, and subnets.
 
 ---
 
 ## Step 3: Create ARO Cluster
+
+Cluster creation takes 30–45 minutes.
 
 ```bash
 az aro create \
@@ -160,13 +165,14 @@ az aro create \
     --pull-secret @pull-secret.txt
 ```
 
-Cluster creation takes 30–45 minutes.
 
 ---
 
 ## Step 4: Permissions and Role Assignments
 
 Below are the key commands used to set permissions and roles for your ARO cluster and TIBCO Platform Data Plane setup, with brief descriptions for each step.
+
+Ref: [Microsoft ARO Doc: How to Create a Storage Class and Set Permissions](https://learn.microsoft.com/en-us/azure/openshift/howto-create-a-storageclass#set-permissions)
 
 ### 4.1. Set Resource Group Permissions
 
@@ -212,6 +218,8 @@ oc adm policy add-cluster-role-to-user azure-secret-reader system:serviceaccount
 ## Step 5: Connect to the Cluster
 
 ### 5.1. Get Credentials
+
+You can also get credentials from the aroCluster in Azure Portal by clicking on "Connect" button. 
 
 ```bash
 az aro list-credentials --name ${TP_CLUSTER_NAME} --resource-group ${TP_RESOURCE_GROUP}
@@ -287,7 +295,7 @@ oc get scc tp-scc
 
 ## Step 7: Prepare Data Plane Environment
 
-Set additional variables:
+Set additional variables (if you are still in the same terminal window, else export all the env variables again):
 
 ```bash
 export TP_TIBCO_HELM_CHART_REPO=https://tibcosoftware.github.io/tp-helm-charts
@@ -297,7 +305,7 @@ export TP_TIBCO_HELM_CHART_REPO=https://tibcosoftware.github.io/tp-helm-charts
 
 ## Step 8: Install Storage Classes
 
-### 8.1. Azure Files Storage Class
+### 8.1. Azure Files Storage Class (Used in capabilities)
 
 ```bash
 oc apply -f - <<EOF
@@ -377,10 +385,19 @@ oc adm policy add-scc-to-user privileged -z sa -n dp1
 
 ## Step 9: (Optional) Configure Observability
 
+Note 1: Optional because if you already have your observability stack we can configure to use yours.
+For logs and traces DP needs Elastic. 
+For metrics DP needs prometheus
+
+Note 2: You can also configure observability after creating/registering the Data Plane.
+
 ### 9.1. Elastic Stack
 
 Install ECK via OperatorHub:  
 [Elastic ECK on OpenShift](https://www.elastic.co/docs/deploy-manage/deploy/cloud-on-k8s/deploy-eck-on-openshift)
+
+Follow Elastic configuration guide for creating all the indexes needed for the TIBCO Platform
+[Prepare logs and traces server](https://docs.tibco.com/pub/platform-cp/latest/doc/html/Default.htm#UserGuide/preparing-logs-and-traces-servers.htm?TocPath=Observability%2520in%2520TIBCO%2520Control%2520Plane%257CConfiguring%2520Observability%2520Resource%257C_____1)
 
 ### 9.2. Prometheus
 
@@ -422,6 +439,10 @@ TOKEN=$(oc create token thanos-client -n openshift-monitoring)
 ## Step 10: Deploy TIBCO Platform Data Plane
 
 Login to your SaaS CP and Register a new Data plane. 
+
+**Note:** If you do not have an access to SaaS CP assigned to your customer work with TIBCO ATS Team.
+Usually there is an invitation email sent to the manager or account lead. 
+
 Follow the wizard which will generate following helm commands with a unique DP ID. 
 
 Dataplane name: aroCluster or aroDataplane or aroStaging
