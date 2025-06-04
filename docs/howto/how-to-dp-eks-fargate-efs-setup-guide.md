@@ -23,26 +23,26 @@
 ## Environment Variables
 
 ```bash
-AWS_DEFAULT_PROFILE=emea-use
+AWS_DEFAULT_PROFILE=emea-use ## Based on local config in ~/.aws/config 
 EKS_AWS_REGION=eu-west-1 
 EKS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
 EKS_EKS_CLUSTER=dp-on-eksfargate
 EKS_DP_NAMESPACE=dp1
 EKS_FARGATE_PROFILE=dp-on-fargate-profile
-POD_EXECUTION_ROLE_ARN="arn:aws:iam::075021648303:role/EMEA_EKS-FARGATE-PODS"
-EKS_FARGATE_NAMESPACES="namespace=default namespace=kube-system namespace=external-dns namespace=dp1"
+POD_EXECUTION_ROLE_ARN="arn:aws:iam::075021648303:role/EMEA_EKS-FARGATE-PODS"  ## role Provides access to other AWS service resources that are required to run Amazon EKS pods on AWS Fargates
+EKS_FARGATE_NAMESPACES="namespace=default namespace=kube-system namespace=external-dns namespace=dp1" ## list of namespaces in which pods will be deployed using Fargate.
 ```
 
 ---
 
 ## Kubeconfig EKS Cluster Initialization
 
+Update local kubeconfig to access the EKS cluster
 ```bash
 aws eks update-kubeconfig --region $EKS_AWS_REGION --name $EKS_EKS_CLUSTER
 ```
 
 Set VPC/CIDR details retrieved from EKS Cluster
-
 ```bash
 EKS_VPC_ID=$(aws eks describe-cluster --name $EKS_EKS_CLUSTER --query "cluster.resourcesVpcConfig.vpcId" --region $EKS_AWS_REGION --output text)
 echo "EKS_VPC_ID: $EKS_VPC_ID"
@@ -61,9 +61,19 @@ Manually retrieve the subnet-ids of the private subnets in the VPS related to th
 ```bash
 EKS_VPC_PRIVATE_SUBNETIDS="subnet-123Example subnet-456Example"
 
-aws eks create-fargate-profile   --cluster-name $EKS_EKS_CLUSTER   --fargate-profile-name $EKS_FARGATE_PROFILE   --pod-execution-role-arn $POD_EXECUTION_ROLE_ARN   --subnets $EKS_VPC_PRIVATE_SUBNETIDS   --selectors $EKS_FARGATE_NAMESPACES
+aws eks create-fargate-profile     \
+   --cluster-name $EKS_EKS_CLUSTER \
+   --fargate-profile-name $EKS_FARGATE_PROFILE  \
+   --pod-execution-role-arn $POD_EXECUTION_ROLE_ARN  \
+   --subnets $EKS_VPC_PRIVATE_SUBNETIDS
+   --selectors $EKS_FARGATE_NAMESPACES
 ```
-Wait for the fargate profile to become Active in the EKS cluster. The Fargate profile are on the Compute tab in the EKS cluster.
+
+Wait for the fargate profile to become Active in the EKS cluster. 
+```
+aws eks describe-fargate-profile --cluster-name $EKS_EKS_CLUSTER  --fargate-profile-name $EKS_FARGATE_PROFILE
+```
+
 
 ### Restart System Deployments on Fargate
 In order to retrigger deployment of the core K8S service execute below command. This will start using fargate as deployment target.
