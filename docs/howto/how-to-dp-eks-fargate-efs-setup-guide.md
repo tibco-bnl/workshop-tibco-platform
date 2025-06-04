@@ -13,6 +13,7 @@
 
 ## EKS Cluster Setup Notes
 
+- This guide assume the existance of an AWS EKS K8S cluster.
 - **Do not deploy the EFS CSI driver add-on manually** – it is automatically deployed with Fargate.
 - Use **both public and private subnets**. Public subnets allow access to the Kubernetes API from local machines.
 
@@ -34,11 +35,14 @@ EKS_FARGATE_NAMESPACES="namespace=default namespace=kube-system namespace=extern
 
 ---
 
-## EKS Cluster Initialization
+## Kubeconfig EKS Cluster Initialization
 
 ```bash
 aws eks update-kubeconfig --region $EKS_AWS_REGION --name $EKS_EKS_CLUSTER
 ```
+
+Set VPC/CIDR details retrieved from EKS Cluster
+
 ```bash
 EKS_VPC_ID=$(aws eks describe-cluster --name $EKS_EKS_CLUSTER --query "cluster.resourcesVpcConfig.vpcId" --region $EKS_AWS_REGION --output text)
 echo "EKS_VPC_ID: $EKS_VPC_ID"
