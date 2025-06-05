@@ -430,12 +430,19 @@ spec:
 EOF
 ```
 
-To access Prometheus externally, use a service account token:
+To access inbuilt ARO Prometheus externally, use a service account token:
+
+```markdown
+To access Prometheus externally, you can create a dedicated service account with the necessary permissions. The following example uses a service account named `thanos-client`, which is a common convention when integrating with Thanos or other external monitoring tools, but you can use any name you prefer:
 
 ```bash
 oc create sa thanos-client -n openshift-monitoring 
 oc adm policy add-cluster-role-to-user cluster-monitoring-view -z thanos-client -n openshift-monitoring
 TOKEN=$(oc create token thanos-client -n openshift-monitoring)
+```
+
+- `thanos-client` is simply a service account name; it does not require Thanos to be installed. This account is granted the `cluster-monitoring-view` role, allowing it to access Prometheus metrics.
+- The generated token (`$TOKEN`) can be used to authenticate with Prometheus endpoints for external scraping or dashboard access.
 ```
 
 ---
