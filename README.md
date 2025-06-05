@@ -100,8 +100,11 @@ Below is a list of documentation files in this repository for quick reference:
 - [How to Set Up EKS Fargate EFS and Deploy TIBCO Data Plane](docs/howto/how-to-dp-eks-fargate-efs-setup-guide.md)
 - [How to Set Up Azure Red Hat OpenShift (ARO) Cluster and Deploy TIBCO Platform Data Plane](docs/howto/how-to-dp-openshift-aro-aks-setup-guide.md)
 - [How to Set Up Observability on a DP running on Azure Red Hat OpenShift (ARO) Cluster](docs/howto/how-to-dp-openshift-observability.md)
-
-
+- [How to gracefully stop the platform](docs/howto/how-to-gracefully-stop-platform.md)
+- [How to install separate platform components](docs/howto/how-to-install-seperate-platform-components.md)
+- [How to add a capability](docs/howto/how-to-add-a-capability.md)
+- [How to create resources](docs/howto/how-to-create-resources.md)
+- [How to update a platform](docs/howto/how-to-update-a-platform.md)
 
 ---
 
