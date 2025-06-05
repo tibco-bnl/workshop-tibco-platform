@@ -99,11 +99,9 @@ Below is a list of documentation files in this repository for quick reference:
 - [Install TIBCO Platform on Minikube or Docker Desktop kubernetes](/scripts/running_platform_installer.md)
 - [How to Set Up EKS Fargate EFS and Deploy TIBCO Data Plane](docs/howto/how-to-dp-eks-fargate-efs-setup-guide.md)
 - [How to Set Up Azure Red Hat OpenShift (ARO) Cluster and Deploy TIBCO Platform Data Plane](docs/howto/how-to-dp-openshift-aro-aks-setup-guide.md)
-- [How to Configure Ingress for TIBCO Platform](docs/howto/how-to-configure-ingress.md)
-- [How to Enable SSL for TIBCO Platform](docs/howto/how-to-enable-ssl.md)
-- [How to Generate Self-Signed Certificates](docs/howto/how-to-generate-self-signed-certificates.md)
-- [How to Set Up External Database](docs/howto/how-to-setup-external-database.md)
-- [How to Use Port Forwarding](docs/howto/how-to-use-port-forwarding.md)
+- [How to Set Up Observability on a DP running on Azure Red Hat OpenShift (ARO) Cluster](docs/howto/how-to-dp-openshift-observability.md)
+
+
 
 ---
 
@@ -117,4 +115,4 @@ Below is a list of documentation files in this repository for quick reference:
 | Kulbhushan  | 29/1/2025  | v4      | Added script to generate self-signed CA certificates and tokens                           |
 | Kulbhushan  | 03/06/2025 | v5      | Added ARO setup guide for 1.7 version                                                    |
 | Marco  | 03/06/2025 | v5      | Added How to Set Up EKS Fargate EFS and Deploy TIBCO Data Plane for 1.7 version                                                    |
-
+| Kulbhushan  | 05/06/2025 | v5      | Added ARO Observability config - only logs working  

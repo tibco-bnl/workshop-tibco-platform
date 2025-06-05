@@ -810,30 +810,30 @@ Below are screenshots illustrating the observability setup steps on OpenShift AR
 
 #### 1. observability-dp-add-logs-query-service.png
 
-![observability-dp-add-logs-query-service.png](./openshift-azure-aro-dp-observability/observability-dp-add-logs-query-service.png)
+![observability-dp-add-logs-query-service.png](../diagrams/openshift-azure-aro-dp-observability/observability-dp-add-logs-query-service.png)
 
 #### 2. observability-dp-add-metrics-query-service.png
 
-![observability-dp-add-metrics-query-service.png](./openshift-azure-aro-dp-observability/observability-dp-add-metrics-query-service.png)
+![observability-dp-add-metrics-query-service.png](../diagrams/openshift-azure-aro-dp-observability/observability-dp-add-metrics-query-service.png)
 
 #### 3. Observability Traces Query service
 
-![observability-dp-add-traces-query.png](./openshift-azure-aro-dp-observability/observability-dp-add-traces-query.png)
+![observability-dp-add-traces-query.png](../diagrams/openshift-azure-aro-dp-observability/observability-dp-add-traces-query.png)
 
 #### 4. Observability Traces exporter
 
-![observability-dp-add-traces-exporter.png](./openshift-azure-aro-dp-observability/observability-dp-add-traces-exporter.png)
+![observability-dp-add-traces-exporter.png](../diagrams/openshift-azure-aro-dp-observability/observability-dp-add-traces-exporter.png)
 
 #### 5. Observability config log server
 
-![observability-aro-logs-server config](./openshift-azure-aro-dp-observability/observability-aro-logs-server.png)
+![observability-aro-logs-server config](../diagrams/openshift-azure-aro-dp-observability/observability-aro-logs-server.png)
 
 #### 6. Observability config metrics server
 
-![observability-aro-metrics-server config](./openshift-azure-aro-dp-observability/observability-aro-metrics-server.png)
+![observability-aro-metrics-server config](../diagrams/openshift-azure-aro-dp-observability/observability-aro-metrics-server.png)
 
 #### 7. Observability Resouce Trace Server
 
-![observability-aro-traces-server config](./openshift-azure-aro-dp-observability/observability-aro-traces-server.png)
+![observability-aro-traces-server config](../diagrams/openshift-azure-aro-dp-observability/observability-aro-traces-server.png)
 
 
