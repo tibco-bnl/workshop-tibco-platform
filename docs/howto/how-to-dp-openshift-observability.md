@@ -839,7 +839,10 @@ Below are screenshots illustrating the observability setup steps on OpenShift AR
 
 Note: Use url: https://thanos-querier-openshift-monitoring.apps.yyxyzx4x.westeurope.aroapp.io
 (without any api suffix, e.g. /v1/ etc)
-Also, do not use any username password and Authorization tokens
+Use customer headers with: 
+ Key = Authorization
+ Value = Bearer $TOKEN
+Do not use any username password.
 
 
 ![observability-dp-add-metrics-query-service-thanos.png](../diagrams/openshift-azure-aro-dp-observability/observability-dp-add-metrics-query-service-thanos.png)
