@@ -745,6 +745,25 @@ For a more persistent solution, create a Service Account with appropriate permis
 
     This token will be valid for the duration specified (or as per cluster policy) and is more suitable for programmatic access.
 
+#### 4.3 Enable monitoring for user-defined projects
+
+[Openshift Ref: Enabling monitoring for user-defined projects](https://docs.redhat.com/en/documentation/openshift_container_platform/4.17/html/monitoring/configuring-user-workload-monitoring#enabling-monitoring-for-user-defined-projects_preparing-to-configure-the-monitoring-stack-uwm)
+
+```yaml
+oc -n openshift-monitoring get configmap cluster-monitoring-config -o yaml
+apiVersion: v1
+data:
+  config.yaml: |
+    enableUserWorkload: true
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2025-06-02T13:05:02Z"
+  name: cluster-monitoring-config
+  namespace: openshift-monitoring
+  resourceVersion: "1662902"
+  uid: 09ee4eaa-5548-417f-b02d-3723777672d9
+```
+
 -----
 
 ## 5\. Reference Links
@@ -812,9 +831,14 @@ Below are screenshots illustrating the observability setup steps on OpenShift AR
 
 ![observability-dp-add-logs-query-service.png](../diagrams/openshift-azure-aro-dp-observability/observability-dp-add-logs-query-service.png)
 
-#### 2. observability-dp-add-metrics-query-service.png
+#### 2. observability-dp-add-metrics-query-service-thanos.png
 
-![observability-dp-add-metrics-query-service.png](../diagrams/openshift-azure-aro-dp-observability/observability-dp-add-metrics-query-service.png)
+Note: Use url: https://thanos-querier-openshift-monitoring.apps.yyxyzx4x.westeurope.aroapp.io
+(without any api suffix, e.g. /v1/ etc)
+Also, do not use any username password and Authorization tokens
+
+
+![observability-dp-add-metrics-query-service-thanos.png](../diagrams/openshift-azure-aro-dp-observability/observability-dp-add-metrics-query-service-thanos.png)
 
 #### 3. Observability Traces Query service
 
