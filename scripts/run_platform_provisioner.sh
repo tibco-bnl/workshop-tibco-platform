@@ -152,7 +152,7 @@ fi
 # TIBCO PLATFORM Base recipe
 echo "Replace variables in recipes"
 
-RECIPE_TP_BASE=$WORKSHOP_BASE_DIR/docs/recipes/tp-base/tp-base-on-prem-https-$KUBE_CONTEXT.yaml
+RECIPE_TP_BASE=$PP_DIR/docs/recipes/tp-base/tp-base-on-prem-https.yaml
 #replace values in the recipes
 #echo "replacement values: $TLS_CERT, $TLS_KEY, $STORAGE_CLASS_CLUSTER"
 yq e -i '.meta.guiEnv.GUI_TP_TLS_CERT=env(TLS_CERT)' $RECIPE_TP_BASE
@@ -162,7 +162,7 @@ yq e -i '.meta.guiEnv.GUI_TP_STORAGE_CLASS=env(STORAGE_CLASS_CLUSTER)' $RECIPE_T
 
 #
 # TIBCO PLATFORM Control Plane
-RECIPE_TP_CP=$WORKSHOP_BASE_DIR/docs/recipes/controlplane/tp-cp-$KUBE_CONTEXT.yaml
+RECIPE_TP_CP=$PP_DIR/docs/recipes/controlplane/tp-cp.yaml
 #replace values in the recipes
 yq e -i '.meta.guiEnv.GUI_CP_CONTAINER_REGISTRY=env(CONTAINER_REGISTRY)' $RECIPE_TP_CP
 yq e -i '.meta.guiEnv.GUI_CP_CONTAINER_REGISTRY_REPOSITORY=env(CONTAINER_REGISTRY_REPOSITORY)' $RECIPE_TP_CP
@@ -176,7 +176,7 @@ enter_to_continue
 echo ""
 # Install the platform provisioner
 export PIPELINE_NAME="generic-runner"
-export PIPELINE_INPUT_RECIPE="$WORKSHOP_BASE_DIR/docs/recipes/tests/test-local.yaml"
+export PIPELINE_INPUT_RECIPE="$PP_DIR/docs/recipes/tests/test-local.yaml"
 cd $PP_DIR
 ./dev/platform-provisioner-install.sh
 echo ""
@@ -207,7 +207,7 @@ enter_to_continue
 echo ""
 echo "Install tp-base recipe"
 export PIPELINE_NAME="helm-install"
-export PIPELINE_INPUT_RECIPE="$WORKSHOP_BASE_DIR/docs/recipes/tp-base/tp-base-on-prem-https-$KUBE_CONTEXT.yaml"
+export PIPELINE_INPUT_RECIPE="$PP_DIR/docs/recipes/tp-base/tp-base-on-prem-https.yaml"
 
 echo ""
 ./dev/platform-provisioner-pipelinerun.sh
@@ -224,7 +224,7 @@ enter_to_continue
 echo ""
 echo "Install TIBCO Platform Control Plane"
 export PIPELINE_NAME="helm-install"
-export PIPELINE_INPUT_RECIPE="$WORKSHOP_BASE_DIR/docs/recipes/controlplane/tp-cp-$KUBE_CONTEXT.yaml"
+export PIPELINE_INPUT_RECIPE="$PP_DIR/docs/recipes/controlplane/tp-cp.yaml"
 # echo ""
 # echo -e "Update recipe ${GREEN}${PIPELINE_INPUT_RECIPE}${ENDCOLOR} with correct values GUI_CP_CONTAINER_REGISTRY_PASSWORD"
 echo ""
