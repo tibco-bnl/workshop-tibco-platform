@@ -11,8 +11,22 @@ KUBE_CONTEXT=$2
 function forward_ingress() {
     while true; do
         if [[ "$KUBE_CONTEXT" == "minikube" ]]; then
-            sudo mkdir -p /root/.kube
-            sudo cp /home/tibco/.kube/config /root/.kube/config
+            USER_TO_COPY=""
+            if id "tibco" &>/dev/null && [[ -f /home/tibco/.kube/config ]]; then
+                USER_TO_COPY="tibco"
+            else
+                for u in $(ls /home); do
+                    if [[ -f /home/$u/.kube/config ]]; then
+                        USER_TO_COPY="$u"
+                        break
+                    fi
+                done
+            fi
+
+            if [[ -n "$USER_TO_COPY" ]]; then
+                sudo mkdir -p /root/.kube
+                sudo cp /home/$USER_TO_COPY/.kube/config /root/.kube/config
+            fi
         fi
 
         if pgrep -f "kubectl port-forward.*ingress-nginx-controller.*80:http 443:https" >/dev/null; then
