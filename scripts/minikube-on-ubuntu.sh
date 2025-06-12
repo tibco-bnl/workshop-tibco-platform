@@ -67,7 +67,16 @@ install_prerequisites() {
 # Function to start Minikube
 start_minikube() {
     echo "Starting Minikube..."
-    minikube start --cpus 8 --memory 15360 --disk-size "40g" --driver=docker --addons storage-provisioner --kubernetes-version "1.32.0" --extra-config=kubelet.max-pods=500
+    # Get total system memory in GB and subtract 3GB for system use
+    TOTAL_MEM_GB=$(free -g | awk '/^Mem:/{print $2}')
+    if [ "$TOTAL_MEM_GB" -le 3 ]; then
+        echo "Not enough memory to allocate to Minikube (need more than 3GB total)."
+        exit 1
+    fi
+    MINIKUBE_MEM=$((TOTAL_MEM_GB - 3))
+    echo "Total system memory: ${TOTAL_MEM_GB}GB"
+    echo "Allocating ${MINIKUBE_MEM}GB memory to Minikube"
+    minikube start --cpus 8 --memory "$((MINIKUBE_MEM * 1024))" --disk-size "40g" --driver=docker --addons storage-provisioner --kubernetes-version "1.32.0" --extra-config=kubelet.max-pods=500
 }
 
 # Function to display common Minikube commands
