@@ -1,1 +1,2 @@
 This document is moved here: [How to Install Observability for Data Plane running on ARO](https://tibco-bnl.github.io/workshop-tp-aro/howto/how-to-dp-openshift-observability.html)
+
