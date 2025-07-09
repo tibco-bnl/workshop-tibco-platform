@@ -2,7 +2,7 @@
 
 ## Cluster configuration specific variables
 #export TP_CLUSTER_NAME="dp4-aks-presalesnl" # name of the cluster to be provisioned, used for chart deployment
-export TP_CLUSTER_NAME="minikube" # name of the cluster to be provisioned, used for chart deployment
+export TP_CLUSTER_NAME="dp4-aks-presalesnl" # name of the cluster to be provisioned, used for chart deployment
 #export KUBECONFIG=`pwd`/${TP_CLUSTER_NAME}.yaml # kubeconfig saved as cluster name yaml
 
 ## By default, only your public IP will be added to allow access to public cluster
@@ -11,11 +11,11 @@ export TP_CLUSTER_NAME="minikube" # name of the cluster to be provisioned, used 
 ## Tooling specific variables
 export TP_TIBCO_HELM_CHART_REPO=https://tibcosoftware.github.io/tp-helm-charts # location of charts repo url
 #export TP_DOMAIN="mle.atsnl-emea.azure.dataplanes.pro" # domain to be used
-export TP_DOMAIN="localhost.dataplanes.pro" # domain to be used
+export TP_DOMAIN="mle.atsnl-emea.azure.dataplanes.pro" # domain to be used
 export TP_DISK_ENABLED="true" # to enable azure disk storage class
-export TP_DISK_STORAGE_CLASS="standard" # name of azure disk storage class
+export TP_DISK_STORAGE_CLASS="azure-disk-sc" # name of azure disk storage class
 export TP_FILE_ENABLED="true" # to enable azure files storage class
-export TP_FILE_STORAGE_CLASS="standard" # name of azure files storage class
+export TP_FILE_STORAGE_CLASS="azure-files-sc" # name of azure files storage class
 export TP_INGRESS_CLASS="nginx" # name of main ingress class used by capabilities, use 'traefik' for traefik ingress controller
 export TP_ES_RELEASE_NAME="dp-config-es" # name of dp-config-es release name
 export TP_DNS_RESOURCE_GROUP="" # replace with name of resource group containing dns record sets
@@ -31,45 +31,39 @@ install_nginx() {
 
 install_elastic() {
     echo "Install Elastic stack"
-    helm upgrade --install --wait --labels layer=1 --create-namespace -n elastic-system eck-operator eck-operator --repo "https://helm.elastic.co" --version "3.0.0"
+    helm upgrade --install --wait --labels layer=1 --create-namespace -n elastic-system eck-operator eck-operator --repo "https://helm.elastic.co" --version "2.16.0"
 
     # install dp-config-es
     helm upgrade --install --wait --create-namespace --reuse-values \
-        -n elastic-system ${TP_ES_RELEASE_NAME} dp-config-es \
+        -n elastic-system dp-config-es dp-config-es \
         --labels layer=2 \
-        --repo "${TP_TIBCO_HELM_CHART_REPO}" --version "1.0.17" -f - <<EOF
+        --repo "${TP_TIBCO_HELM_CHART_REPO}" --version "^1.0.0" -f - <<EOF
 domain: ${TP_DOMAIN}
 es:
-    version: "9.0.3"
+    version: "8.17.3"
     ingress:
-        ingressClassName: ${TP_INGRESS_CLASS}
-        service: ${TP_ES_RELEASE_NAME}-es-http
+        ingressClassName: nginx
+        service: dp-config-es-es-http
     storage:
-        name: ${TP_DISK_STORAGE_CLASS}
+        name: azure-disk-sc
 kibana:
-    version: "8.9.1"
+    version: "8.17.3"
     ingress:
-        ingressClassName: ${TP_INGRESS_CLASS}
-        service: ${TP_ES_RELEASE_NAME}-kb-http
+        ingressClassName: nginx
+        service: dp-config-es-kb-http
 apm:
-    enabled: false
-    version: "8.9.1"
+    enabled: true
+    version: "8.17.3"
     ingress:
-        ingressClassName: ${TP_INGRESS_CLASS}
-        service: ${TP_ES_RELEASE_NAME}-apm-http
+        ingressClassName: nginx
+        service: dp-config-es-apm-http
 EOF
 
-    echo "Kibana URL"
-    kubectl get ingress -n elastic-system ${TP_ES_RELEASE_NAME}-kb-http -o jsonpath='{.spec.rules[0].host}' && echo
-
-    echo "Elasticsearch Username"
-    kubectl get secret -n elastic-system ${TP_ES_RELEASE_NAME}-es-elastic-user -o jsonpath='{.data.elastic}' | base64 --decode && echo
-
     echo "Elasticsearch Password"
-    kubectl get secret -n elastic-system ${TP_ES_RELEASE_NAME}-es-elastic-user -o jsonpath='{.data.password}' | base64 --decode && echo
+    kubectl get secret -n elastic-system dp-config-es-es-elastic-user -o jsonpath='{.data.elastic}' | base64 --decode && echo
 
-    echo "APM URL"
-    kubectl get ingress -n elastic-system ${TP_ES_RELEASE_NAME}-apm-http -o jsonpath='{.spec.rules[0].host}' && echo
+    echo "Print ingresses"
+    kubectl get ingress -n elastic-system -o json | jq -r '.items[] | "https://\(.spec.rules[0].host)"'
 }
 
 install_prometheus() {
@@ -126,10 +120,9 @@ prometheus:
 EOF
 )
 
-    echo "Use this command to get the host URL for Kibana"
-    kubectl get ingress -n prometheus-system kube-prometheus-stack-grafana -oyaml | yq eval '.spec.rules[0].host' && echo
-
-    echo "The username is admin. And Prometheus Operator use fixed password: prom-operator."
+    echo "Prometheus and Grafana URLs"
+    kubectl get ingress -n prometheus-system -o json | jq -r '.items[] | "https://\(.spec.rules[0].host)"'
+    echo "username:admin. And Prometheus Operator use fixed password: prom-operator."
 
     echo "You can get BASE_FQDN (fully qualified domain name) by running the following command:"
     kubectl get ingress -n ingress-system nginx |  awk 'NR==2 { print $3 }' && echo
@@ -144,19 +137,16 @@ port_forward() {
      nohup sudo kubectl port-forward -n prometheus-system --address 0.0.0.0 svc/kube-prometheus-stack-grafana 3000:80 & >/dev/null 2>&1 &
      nohup sudo kubectl port-forward -n prometheus-system --address 0.0.0.0 svc/kube-prometheus-stack-prometheus 9090:9090 & >/dev/null 2>&1 &
 
-    echo "All URLS: "
-    echo "Elasticsearch: http://localhost:9200"
-    echo "Kibana: http://localhost:5601"
-    echo "Grafana: http://localhost:3000"
-    echo "Prometheus: http://localhost:9090"
+
 
     echo "To stop the port forwarding, run the following commands:"
     echo "kill elastic $(lsof -t -i:9200)"
     echo "kill kibana $(lsof -t -i:5601)"
     echo "kill grafana $(sudo lsof -t -i:3000)"
     echo "kill prometheus $(sudo lsof -t -i:9090)"
-
-     echo "Elastic url to use in DP: https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200"
+    
+    echo "All URLS: "
+    echo "Elastic url to use in DP: https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200"
     echo "For Kibana username is elastic and password "
     kubectl get secret -n elastic-system dp-config-es-es-elastic-user -o jsonpath='{.data.elastic}' | base64 --decode && echo
 
