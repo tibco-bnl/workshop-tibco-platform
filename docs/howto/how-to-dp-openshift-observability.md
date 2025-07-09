@@ -684,21 +684,26 @@ OpenShift's built-in Prometheus (via Thanos Querier) does not support username/p
 
 #### 4.2.1. Using a Short-Lived Token
 
-1.  **Extract the Thanos Querier API route URL:**
+1. Update following config map: 
+  ```sh
+  oc -n openshift-monitoring edit configmap cluster-monitoring-config, to have  enableUserWorkload: true 
+  ```
+
+2.  **Extract the Thanos Querier API route URL:**
 
     ```sh
     HOST=$(oc -n openshift-monitoring get route thanos-querier -ojsonpath='{.status.ingress[].host}')
     echo "Thanos Querier URL: https://\${HOST}"
     ```
 
-2.  **Extract an authentication token for your current logged-in user:**
+3.  **Extract an authentication token for your current logged-in user:**
 
     ```sh
     TOKEN=$(oc whoami -t)
     echo "Token: \${TOKEN}"
     ```
 
-3.  **Use the token in the Authorization header to query Thanos Querier:**
+4.  **Use the token in the Authorization header to query Thanos Querier:**
     You can use this token with tools like `curl` or in your Data Plane's configuration:
 
     ```
