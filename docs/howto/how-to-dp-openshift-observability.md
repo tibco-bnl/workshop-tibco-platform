@@ -1,7 +1,9 @@
-Okay, I've added a "Reference Links" section at the end of the document. This section includes links to official documentation for the tools, commands, and concepts mentioned throughout the guide.
 
-````markdown
-# How to Install Elastic ECK and Prometheus on OpenShift ARO
+**Note:** This documentation is expanded and created from a base reference documentation as desribed here: [tp-helm-charts/Install and configure observability](https://github.com/TIBCOSoftware/tp-helm-charts/tree/main/docs/workshop/aro%20(Azure%20Red%20Hat%20OpenShift)/data-plane#install--configure-observability-tools)
+
+
+
+# How to Install Elastic ECK and Prometheus on OpenShift ARO for Data Plane Observability
 
 This guide provides step-by-step instructions to install [Elastic ECK (Elastic Cloud on Kubernetes)](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-installation.html) and configure Prometheus on OpenShift Azure Red Hat OpenShift (ARO).
 
@@ -34,7 +36,7 @@ Apply the manifests as described in the [Install ECK using the YAML manifests](h
 ```sh
 oc create -f [https://download.elastic.co/downloads/eck/3.0.0/crds.yaml](https://download.elastic.co/downloads/eck/3.0.0/crds.yaml)
 oc apply -f [https://download.elastic.co/downloads/eck/3.0.0/operator.yaml](https://download.elastic.co/downloads/eck/3.0.0/operator.yaml)
-````
+```
 
 ### 1.3. Network Configuration (Optional)
 
@@ -244,6 +246,8 @@ Use the retrieved password and the Kibana route URL (from `oc get route -n elast
 -----
 
 ## 3\. Configure Kibana: Index Templates & Lifecycle Policies
+
+**Note:** For Elastic index templates you can also directly refer to helm chart templates: https://github.com/TIBCOSoftware/tp-helm-charts/tree/main/charts/dp-config-es/templates
 
 These configurations are typically done via the Kibana UI (Stack Management \> Index Management) or a configuration management tool using Elasticsearch APIs.
 
