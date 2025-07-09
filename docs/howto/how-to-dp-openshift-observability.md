@@ -34,8 +34,8 @@ For more details, refer to the [Elasticsearch Virtual memory documentation](http
 Apply the manifests as described in the [Install ECK using the YAML manifests](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-quickstart-self-managed.html) document:
 
 ```sh
-oc create -f [https://download.elastic.co/downloads/eck/3.0.0/crds.yaml](https://download.elastic.co/downloads/eck/3.0.0/crds.yaml)
-oc apply -f [https://download.elastic.co/downloads/eck/3.0.0/operator.yaml](https://download.elastic.co/downloads/eck/3.0.0/operator.yaml)
+oc create -f https://download.elastic.co/downloads/eck/2.16.0/crds.yaml
+oc apply -f https://download.elastic.co/downloads/eck/2.16.0/operator.yaml
 ```
 
 ### 1.3. Network Configuration (Optional)
@@ -79,7 +79,7 @@ kind: Elasticsearch
 metadata:
   name: elasticsearch-sample
 spec:
-  version: 8.16.1 # Specify your desired Elasticsearch version
+  version: 8.16.3 # Specify your desired Elasticsearch version
   nodeSets:
   - name: default
     count: 1
@@ -115,7 +115,7 @@ kind: Kibana
 metadata:
   name: kibana-sample
 spec:
-  version: 8.16.1 # Match your Elasticsearch version
+  version: 8.16.3 # Match your Elasticsearch version
   count: 1
   elasticsearchRef:
     name: "elasticsearch-sample"
@@ -180,7 +180,7 @@ kind: ApmServer
 metadata:
   name: apm-server-sample
 spec:
-  version: 8.16.1 # Match your Elasticsearch version
+  version: 8.16.3 # Match your Elasticsearch version
   count: 1
   elasticsearchRef:
     name: "elasticsearch-sample"
