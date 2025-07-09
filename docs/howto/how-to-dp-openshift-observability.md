@@ -79,7 +79,7 @@ kind: Elasticsearch
 metadata:
   name: elasticsearch-sample
 spec:
-  version: 8.16.3 # Specify your desired Elasticsearch version
+  version: 8.17.3 # Specify your desired Elasticsearch version
   nodeSets:
   - name: default
     count: 1
@@ -115,7 +115,7 @@ kind: Kibana
 metadata:
   name: kibana-sample
 spec:
-  version: 8.16.3 # Match your Elasticsearch version
+  version: 8.17.3 # Match your Elasticsearch version
   count: 1
   elasticsearchRef:
     name: "elasticsearch-sample"
@@ -180,7 +180,7 @@ kind: ApmServer
 metadata:
   name: apm-server-sample
 spec:
-  version: 8.16.3 # Match your Elasticsearch version
+  version: 8.17.3 # Match your Elasticsearch version
   count: 1
   elasticsearchRef:
     name: "elasticsearch-sample"
