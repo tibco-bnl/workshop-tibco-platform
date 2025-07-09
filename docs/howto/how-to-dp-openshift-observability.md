@@ -1,6 +1,4 @@
-Okay, I've added a "Reference Links" section at the end of the document. This section includes links to official documentation for the tools, commands, and concepts mentioned throughout the guide.
 
-````markdown
 # How to Install Elastic ECK and Prometheus on OpenShift ARO
 
 This guide provides step-by-step instructions to install [Elastic ECK (Elastic Cloud on Kubernetes)](https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-installation.html) and configure Prometheus on OpenShift Azure Red Hat OpenShift (ARO).
@@ -34,7 +32,7 @@ Apply the manifests as described in the [Install ECK using the YAML manifests](h
 ```sh
 oc create -f [https://download.elastic.co/downloads/eck/3.0.0/crds.yaml](https://download.elastic.co/downloads/eck/3.0.0/crds.yaml)
 oc apply -f [https://download.elastic.co/downloads/eck/3.0.0/operator.yaml](https://download.elastic.co/downloads/eck/3.0.0/operator.yaml)
-````
+```
 
 ### 1.3. Network Configuration (Optional)
 
