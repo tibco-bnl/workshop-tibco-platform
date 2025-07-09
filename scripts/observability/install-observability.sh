@@ -31,29 +31,29 @@ install_nginx() {
 
 install_elastic() {
     echo "Install Elastic stack"
-    helm upgrade --install --wait --labels layer=1 --create-namespace -n elastic-system eck-operator eck-operator --repo "https://helm.elastic.co" --version "3.0.0"
+    helm upgrade --install --wait --labels layer=1 --create-namespace -n elastic-system eck-operator eck-operator --repo "https://helm.elastic.co" --version "2.16.0"
 
     # install dp-config-es
     helm upgrade --install --wait --create-namespace --reuse-values \
         -n elastic-system ${TP_ES_RELEASE_NAME} dp-config-es \
         --labels layer=2 \
-        --repo "${TP_TIBCO_HELM_CHART_REPO}" --version "1.0.17" -f - <<EOF
+        --repo "${TP_TIBCO_HELM_CHART_REPO}" --version "^1.0.0" -f - <<EOF
 domain: ${TP_DOMAIN}
 es:
-    version: "9.0.3"
+    version: "8.17.3"
     ingress:
         ingressClassName: ${TP_INGRESS_CLASS}
         service: ${TP_ES_RELEASE_NAME}-es-http
     storage:
         name: ${TP_DISK_STORAGE_CLASS}
 kibana:
-    version: "8.9.1"
+    version: "8.17.3"
     ingress:
         ingressClassName: ${TP_INGRESS_CLASS}
         service: ${TP_ES_RELEASE_NAME}-kb-http
 apm:
     enabled: false
-    version: "8.9.1"
+    version: "8.17.3"
     ingress:
         ingressClassName: ${TP_INGRESS_CLASS}
         service: ${TP_ES_RELEASE_NAME}-apm-http
