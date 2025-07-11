@@ -1,1 +1,2 @@
 This document is moved to: [How to Set Up Azure Red Hat OpenShift (ARO) Cluster and Deploy TIBCO Platform Data Plane](https://tibco-bnl.github.io/workshop-tp-aro/howto/how-to-dp-openshift-aro-aks-setup-guide.html)
+
