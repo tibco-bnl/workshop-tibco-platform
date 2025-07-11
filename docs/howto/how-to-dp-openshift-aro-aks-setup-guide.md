@@ -395,6 +395,10 @@ For metrics DP needs prometheus
 
 Note 2: You can also configure observability after creating/registering the Data Plane.
 
+You can setup observability using following 2 sections (Elastic stack and prometheus) or you can also follow following guide which we have created based on our steps: 
+
+[How to Install Elastic ECK and Prometheus on OpenShift ARO for Data Plane Observability](./how-to-dp-openshift-observability.md)
+
 ### 9.1. Elastic Stack
 
 Install ECK via OperatorHub:  
@@ -402,6 +406,7 @@ Install ECK via OperatorHub:
 
 Follow Elastic configuration guide for creating all the indexes needed for the TIBCO Platform
 [Prepare logs and traces server](https://docs.tibco.com/pub/platform-cp/latest/doc/html/Default.htm#UserGuide/preparing-logs-and-traces-servers.htm?TocPath=Observability%2520in%2520TIBCO%2520Control%2520Plane%257CConfiguring%2520Observability%2520Resource%257C_____1)
+
 
 ### 9.2. Prometheus
 
