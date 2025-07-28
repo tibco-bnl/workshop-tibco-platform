@@ -767,7 +767,92 @@ metadata:
   resourceVersion: "1662902"
   uid: 09ee4eaa-5548-417f-b02d-3723777672d9
 ```
+#### 4.4. In case Thanos Router URL has a default /api endpoint
+When configuring the TIBCO Platform o11y-service to connect to a Thanos Router (or any endpoint that already includes a base /api path), an issue with URL construction may occur. The o11y-service internally appends a path like /api/v1/query to the provided base URL. If your Thanos Router URL already ends with /api, this can result in a malformed path such as .../api/api/v1/query, leading to query failures.
 
+Resolution:
+Ensure that the base URL configured for the Thanos Router in your o11y-service does not include /api if the o11y-service is designed to append it. Provide only the hostname and port, allowing the o11y-service to correctly construct the full path. For example, if your Thanos Router is accessible at thanos-router.example.com/api, configure o11y-service with thanos-router.example.com (or equivalent Kubernetes service URL).
+
+4.5. In case Thanos Internal Cluster URL does not work with HTTPS (or unexpectedly works with HTTP)
+OpenShift's native Thanos Querier is typically configured to serve metrics securely over HTTPS, especially on ports like 9091 (for PromQL queries). Communication usually requires TLS and authentication via a Service Account bearer token.
+
+During integration of o11y-service with Thanos Querier via its internal Cluster Service URL (thanos-querier.openshift-monitoring.svc.cluster.local:9091), we observed an unusual behavior:
+
+Despite curl tests from within the cluster successfully connecting to the HTTPS endpoint, and consistently failing on the HTTP endpoint (as expected for an HTTPS-only service).
+
+The o11y-service could not establish a connection over HTTPS even after injecting the necessary CA certificate.
+
+However, surprisingly, the o11y-service was able to connect successfully over HTTP to thanos-querier.openshift-monitoring.svc.cluster.local:9091, which contradicts direct curl observations and the expected secure configuration of Thanos Querier.
+
+This suggests an underlying issue with how o11y-service's internal HTTP client handles TLS or network interactions within the ARO environment.
+
+Workaround & Certificate Injection:
+Since the o11y-service application requires proper TLS validation (it lacks an --insecure option), and to address the connectivity issues, a custom CA certificate bundle was injected into the o11y-service pod. This is crucial for enabling trust in the Thanos Querier's TLS certificate.
+
+Steps to Implement the Certificate Workaround:
+
+Obtain the Thanos Querier CA Certificate:
+
+You can typically extract the CA certificate that signed the Thanos Querier's certificate from your OpenShift cluster. This is often the cluster's internal CA. Consult OpenShift documentation or a cluster administrator for the exact method, but a common approach involves inspecting the serving-cert associated with the thanos-querier endpoint.
+
+Create a ConfigMap with the Certificate:
+Create a Kubernetes ConfigMap in the same namespace as your o11y-service deployment (e.g., dp5). Name this ConfigMap o11y-service-to-thanos-querier-cm. The ca-certificates.crt key will store your Thanos Querier CA certificate.
+
+YAML
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: o11y-service-to-thanos-querier-cm
+  namespace: dp5 # Ensure this matches the namespace of your o11y-service
+data:
+  ca-certificate-thanos.crt: |
+    -----BEGIN CERTIFICATE-----
+    # Paste your Thanos Querier CA certificate content here
+    # Example: MIIDjjCCAnagAwIBAgIQAzQhIe0WjX2c0NnC8+92JTANBgkqhkiG9w0BAQsFADBL
+    # ... (rest of your certificate) ...
+    -----END CERTIFICATE-----
+Apply this ConfigMap:
+
+Bash
+
+oc apply -f <your-configmap-file.yaml> -n dp5
+Update the o11y-service Deployment:
+Modify the o11y-service Deployment YAML to mount this new ConfigMap into the tp-o11y-service container. This will place your custom CA certificate at /etc/ssl/certs/ca-certificate-thanos.crt.
+
+Add the following to your spec.template.spec.volumes section:
+
+YAML
+
+      volumes:
+        # ... (your existing volumes) ...
+        - name: custom-ca-bundle-volume
+          configMap:
+            name: o11y-service-to-thanos-querier-cm
+            items:
+            - key: ca-certificate-thanos.crt
+              path: ca-certificate-thanos.crt # This becomes the filename in the mounted volume
+            defaultMode: 420
+And add the following to your containers.tp-o11y-service.volumeMounts section:
+
+YAML
+
+          volumeMounts:
+            # ... (your existing volume mounts) ...
+            - name: custom-ca-bundle-volume
+              mountPath: /etc/ssl/certs/ca-certificate-thanos.crt # The exact file path inside the container
+              subPath: ca-certificate-thanos.crt   # Mount only this specific file from the volume
+              readOnly: true
+Apply the updated Deployment:
+
+Bash
+
+oc apply -f <your-deployment-file.yaml> -n dp5
+Final Configuration Observation for o11y-service:
+
+After performing the certificate injection, if the HTTPS connection still fails for o11y-service as observed, you might need to try configuring the o11y-service with the HTTP URL for the internal Thanos Querier service. While this behavior is unexpected given Thanos Querier's default HTTPS-only configuration on port 9091, it proved to be a functional workaround in our specific environment.
+
+Note to Reader: The successful connection over HTTP after certificate injection is highly unusual for a standard Thanos Querier setup that enforces HTTPS. This documentation reflects a specific workaround found necessary in a particular ARO environment and may indicate an underlying anomaly in that environment or o11y-service's network client behavior.
 -----
 
 ## 5\. Reference Links
