@@ -53,11 +53,11 @@ In the Control Plane UI follow the below procedure:
 - Click 'Control Tower Data Plane' Start
 This opens the Setup Control Tower wizard:
 - Data Plane Details:
-    > 'Data Plane Name': name of the data plane to be used for Control Tower
-    > 'Description' : description of the data plane, will be displayed on the data plane overview page
-    > 'Machine Host Name' : the fqdn used for the ingress into the dataplane
-    > 'I have read and accepted the TIBCO EUA': check this
-    > Click 'Proceed with Advanced Configuration' 
+    > 'Data Plane Name': name of the data plane to be used for Control Tower<br>
+    > 'Description' : description of the data plane, will be displayed on the data plane overview page<br>
+    > 'Machine Host Name' : the fqdn used for the ingress into the dataplane<br>
+    > 'I have read and accepted the TIBCO EUA': check this<br>
+    > Click 'Proceed with Advanced Configuration' <br>
 
 - Namespace & Service Account:
     > 'Namespace': name of the namespace to be used for the control tower deployment (will be created)
