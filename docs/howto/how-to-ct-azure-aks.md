@@ -72,7 +72,7 @@ This opens the Setup Control Tower wizard:<br>
     > Storage Class Name: use the name of the storage class created in the previous section.<br>
     > Click 'Next' <br>
 
-- Ingress Controller:<br>
+    Ingress Controller:<br>
     > Ingress Controller: nginx<br>
     > Resource Name: name of the resource. <br>
     > Ingress Class name: This should be the same as the main nginx ingress of the K8S cluster if there is already a running data plane running on this K8S cluster. <br>
