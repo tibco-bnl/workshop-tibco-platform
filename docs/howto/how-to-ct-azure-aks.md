@@ -99,18 +99,19 @@ Wait a few minutes for all the deployments to complete and pods to startup.
 
 Open the Control Tower dataplane, click on 'Data Plane Configuration'.
 On the domain Tab Click Add Domain.
-This opens the page 'Add Domains details'.
-> Domain name: name of the existing BW5 domain
-> Transport: Select EMS or RV based on the domain communication within the domain uses.
-EMS: provide the ems details of the ems server used for domain communication
-> EMS Server URL
-> EMS Username
-> EMS Password
 
-RV: 
-> Hawk RV service: port number of the Hawk RV service on the BW5 server
-> Hawk RV Network: name of the Hawk RV Network on the BW5 server
-> Hawk RV Daemon: rv daemon connection string (i.e. tcp://<bw server>:<rv deamon port>)
+- 'Add Domains details'.
+> Domain name: name of the existing BW5 domain<br>
+> Transport: Select EMS or RV based on the domain communication within the domain uses.<br>
+EMS: provide the ems details of the ems server used for domain communication<br>
+> EMS Server URL<br>
+> EMS Username<br>
+> EMS Password<br>
+
+RV: <br>
+> Hawk RV service: port number of the Hawk RV service on the BW5 server<br>
+> Hawk RV Network: name of the Hawk RV Network on the BW5 server<br>
+> Hawk RV Daemon: rv daemon connection string (i.e. tcp://<bw server>:<rv deamon port>)<br>
 
 Click 'Add Domain' 
 
