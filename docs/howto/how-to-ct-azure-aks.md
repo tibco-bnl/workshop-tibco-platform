@@ -46,47 +46,48 @@ The name of the storage class can be adjusted as per company requirements.
 
 ## 2 Create dataplane
 
-In the Control Plane UI follow the below procedure:
+In the Control Plane UI follow the below procedure:<br>
 
-- Click 'Data Planes'
-- Click 'Register a Data Plane' 
-- Click 'Control Tower Data Plane' Start
-This opens the Setup Control Tower wizard:
-- Data Plane Details:
+- Click 'Data Planes'<br>
+- Click 'Register a Data Plane' <br>
+- Click 'Control Tower Data Plane' Start<br>
+This opens the Setup Control Tower wizard:<br>
+<br>
+- Data Plane Details:<br>
     > 'Data Plane Name': name of the data plane to be used for Control Tower<br>
     > 'Description' : description of the data plane, will be displayed on the data plane overview page<br>
     > 'Machine Host Name' : the fqdn used for the ingress into the dataplane<br>
     > 'I have read and accepted the TIBCO EUA': check this<br>
     > Click 'Proceed with Advanced Configuration' <br>
 
-- Namespace & Service Account:
-    > 'Namespace': name of the namespace to be used for the control tower deployment (will be created)
-    > 'Service Account': name of the service account to be used for the control tower deployment (will be created)
-    > Click 'Next' 
+- Namespace & Service Account:<br>
+    > 'Namespace': name of the namespace to be used for the control tower deployment (will be created)<br>
+    > 'Service Account': name of the service account to be used for the control tower deployment (will be created)<br>
+    > Click 'Next' <br>
 
-- Resources:
-    Storage Class:
-    > Resource Name:  name of the storageclass (change as per liking)
-    > Description:  description (change as per liking)
-    > Storage Class Name: use the name of the storage class created in the previous section.
-    > Click 'Next' 
+- Resources:<br>
+    Storage Class:<br>
+    > Resource Name:  name of the storageclass (change as per liking)<br>
+    > Description:  description (change as per liking)<br>
+    > Storage Class Name: use the name of the storage class created in the previous section.<br>
+    > Click 'Next' <br>
 
-- Ingress Controller:
-    > Ingress Controller: nginx
-    > Resource Name: name of the resource. 
-    > Ingress Class name: This should be the same as the main nginx ingress of the K8S cluster if there is already a running data plane running on this K8S cluster. 
-    > hostname.tibco.com
-    > FQDN: prepopulated based on 'Machine Host Name' provided on the Data Plane Detais screen.
-    > Click 'Next' 
-
-- Configuration:
-    Details on this page are usually used as per default settings (originating from the CP configuration)
-    > Click 'Next' 
-
-- Preview:
-    Check all information provided
-    > Click 'Register on Control Plane' 
-
+- Ingress Controller:<br>
+    > Ingress Controller: nginx<br>
+    > Resource Name: name of the resource. <br>
+    > Ingress Class name: This should be the same as the main nginx ingress of the K8S cluster if there is already a running data plane running on this K8S cluster. <br>
+    > hostname.tibco.com<br>
+    > FQDN: prepopulated based on 'Machine Host Name' provided on the Data Plane Detais screen.<br>
+    > Click 'Next' <br>
+<br>
+- Configuration:<br>
+    Details on this page are usually used as per default settings (originating from the CP configuration)<br>
+    > Click 'Next' <br>
+<br>
+- Preview:<br>
+    Check all information provided<br>
+    > Click 'Register on Control Plane' <br>
+<br>
 Now Click 'Display Details & Registration Commands'.
 
 Execute the 4 provided commands against the K8S cluster to create the 'Control Tower' Data Plane
