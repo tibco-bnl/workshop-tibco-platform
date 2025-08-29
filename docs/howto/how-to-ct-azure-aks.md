@@ -82,11 +82,11 @@ This opens the Setup Control Tower wizard:<br>
     > Click 'Next' <br>
 
 - Configuration:<br>
-    Details on this page are usually used as per default settings (originating from the CP configuration)<br>
+    > Details on this page are usually used as per default settings (originating from the CP configuration)<br>
     > Click 'Next' <br>
 
 - Preview:<br>
-    Check all information provided<br>
+    > Check all information provided<br>
     > Click 'Register on Control Plane' <br>
 <br>
 Now Click 'Display Details & Registration Commands'.
