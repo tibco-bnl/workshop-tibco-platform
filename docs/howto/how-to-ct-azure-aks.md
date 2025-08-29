@@ -53,6 +53,7 @@ In the Control Plane UI follow the below procedure:<br>
 - Click 'Control Tower Data Plane' Start<br>
 This opens the Setup Control Tower wizard:<br>
 <br>
+
 - Data Plane Details:<br>
     > 'Data Plane Name': name of the data plane to be used for Control Tower<br>
     > 'Description' : description of the data plane, will be displayed on the data plane overview page<br>
