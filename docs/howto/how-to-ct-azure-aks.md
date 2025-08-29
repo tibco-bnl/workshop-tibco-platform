@@ -13,7 +13,7 @@ This guide described the setup of a Control Tower data plane on an Azure AKS clu
 The creation of the Control Tower is initiated from the Control Plane UI (create dataplane) and excuted by a set of helm commands created during this initialisation.
 
 
-## 1 Create storage class 
+## 1 Storage class 
 
 The storage class needs some specific mount options in order for the hawk-console and msg-gateway to share the same persistant volume using SQLLite.
 
@@ -95,7 +95,7 @@ Execute the 4 provided commands against the K8S cluster to create the 'Control T
 Wait a few minutes for all the deployments to complete and pods to startup.
 
 
-## Add BW5 domain to Control Tower
+## 3 Add BW5 domain to Control Tower
 
 Open the Control Tower dataplane, click on 'Data Plane Configuration'.
 On the domain Tab Click Add Domain.
@@ -119,7 +119,7 @@ This will conect the Control Tower to the BW domain. After a while domain detail
 
 
 
-## BW5 app configuration
+## 4 BW5 app configuration
 
 To enable the BW5 application to start producing metrics and traces some additions to the bw tra file need to be made.
 
