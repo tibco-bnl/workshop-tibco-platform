@@ -95,7 +95,7 @@ Execute the 4 provided commands against the K8S cluster to create the 'Control T
 Wait a few minutes for all the deployments to complete and pods to startup.
 
 
-## Add BW5 domain
+## Add BW5 domain to Control Tower
 
 Open the Control Tower dataplane, click on 'Data Plane Configuration'.
 On the domain Tab Click Add Domain.
