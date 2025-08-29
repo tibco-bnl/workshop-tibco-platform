@@ -80,11 +80,11 @@ This opens the Setup Control Tower wizard:<br>
     > hostname.tibco.com<br>
     > FQDN: prepopulated based on 'Machine Host Name' provided on the Data Plane Detais screen.<br>
     > Click 'Next' <br>
-<br>
+
 - Configuration:<br>
     Details on this page are usually used as per default settings (originating from the CP configuration)<br>
     > Click 'Next' <br>
-<br>
+
 - Preview:<br>
     Check all information provided<br>
     > Click 'Register on Control Plane' <br>
