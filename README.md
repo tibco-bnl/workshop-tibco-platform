@@ -1,5 +1,8 @@
 # TIBCO Platform Workshop
 
+## [GH Pages link](https://tibco-bnl.github.io/workshop-tibco-platform/)
+## [Github project link](https://github.com/tibco-bnl/workshop-tibco-platform)
+
 This repository contains material for the TIBCO Platform Workshop. The material is intended for TIBCO customers and partners who want to create a TIBCO Platform sandbox environment and experiment with it. The aim of this sandbox is to help users learn the platform. **A sandbox is NOT intended or supported for production purposes.**
 
 ## Table of Contents: In order to setup the platform, four steps are required:
