@@ -15,7 +15,7 @@ The creation of the Control Tower is initiated from the Control Plane UI (create
 
 ## 1 Storage class 
 
-The storage class needs some specific mount options in order for the hawk-console and msg-gateway to share the same persistant volume using SQLLite.
+Control Tower requires persistant storage. The storage class on AKS need some specific mount options in order for the hawk-console and msg-gateway to share the same persistant volume using SQLLite.
 
 ```
 apiVersion: storage.k8s.io/v1
