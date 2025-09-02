@@ -19,6 +19,8 @@ Before actually creating the Control Tower first the EKS storage class needs to 
 * EFS-CSI driver installed in cluster
 
 
+![alt text](../images/aws-eks-efs.jpg)
+
 ## 1 Storage class 
 
 Control Tower requires persistant storage. The storage class on EKS needs Elastic File Storage as provider in order for the hawk-console and msg-gateway to share the same persistant volume using SQLLite.
