@@ -79,7 +79,8 @@ echo "EKS_EFS_AP= $EKS_EFS_AP"
 ```
 
 ### Create Security Group and Add Ingress
-The EKS cluster resources require access to the fargate services volumes. For this port 2049 is allowed in the vpc ingress.
+The EKS cluster resources require access to the EFS services. For this port 2049 is allowed in the vpc ingress.
+The access needs to be created both ingress and egress between EFS servcies and the cluster.
 
 ```bash
 EKS_EFS_SG_ID=$(aws ec2 create-security-group   --description eks-controltower-ingress-egress --group-name eks-controltower   --vpc-id $EKS_VPC_ID   --region $EKS_AWS_REGION   --query 'GroupId' --output text)
@@ -143,7 +144,9 @@ spec:
     volumeHandle: $EKS_EFS_FS_ID::$EKS_EFS_AP
 EOF
 ```
-If the PV already exists and following step (capability provisioning) is failing it will help to first delete the existing PV, recreated with above command and then continue.
+
+This completes the setup of the storage for Control tower.
+
 ---
 
 
