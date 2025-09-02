@@ -11,7 +11,7 @@
 
 This guide described the setup of a Control Tower data plane on an AWS EKS cluster.
 The creation of the Control Tower is initiated from the Control Plane UI (create dataplane) and excuted by a set of helm commands created during this initialisation.
-
+Before actually creating the Control Tower first the EKS storage class needs to be created.
 
 ## 1 Storage class 
 
