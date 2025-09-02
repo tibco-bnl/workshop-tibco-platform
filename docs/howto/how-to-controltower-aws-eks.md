@@ -13,6 +13,12 @@ This guide described the setup of a Control Tower data plane on an AWS EKS clust
 The creation of the Control Tower is initiated from the Control Plane UI (create dataplane) and excuted by a set of helm commands created during this initialisation.
 Before actually creating the Control Tower first the EKS storage class needs to be created.
 
+## Requirements
+
+* AWS EKS cluster with worker nodes (at least 8 cpu / 32 GB total)
+* EFS-CSI driver installed in cluster
+
+
 ## 1 Storage class 
 
 Control Tower requires persistant storage. The storage class on EKS needs Elastic File Storage as provider in order for the hawk-console and msg-gateway to share the same persistant volume using SQLLite.
