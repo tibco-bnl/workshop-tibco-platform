@@ -19,7 +19,6 @@ Before actually creating the Control Tower first the EKS storage class needs to 
 * EFS-CSI driver installed in cluster
 
 
-![alt text](../images/aws-eks-efs.jpg)
 
 ## 1 Storage class 
 
@@ -70,6 +69,7 @@ This section describes the setup of the persistent storage based on EFS. EFS is 
 Only static assigned storage is permitted on Fargate.
 
 
+![alt text](../images/aws-eks-efs.jpg)
 
 ### Create EFS File System
 
