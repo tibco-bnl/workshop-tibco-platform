@@ -21,6 +21,9 @@ By implementing these three principles, with the correct configuration, we can a
 
 First we will describe the BusinessWorks process details and the creation of the ear file.
 
+
+![alt text](cronjob/BW-process.png)
+
 The process has the following activities:
 1) Timer activity as process starter
 2) Activities implementing the business logic, here not further described
