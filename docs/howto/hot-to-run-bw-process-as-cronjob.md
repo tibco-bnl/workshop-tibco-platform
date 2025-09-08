@@ -109,7 +109,7 @@ spec:
 The above sample yaml has been configure to implement the use case in this document: 'The process must be executed periodically (every hour) and once it has completed execuring its business logic the pod/container hosting this process should be removed. A new one should be started only based on the periodic schedule' 
 
 This is implemented by:
-* Schedule: spec.schedule: "0 * * * *"
+* Schedule: spec.schedule: "0 * * * *" (here every minute, for testing purposes)
 * Assure the Pod failure, initiated by the kill action in the BW process, is threated as a FailJob status. This kill action results in a POD result code '130'.This will enable the below conifguration not to restart the pod: 'podFailurePolicy.rules'
 * Don't restart pod/container automatically (K8S will try this by default):  'ttlSecondsAfterFinished: 10', 'backoffLimit: 0'  and 'restartPolicy: Never'
 
