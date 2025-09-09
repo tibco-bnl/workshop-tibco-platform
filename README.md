@@ -102,6 +102,7 @@ Below is a list of documentation files in this repository for quick reference:
 - [Install TIBCO Platform on Minikube or Docker Desktop kubernetes](/scripts/running_platform_installer.md)
 - [How to Set Up EKS Fargate EFS and Deploy TIBCO Data Plane](docs/howto/how-to-dp-eks-fargate-efs-setup-guide.md)
 - [How to Set Up Azure Red Hat OpenShift (ARO) Cluster and Deploy TIBCO Platform Data Plane](docs/howto/how-to-dp-openshift-aro-aks-setup-guide.md)
+- [How to Setup AKS Cluster and Deploy TIBCO Platform Data Plane](docs/howto/how-to-dp-aks-setup-guide.md)
 - [How to Set Up Observability on a DP running on Azure Red Hat OpenShift (ARO) Cluster](docs/howto/how-to-dp-openshift-observability.md)
 - [How to gracefully stop the platform](docs/howto/how-to-gracefully-stop-platform.md)
 - [How to install separate platform components](docs/howto/how-to-install-seperate-platform-components.md)

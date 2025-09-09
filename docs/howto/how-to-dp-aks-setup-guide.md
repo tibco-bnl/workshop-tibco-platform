@@ -2,7 +2,7 @@
 
 # Setting Up and Configuring Azure Kubernetes Service (AKS) for TIBCO Platform Data Plane
 
-Ref: (Main source reference to this doc)[https://github.com/TIBCOSoftware/tp-helm-charts/tree/main/docs/workshop/aks/data-plane]
+Ref: [Main source reference to this doc](https://github.com/TIBCOSoftware/tp-helm-charts/tree/main/docs/workshop/aks/data-plane)
 
 This document provides a comprehensive guide for setting up and configuring an Azure Kubernetes Service (AKS) cluster to act as a TIBCO Platform Data Plane. It covers prerequisites, cluster creation, and the installation of necessary tools and components.
 
