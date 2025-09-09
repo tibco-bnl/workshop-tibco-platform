@@ -6,6 +6,18 @@ Ref: (Main source reference to this doc)[https://github.com/TIBCOSoftware/tp-hel
 
 This document provides a comprehensive guide for setting up and configuring an Azure Kubernetes Service (AKS) cluster to act as a TIBCO Platform Data Plane. It covers prerequisites, cluster creation, and the installation of necessary tools and components.
 
+## Table of Contents
+
+- [1. Prerequisites](#1-prerequisites)
+- [2. Clone the `tp-helm-charts` Repository](#2-clone-the-tp-helm-charts-repository)
+- [3. Using a Prebuilt Docker Container for CLI Tools (Optional)](#3-using-a-prebuilt-docker-container-for-cli-tools-optional)
+- [4. Export Required Variables](#4-export-required-variables)
+- [5. Create the AKS Cluster](#5-create-the-aks-cluster)
+- [6. Install Third-Party Tools](#6-install-third-party-tools)
+- [7. Install Observability Tools](#7-install-observability-tools)
+- [8. Information for TIBCO® Data Plane Configuration](#8-information-for-tibco-data-plane-configuration)
+- [9. Cleanup](#9-cleanup)
+
 -----
 
 ## 1\. Prerequisites
