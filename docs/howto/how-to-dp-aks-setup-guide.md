@@ -106,7 +106,7 @@ export TP_NODE_VM_SIZE="Standard_D4s_v3" # VM Size of nodes
 ```bash
 export TP_NETWORK_POLICY="azure" # possible values: "azure", "calico", "none"
 export TP_NETWORK_PLUGIN="azure" # possible values: "azure", "calico", "none"
-export TP_AUTHORIZED_IP="86.90.167.198" # whitelisted IP for accessing the cluster
+export TP_AUTHORIZED_IP="" # whitelisted IP for accessing the cluster
 export TP_TIBCO_HELM_CHART_REPO=https://tibcosoftware.github.io/tp-helm-charts # location of charts repo url
 export TP_DNS_RESOURCE_GROUP="cic-dns" # resource group for DNS record-sets
 ```
@@ -115,14 +115,14 @@ export TP_DNS_RESOURCE_GROUP="cic-dns" # resource group for DNS record-sets
 
 ```bash
 # To use the same domain for services and user apps:
-export TP_DOMAIN="dp1.mle.atsnl-emea.azure.dataplanes.pro"
+export TP_DOMAIN="dp1.any.yourdomain.azure.company.com"
 
 # To use different domains for services and user apps [OPTIONAL]:
-# export TP_DOMAIN="services.dp1.mle.atsnl-emea.azure.dataplanes.pro"
-# export TP_APPS_DOMAIN="apps.dp1.mle.atsnl-emea.azure.dataplanes.pro"
+# export TP_DOMAIN="services.dp1.any.yourdomain.azure.company.com"
+# export TP_APPS_DOMAIN="apps.dp1.any.yourdomain.azure.company.com"
 
 export TP_SANDBOX="dp1" # hostname of TP_DOMAIN
-export TP_TOP_LEVEL_DOMAIN="mle.atsnl-emea.azure.dataplanes.pro" # top level domain
+export TP_TOP_LEVEL_DOMAIN="any.yourdomain.azure.company.com" # top level domain
 export TP_MAIN_INGRESS_CLASS_NAME="azure-application-gateway" # name of Azure Application Gateway Ingress Controller
 export TP_DISK_ENABLED="true" # enables Azure Disk storage class
 export TP_DISK_STORAGE_CLASS="azure-disk-sc" # name of Azure Disk storage class
