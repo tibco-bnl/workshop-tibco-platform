@@ -1,52 +1,56 @@
 
 
+
 # Setting Up and Configuring Azure Kubernetes Service (AKS) for TIBCO Platform Data Plane
 
-Ref: [Main source reference to this doc](https://github.com/TIBCOSoftware/tp-helm-charts/tree/main/docs/workshop/aks/data-plane)
+> **Reference:** [Main source for this guide](https://github.com/TIBCOSoftware/tp-helm-charts/tree/main/docs/workshop/aks/data-plane)
 
-This document provides a comprehensive guide for setting up and configuring an Azure Kubernetes Service (AKS) cluster to act as a TIBCO Platform Data Plane. It covers prerequisites, cluster creation, and the installation of necessary tools and components.
+This guide walks you through setting up and configuring an Azure Kubernetes Service (AKS) cluster as a TIBCO Platform Data Plane. It covers prerequisites, cluster creation, and installation of required tools and components.
 
 ## Table of Contents
 
+
 - [1. Prerequisites](#1-prerequisites)
-- [2. Clone the `tp-helm-charts` Repository](#2-clone-the-tp-helm-charts-repository)
+- [2. Clone the tp-helm-charts Repository](#2-clone-the-tp-helm-charts-repository)
 - [3. Using a Prebuilt Docker Container for CLI Tools (Optional)](#3-using-a-prebuilt-docker-container-for-cli-tools-optional)
 - [4. Export Required Variables](#4-export-required-variables)
 - [5. Create the AKS Cluster](#5-create-the-aks-cluster)
 - [6. Install Third-Party Tools](#6-install-third-party-tools)
 - [7. Install Observability Tools](#7-install-observability-tools)
-- [8. Information for TIBCO® Data Plane Configuration](#8-information-for-tibco-data-plane-configuration)
+- [8. Information for TIBCO Data Plane Configuration](#8-information-for-tibco-data-plane-configuration)
 - [9. Cleanup](#9-cleanup)
 
 -----
 
-## 1\. Prerequisites
+## 1. Prerequisites
 
-Before you begin, ensure you have the following ready:
+Before you begin, ensure you have the following:
 
-  * **Azure Subscription:** An Azure subscription with either `Owner` or `Contributor` + `User Access Administrator` roles.
-  * **Red Hat Account:** Required for a pull secret.
-  * **Command-line Tools:** The following tools must be installed. They can be installed via [Homebrew](https://brew.sh/) on macOS/Linux.
-      * `az` (Azure CLI)
-      * `oc` (OpenShift CLI)
-      * `kubectl`
-      * `helm`
-      * `jq`, `yq`, `envsubst`, `bash`
-  * **Docker:** (Optional) Recommended for using a containerized environment to run CLI tools.
-  * **TIBCO Platform Helm Charts Repository:** The repository URL is `https://tibcosoftware.github.io/tp-helm-charts`.
+* **Azure Subscription:** With `Owner` or `Contributor` + `User Access Administrator` roles
+* **Red Hat Account:** For pull secret
+* **Command-line Tools:** Install via [Homebrew](https://brew.sh/) (macOS/Linux):
+  * `az` (Azure CLI)
+  * `oc` (OpenShift CLI)
+  * `kubectl`
+  * `helm`
+  * `jq`, `yq`, `envsubst`, `bash`
+* **Docker:** (Optional) For containerized CLI tools
+* **TIBCO Platform Helm Charts Repository:** `https://tibcosoftware.github.io/tp-helm-charts`
 
-## 2\. Clone the `tp-helm-charts` Repository
 
-All necessary charts and scripts are located in the `tp-helm-charts` repository. Clone it by running the following commands:
+## 2. Clone the tp-helm-charts Repository
+
+Clone the repository containing all necessary charts and scripts:
 
 ```bash
 git clone https://github.com/TIBCOSoftware/tp-helm-charts.git
 cd tp-helm-charts
 ```
 
-## 3\. Using a Prebuilt Docker Container for CLI Tools (Optional)
 
-To ensure a consistent environment and avoid local installation issues, you can use a prebuilt Docker container with all the required CLI tools.
+## 3. Using a Prebuilt Docker Container for CLI Tools (Optional)
+
+To ensure a consistent environment and avoid local installation issues, use a prebuilt Docker container with all required CLI tools.
 
 ### Build the Docker Image
 
@@ -64,15 +68,18 @@ Start an interactive shell within the container:
 docker run -it --rm workshop-cli-tools:latest /bin/bash
 ```
 
-> **Tip:** If you need to access local files from inside the container, mount your working directory with `-v $(pwd):/workspace`.
+
+> **Tip:** To access local files inside the container, mount your working directory: `-v $(pwd):/workspace`
 
 All subsequent commands in this guide can be run from within this container shell.
 
-## 4\. Export Required Variables
 
-Before running the setup scripts, you must set the following environment variables. The scripts and configurations rely on these values. We use the prefix `TP_` for "TIBCO PLATFORM" variables.
+## 4. Export Required Variables
 
-> **Note:** We are using `az` CLI commands to create prerequisites and the cluster. Please review the parameters below to set the variables correctly.
+Before running setup scripts, set the following environment variables. Scripts and configurations rely on these values. Prefix: `TP_` (TIBCO PLATFORM).
+
+
+> **Note:** We use `az` CLI commands to create prerequisites and the cluster. Review and set the variables below correctly.
 
 ### Azure Specific Variables
 
@@ -118,24 +125,26 @@ export TP_NODE_VM_SIZE="Standard_D4s_v3" # VM Size of nodes
 ```bash
 export TP_NETWORK_POLICY="azure" # possible values: "azure", "calico", "none"
 export TP_NETWORK_PLUGIN="azure" # possible values: "azure", "calico", "none"
-export TP_AUTHORIZED_IP="" # whitelisted IP for accessing the cluster
+export TP_AUTHORIZED_IP="86.90.167.198" # whitelisted IP for accessing the cluster
 export TP_TIBCO_HELM_CHART_REPO=https://tibcosoftware.github.io/tp-helm-charts # location of charts repo url
-export TP_DNS_RESOURCE_GROUP="cic-dns" # resource group for DNS record-sets
+export TP_DNS_RESOURCE_GROUP="kul-atsbnl" # resource group for DNS record-sets
 ```
 
 ### Domain Specific Variables
 
 ```bash
 # To use the same domain for services and user apps:
-export TP_DOMAIN="dp1.any.yourdomain.azure.company.com"
+export TP_DOMAIN="dp1.kul.atsnl-emea.azure.dataplanes.pro"
 
 # To use different domains for services and user apps [OPTIONAL]:
-# export TP_DOMAIN="services.dp1.any.yourdomain.azure.company.com"
-# export TP_APPS_DOMAIN="apps.dp1.any.yourdomain.azure.company.com"
+# export TP_DOMAIN="services.$TP_DOMAIN"
+# export TP_APPS_DOMAIN="apps.$TP_DOMAIN"
+
 
 export TP_SANDBOX="dp1" # hostname of TP_DOMAIN
-export TP_TOP_LEVEL_DOMAIN="any.yourdomain.azure.company.com" # top level domain
-export TP_MAIN_INGRESS_CLASS_NAME="azure-application-gateway" # name of Azure Application Gateway Ingress Controller
+export TP_TOP_LEVEL_DOMAIN="kul.atsnl-emea.azure.dataplanes.pro" # top level domain
+#export TP_MAIN_INGRESS_CLASS_NAME="azure-application-gateway" # name of Azure Application Gateway Ingress Controller
+export TP_MAIN_INGRESS_CLASS_NAME="nginx" # name of Azure Application Gateway Ingress Controller
 export TP_DISK_ENABLED="true" # enables Azure Disk storage class
 export TP_DISK_STORAGE_CLASS="azure-disk-sc" # name of Azure Disk storage class
 export TP_FILE_ENABLED="true" # enables Azure Files storage class
@@ -147,9 +156,10 @@ export TP_STORAGE_ACCOUNT_RESOURCE_GROUP="" # replace with name of storage accou
 export DP_NAMESPACE="dp1"
 ```
 
-## 5\. Create the AKS Cluster
 
-Before creating the cluster, you must log in to Azure and set the correct subscription.
+## 5. Create the AKS Cluster
+
+Before creating the cluster, log in to Azure and set the correct subscription:
 
 ```bash
 az login
@@ -217,11 +227,13 @@ kubectl get nodes
 
 **Expected Output:** `kubectl get nodes` should return a list of your three `Ready` nodes.
 
-## 6\. Install Third-Party Tools
 
-Before deploying the TIBCO Platform Data Plane, you need to install essential third-party tools like Cert Manager, External DNS, Ingress Controllers, and Storage Classes.
+## 6. Install Third-Party Tools
 
-> **Note:** The `helm` commands in the following sections use the `--labels layer=<number>` flag. This is supported in Helm v3.13 and above and helps identify chart dependencies for easier uninstallation.
+Before deploying the TIBCO Platform Data Plane, install essential third-party tools: Cert Manager, External DNS, Ingress Controllers, and Storage Classes.
+
+
+> **Note:** The `helm` commands use the `--labels layer=<number>` flag (Helm v3.13+), which helps identify chart dependencies for easier uninstallation.
 
 ### 6.1 Install Cert Manager
 
@@ -268,18 +280,77 @@ extraVolumeMounts:
   readOnly: true
 extraArgs:
 - --ingress-class=${TP_MAIN_INGRESS_CLASS_NAME}
+- --txt-wildcard-replacement=wildcard 
 EOF
 ```
 
-**Expected Output:** The `external-dns` release should be installed, and the notes will confirm the chart and app versions.
+### 6.3 Install Cluster Issuer, Ingress Controller and Storage Class
 
-### 6.3 Install Ingress Controller and Storage Class
+In this section, we will install cluster issuer, ingress controller and storage class. We have made a helm chart called `dp-config-aks` that encapsulates the installation of ingress controller and storage class.
+It will create the following resources:
+* cluster issuer to represent certificate authorities (CAs) that are able to generate signed certificates by honoring certificate signing requests
+* ingress object which will be able to create Azure load balancer
+* annotation for external-dns to create DNS record for the ingress
+* storage class for Azure Disks
+* storage class for Azure Files
+
+### Install Cluster Issuer
+
+```bash
+export TP_CLIENT_ID=$(az aks show --resource-group "${TP_RESOURCE_GROUP}" --name "${TP_CLUSTER_NAME}" --query "identityProfile.kubeletidentity.clientId" --output tsv)
+
+helm upgrade --install --wait --timeout 1h --create-namespace \
+  -n ingress-system dp-config-aks-ingress-certificate dp-config-aks \
+  --labels layer=1 \
+  --repo "${TP_TIBCO_HELM_CHART_REPO}" --version "^1.0.0" -f - <<EOF
+global:
+  dnsSandboxSubdomain: "${TP_SANDBOX}"
+  dnsGlobalTopDomain: "${TP_TOP_LEVEL_DOMAIN}"
+  azureSubscriptionDnsResourceGroup: "${TP_DNS_RESOURCE_GROUP}"
+  azureSubscriptionId: "${TP_SUBSCRIPTION_ID}"
+  azureAwiAsoDnsClientId: "${TP_CLIENT_ID}"
+httpIngress:
+  enabled: false
+  name: main # this is part of cluster issuer name. 
+ingress-nginx:
+  enabled: false
+kong:
+  enabled: false
+EOF
+```
+
 
 The `dp-config-aks` Helm chart bundles the installation of the ingress controller and storage classes required for the TIBCO Platform. It creates an Azure Application Gateway, storage classes for Azure Disks and Files, and sets up DNS records.
 
 #### Nginx Ingress Controller
 
 This ingress controller can be used for both Data Plane services and user apps.
+
+
+In order to make sure that the network traffic is allowed from the ingress-system namespace to the Control Plane namespace pods, we need to label this namespace.
+
+```bash
+kubectl label namespace ingress-system networking.platform.tibco.com/non-cp-ns=enable --overwrite=true
+```
+
+Create a certificate for the ingress controller using the issuer created above
+```bash
+kubectl apply -f - << EOF
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: tp-certificate-main-ingress
+  namespace: ingress-system
+spec:
+  secretName: tp-certificate-main-ingress
+  issuerRef:
+    name: "cic-cert-subscription-scope-production-main"
+    kind: ClusterIssuer
+  dnsNames:
+    - '*.${TP_DOMAIN}'
+EOF
+```
+
 
 ```bash
 export TP_CLIENT_ID=$(az aks show --resource-group "${TP_RESOURCE_GROUP}" --name "${TP_CLUSTER_NAME}" --query "identityProfile.kubeletidentity.clientId" --output tsv)
@@ -294,11 +365,10 @@ global:
   azureSubscriptionDnsResourceGroup: "${TP_DNS_RESOURCE_GROUP}"
   azureSubscriptionId: "${TP_SUBSCRIPTION_ID}"
   azureAwiAsoDnsClientId: "${TP_CLIENT_ID}"
-dns:
-  domain: "${TP_DOMAIN}"
+#dns:
+#  domain: "${TP_DOMAIN}"
 httpIngress:
-  enabled: true
-  name: nginx
+  enabled: false
   backend:
     serviceName: dp-config-aks-nginx-ingress-nginx-controller
   ingressClassName: ${TP_MAIN_INGRESS_CLASS_NAME}
@@ -308,14 +378,22 @@ httpIngress:
 ingress-nginx:
   enabled: true
   controller:
+    service:
+      type: LoadBalancer
+      annotations:
+        external-dns.alpha.kubernetes.io/hostname: "*.${TP_DOMAIN}"
+        service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: /healthz
+      enableHttp: false # disable http 80 port on service and NLB
     config:
       use-forwarded-headers: "true"
       proxy-body-size: "150m"
       proxy-buffer-size: 16k
+    extraArgs:
+      # set the certificate you have created in ingress-system or Control Plane namespace
+      default-ssl-certificate: ingress-system/tp-certificate-main-ingress
 EOF
 ```
 
-After installation, verify the ingress classes:
 
 ```bash
 kubectl get ingressclass
@@ -359,7 +437,8 @@ kubectl get storageclass
 
 -----
 
-## 7\. Install Observability Tools
+
+## 7. Install Observability Tools
 
 The TIBCO Platform requires observability tools to monitor logs and metrics.
 
@@ -478,9 +557,10 @@ The default username for Grafana is `admin`, and the password is `prom-operator`
 
 -----
 
-## 8\. Information for TIBCO® Data Plane Configuration
 
-You will need the following information to configure the TIBCO Platform Data Plane.
+## 8. Information for TIBCO Data Plane Configuration
+
+You will need the following information to configure the TIBCO Platform Data Plane:
 
   * **BASE\_FQDN:**
     ```bash
@@ -502,9 +582,12 @@ You will need the following information to configure the TIBCO Platform Data Pla
 
 -----
 
-## 9\. Cleanup
 
-To delete the cluster and associated resources, first delete the Data Plane from the TIBCO Control Plane UI. Then, navigate to the `scripts/aks` directory and run the cleanup script.
+## 9. Cleanup
+
+To delete the cluster and associated resources:
+1. Delete the Data Plane from the TIBCO Control Plane UI
+2. Navigate to `scripts/aks` and run the cleanup script:
 
 ```bash
 cd scripts/aks
