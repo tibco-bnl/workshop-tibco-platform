@@ -25,7 +25,7 @@ This guide walks you through setting up and configuring an Azure Kubernetes Serv
 ## 1. Prerequisites
 
 Before you begin, ensure you have the following:  
-(Alternatively you can jump to step 2 and run everything from a docker image.)
+(Alternatively you can jump to step 3 and run everything from a docker image.)
 
 * **Azure Subscription:** With `Owner` or `Contributor` + `User Access Administrator` roles
 * **Red Hat Account:** For pull secret
