@@ -83,6 +83,9 @@ Before running setup scripts, set the following environment variables. Scripts a
 
 ### Azure Specific Variables
 
+#### For using them from script: 
+- Use script: [aks-aks-env-variables.sh](aks-aks-env-variables.sh)
+
 ```bash
 export TP_SUBSCRIPTION_ID=$(az account show --query id -o tsv) # subscription id
 export TP_TENANT_ID=$(az account show --query tenantId -o tsv) # tenant id
@@ -125,7 +128,7 @@ export TP_NODE_VM_SIZE="Standard_D4s_v3" # VM Size of nodes
 ```bash
 export TP_NETWORK_POLICY="azure" # possible values: "azure", "calico", "none"
 export TP_NETWORK_PLUGIN="azure" # possible values: "azure", "calico", "none"
-export TP_AUTHORIZED_IP="86.90.167.198" # whitelisted IP for accessing the cluster
+export TP_AUTHORIZED_IP="" # whitelisted IP for accessing the cluster
 export TP_TIBCO_HELM_CHART_REPO=https://tibcosoftware.github.io/tp-helm-charts # location of charts repo url
 export TP_DNS_RESOURCE_GROUP="kul-atsbnl" # resource group for DNS record-sets
 ```
@@ -151,6 +154,8 @@ export TP_FILE_ENABLED="true" # enables Azure Files storage class
 export TP_FILE_STORAGE_CLASS="azure-files-sc" # name of Azure Files storage class
 export TP_INGRESS_CLASS="nginx" # name of main ingress class
 export TP_ES_RELEASE_NAME="dp-config-es" # name of dp-config-es release
+export TP_STORAGE_ACCOUNT_NAME="" # replace with name of existing storage account (optional)
+export TP_STORAGE_ACCOUNT_RESOURCE_GROUP="" # replace with name of storage account resource group (optional)
 export TP_STORAGE_ACCOUNT_NAME="" # replace with name of existing storage account (optional)
 export TP_STORAGE_ACCOUNT_RESOURCE_GROUP="" # replace with name of storage account resource group (optional)
 export DP_NAMESPACE="dp1"
@@ -373,7 +378,7 @@ httpIngress:
     serviceName: dp-config-aks-nginx-ingress-nginx-controller
   ingressClassName: ${TP_MAIN_INGRESS_CLASS_NAME}
   annotations:
-    cert-manager.io/cluster-issuer: "cic-cert-subscription-scope-production-nginx"
+    cert-manager.io/cluster-issuer: "cic-cert-subscription-scope-production-main"
     external-dns.alpha.kubernetes.io/hostname: "*.${TP_DOMAIN}"
 ingress-nginx:
   enabled: true
