@@ -1,7 +1,7 @@
 # TIBCO Platform Workshop
 
-## [GH Pages link](https://tibco-bnl.github.io/workshop-tibco-platform/)
-## [Github project link](https://github.com/tibco-bnl/workshop-tibco-platform)
+#### [GH Pages Web link](https://tibco-bnl.github.io/workshop-tibco-platform/)
+#### [Github source code link](https://github.com/tibco-bnl/workshop-tibco-platform)
 
 This repository contains material for the TIBCO Platform Workshop. The material is intended for TIBCO customers and partners who want to create a TIBCO Platform sandbox environment and experiment with it. The aim of this sandbox is to help users learn the platform. **A sandbox is NOT intended or supported for production purposes.**
 
@@ -100,15 +100,15 @@ Use [this guide](docs/configure-platform/configure-tibco-platform.md) to perform
 Below is a list of documentation files in this repository for quick reference:
 
 - [Install TIBCO Platform on Minikube or Docker Desktop kubernetes](/scripts/running_platform_installer.md)
+- [How to Set up AKS Cluster and Deploy TIBCO Platform Data Plane](docs/howto/how-to-dp-aks-setup-guide.md)
 - [How to Set Up EKS Fargate EFS and Deploy TIBCO Data Plane](docs/howto/how-to-dp-eks-fargate-efs-setup-guide.md)
 - [How to Set Up Azure Red Hat OpenShift (ARO) Cluster and Deploy TIBCO Platform Data Plane](docs/howto/how-to-dp-openshift-aro-aks-setup-guide.md)
-- [How to Setup AKS Cluster and Deploy TIBCO Platform Data Plane](docs/howto/how-to-dp-aks-setup-guide.md)
 - [How to Set Up Observability on a DP running on Azure Red Hat OpenShift (ARO) Cluster](docs/howto/how-to-dp-openshift-observability.md)
 - [How to gracefully stop the platform](docs/howto/how-to-gracefully-stop-platform.md)
 - [How to install separate platform components](docs/howto/how-to-install-seperate-platform-components.md)
 - [How to add a capability](docs/howto/how-to-add-a-capability.md)
 - [How to create resources](docs/howto/how-to-create-resources.md)
-- [How to update a platform](docs/howto/how-to-update-a-platform.md)
+- [How to upgrade a platform](docs/howto/how-to-update-a-platform.md)
 
 ---
 
@@ -121,5 +121,6 @@ Below is a list of documentation files in this repository for quick reference:
 | Marco       | 28/1/2025  | v3      | Separated port forwarding into a separate script                                          |
 | Kulbhushan  | 29/1/2025  | v4      | Added script to generate self-signed CA certificates and tokens                           |
 | Kulbhushan  | 03/06/2025 | v5      | Added ARO setup guide for 1.7 version                                                    |
-| Marco  | 03/06/2025 | v5      | Added How to Set Up EKS Fargate EFS and Deploy TIBCO Data Plane for 1.7 version                                                    |
-| Kulbhushan  | 05/06/2025 | v5      | Added ARO Observability config - only logs working  
+| Marco  | 03/06/2025 | v5      | Added How to Set Up EKS Fargate EFS and Deploy TIBCO Data Plane for 1.7 version          |                                          |
+| Kulbhushan  | 05/06/2025 | v5      | Added ARO Observability config - only logs working  |
+| Kulbhushan  | 12/09/2025 | v6      | Added AKS DP setup document |

@@ -99,7 +99,9 @@ export TP_RESOURCE_GROUP="kul-atsbnl" # set the resource group name in which all
 export TP_CLUSTER_NAME="dp1-aks-aauk-kul" # name of the cluster to be provisioned
 export TP_KUBERNETES_VERSION="1.32.6" # refer to: https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli
 export TP_USER_ASSIGNED_IDENTITY_NAME="${TP_CLUSTER_NAME}-identity" # user assigned identity to be associated with the cluster
-export KUBECONFIG=`pwd`/${TP_CLUSTER_NAME}.yaml # kubeconfig file path
+
+#Uncomment if you are running from docker image but nevertheless this is optional
+#export KUBECONFIG=`pwd`/${TP_CLUSTER_NAME}.yaml # kubeconfig file path
 ```
 
 ### Network Specific Variables
@@ -154,8 +156,6 @@ export TP_FILE_ENABLED="true" # enables Azure Files storage class
 export TP_FILE_STORAGE_CLASS="azure-files-sc" # name of Azure Files storage class
 export TP_INGRESS_CLASS="nginx" # name of main ingress class
 export TP_ES_RELEASE_NAME="dp-config-es" # name of dp-config-es release
-export TP_STORAGE_ACCOUNT_NAME="" # replace with name of existing storage account (optional)
-export TP_STORAGE_ACCOUNT_RESOURCE_GROUP="" # replace with name of storage account resource group (optional)
 export TP_STORAGE_ACCOUNT_NAME="" # replace with name of existing storage account (optional)
 export TP_STORAGE_ACCOUNT_RESOURCE_GROUP="" # replace with name of storage account resource group (optional)
 export DP_NAMESPACE="dp1"
@@ -416,17 +416,31 @@ helm upgrade --install --wait --timeout 1h --create-namespace \
   --repo "${TP_TIBCO_HELM_CHART_REPO}" \
   --labels layer=1 \
   --version "^1.0.0" -f - <<EOF
-dns:
-  domain: "${TP_DOMAIN}"
+httpIngress:
+  enabled: false
 clusterIssuer:
   create: false
 storageClass:
   azuredisk:
     enabled: ${TP_DISK_ENABLED}
     name: ${TP_DISK_STORAGE_CLASS}
+    volumeBindingMode: Immediate
+    reclaimPolicy: "Delete"
+    parameters:
+      skuName: Premium_LRS # other values: Premium_ZRS, StandardSSD_LRS (default)
   azurefile:
     enabled: ${TP_FILE_ENABLED}
     name: ${TP_FILE_STORAGE_CLASS}
+    volumeBindingMode: Immediate
+    reclaimPolicy: "Delete"
+    parameters:
+      allowBlobPublicAccess: "false"
+      networkEndpointType: privateEndpoint
+      skuName: Premium_LRS # other values: Premium_ZRS
+    mountOptions:
+      - mfsymlinks
+      - cache=strict
+      - nosharesock
 ingress-nginx:
   enabled: false
 EOF

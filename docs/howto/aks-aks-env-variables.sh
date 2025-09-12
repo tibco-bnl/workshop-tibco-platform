@@ -6,7 +6,10 @@ export TP_RESOURCE_GROUP="kul-atsbnl" # set the resource group name in which all
 export TP_CLUSTER_NAME="dp1-aks-aauk-kul" # name of the cluster to be provisioned
 export TP_KUBERNETES_VERSION="1.32.6" # refer to: https://learn.microsoft.com/en-us/azure/aks/supported-kubernetes-versions?tabs=azure-cli
 export TP_USER_ASSIGNED_IDENTITY_NAME="${TP_CLUSTER_NAME}-identity" # user assigned identity to be associated with the cluster
-export KUBECONFIG=`pwd`/${TP_CLUSTER_NAME}.yaml # kubeconfig file path
+
+#Uncomment if you are running from docker image but nevertheless this is optional
+#export KUBECONFIG=`pwd`/${TP_CLUSTER_NAME}.yaml # kubeconfig file path
+
 export TP_VNET_NAME="${TP_CLUSTER_NAME}-vnet" # name of VNet resource
 export TP_VNET_CIDR="10.4.0.0/16" # CIDR of the VNet
 export TP_SERVICE_CIDR="10.0.0.0/16" # CIDR for service cluster IPs
