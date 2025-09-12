@@ -18,6 +18,7 @@ This guide walks you through setting up and configuring an Azure Kubernetes Serv
 - [6. Install Third-Party Tools](#6-install-third-party-tools)
 - [7. Install Observability Tools](#7-install-observability-tools)
 - [8. Information for TIBCO Data Plane Configuration](#8-information-for-tibco-data-plane-configuration)
+- [](#99: Deploy TIBCO Platform Data Plane)
 - [9. Cleanup](#9-cleanup)
 
 -----
@@ -602,7 +603,109 @@ You will need the following information to configure the TIBCO Platform Data Pla
 -----
 
 
-## 9. Cleanup
+## 9: Deploy TIBCO Platform Data Plane
+
+Login to your SaaS CP and Register a new Data plane. 
+
+**Note:** If you do not have an access to SaaS CP assigned to your customer, work with TIBCO ATS Team or TIBCO Support.
+Usually there is an invitation email sent to the manager or account lead. 
+
+Follow the wizard which will generate following helm commands with a unique DP ID. These helm commands can also be generated using TIBCO Platform Control Plane APIs.
+
+Dataplane name: dp1 or aksdp1 or dp1-prod
+Dataplane k8s namespace: dp1
+
+### 9.1. Add Helm Repo
+
+```bash
+helm repo add tibco-platform-public https://tibcosoftware.github.io/tp-helm-charts
+helm repo update tibco-platform-public
+```
+
+### 9.2. Create Namespace
+
+```bash
+kubectl apply -f - <<EOF
+apiVersion: v1
+kind: Namespace
+metadata:
+    name: dp1
+    labels:
+        platform.tibco.com/dataplane-id: <your-dataplane-id>
+EOF
+```
+
+### 9.3. Configure Namespace
+
+```bash
+helm upgrade --install -n dp1 dp-configure-namespace tibco-platform-public/dp-configure-namespace \
+    --version x.x.x \
+    --set global.tibco.dataPlaneId=<your-dataplane-id> \
+    --set global.tibco.subscriptionId=<your-subscription-id> \
+    --set global.tibco.primaryNamespaceName=dp1 \
+    --set global.tibco.serviceAccount=sa \
+    --set global.tibco.containerRegistry.url=<your-registry-url> \
+    --set global.tibco.containerRegistry.username=<your-registry-username> \
+    --set global.tibco.containerRegistry.password=<your-registry-password> \
+    --set global.tibco.containerRegistry.repository=tibco-platform-docker-prod \
+    --set global.tibco.enableClusterScopedPerm=true \
+    --set networkPolicy.createDeprecatedPolicies=false
+```
+
+### 9.4. Deploy Core Infrastructure
+
+```bash
+helm upgrade --install dp-core-infrastructure -n dp1 tibco-platform-public/dp-core-infrastructure \
+    --version x.x.x \
+    --set global.tibco.dataPlaneId=<your-dataplane-id> \
+    --set global.tibco.subscriptionId=<your-subscription-id> \
+    --set tp-tibtunnel.configure.accessKey=<your-access-key> \
+    --set tp-tibtunnel.connect.url=<your-tibtunnel-url> \
+    --set global.tibco.serviceAccount=sa \
+    --set global.tibco.containerRegistry.url=<your-registry-url> \
+    --set global.tibco.containerRegistry.repository=tibco-platform-docker-prod \
+    --set global.proxy.noProxy='' \
+    --set global.logging.fluentbit.enabled=true
+```
+Run these helm commands from CLI where you have added kubernetes cluster to your kubeconfig and then in the UI press Done.
+---
+
+## Step 10: Provision TIBCO BWCE and Flogo Capabilities from the GUI
+
+Once the Data Plane is registered and core infrastructure is deployed, you can provision additional capabilities such as TIBCO BusinessWorks Container Edition (BWCE) and TIBCO Flogo directly from the TIBCO Control Plane GUI.
+
+### Steps:
+
+1. **Login to TIBCO Control Plane (SaaS GUI):**
+    - Navigate to your TIBCO Control Plane URL and sign in.
+
+2. **Select Your Data Plane:**
+    - Go to the "Data Planes" section and select the Data Plane you registered and deployed.
+
+3. **Add Capabilities:**
+    - Click on "Provision a Capability".
+    - Choose **TIBCO BusinessWorks Container Edition (BWCE)** or **TIBCO Flogo** from the list and press Start button
+    - Configure storage class azure-files-sc for Flogo and/or BWCE
+    - For ingress: use the base URL and prefix it with `flogo.` or `bwce.`. You can find the base URL using [Get OpenShift Ingress Domain](#get-openshift-ingress-domain).
+    - Follow the wizard to configure other required parameters
+    - Once finished you will see BWCE and/or Flogo Capability provisioned
+
+4. **Monitor Deployment:**
+    - The Control Plane will show the capability provisioning/deployment status.
+    - You can monitor progress and logs from the GUI or by checking pods in the corresponding namespace:
+
+    ```bash
+    kubectl -n dp1 get pods
+    ```
+5. **Deploy apps**
+    - Now you can deploy the apps. Follow the documentation of BWCE or Flogo in case you are not aware of how to build your first project and deploy it to TIBCO Platform
+
+> **Note:** The Control Plane GUI automates the Helm chart installation and configuration for these capabilities. No manual CLI steps are required for this process.
+
+--- 
+
+
+## 11. Cleanup
 
 To delete the cluster and associated resources:
 1. Delete the Data Plane from the TIBCO Control Plane UI
