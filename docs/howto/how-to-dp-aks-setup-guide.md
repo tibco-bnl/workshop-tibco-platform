@@ -689,7 +689,11 @@ Once the Data Plane is registered and core infrastructure is deployed, you can p
     - Click on "Provision a Capability".
     - Choose **TIBCO BusinessWorks Container Edition (BWCE)** or **TIBCO Flogo** from the list and press Start button
     - Configure storage class azure-files-sc for Flogo and/or BWCE
-    - For ingress: use the base URL and prefix it with `flogo.` or `bwce.`. You can find the base URL using [Get OpenShift Ingress Domain](#get-openshift-ingress-domain).
+    - For ingress: use the base URL and prefix it with `flogo.` or `bwce.`
+      
+      ```bash
+      kubectl get ingress -n ingress-system nginx |  awk 'NR==2 { print $3 }'
+      ```
     - Follow the wizard to configure other required parameters
     - Once finished you will see BWCE and/or Flogo Capability provisioned
 
