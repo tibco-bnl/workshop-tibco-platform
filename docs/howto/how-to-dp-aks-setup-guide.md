@@ -18,8 +18,9 @@ This guide walks you through setting up and configuring an Azure Kubernetes Serv
 - [6. Install Third-Party Tools](#6-install-third-party-tools)
 - [7. Install Observability Tools](#7-install-observability-tools)
 - [8. Information for TIBCO Data Plane Configuration](#8-information-for-tibco-data-plane-configuration)
-- [](#99: Deploy TIBCO Platform Data Plane)
-- [9. Cleanup](#9-cleanup)
+- [9. Deploy TIBCO Platform Data Plane](#9-deploy-tibco-platform-data-plane)
+- [10. Provision TIBCO BWCE and Flogo capabilities](#10-provision-tibco-bwce-and-flogo-capabilities-from-the-gui)
+- [11. Cleanup](#11-cleanup)
 
 -----
 
@@ -605,7 +606,9 @@ You will need the following information to configure the TIBCO Platform Data Pla
 
 ## 9: Deploy TIBCO Platform Data Plane
 
-Login to your SaaS CP and Register a new Data plane. 
+Login to your SaaS CP and Register a new Data plane.
+
+Make sure you also setup the activation server URL at a global level.
 
 **Note:** If you do not have an access to SaaS CP assigned to your customer, work with TIBCO ATS Team or TIBCO Support.
 Usually there is an invitation email sent to the manager or account lead. 
@@ -670,7 +673,7 @@ helm upgrade --install dp-core-infrastructure -n dp1 tibco-platform-public/dp-co
 Run these helm commands from CLI where you have added kubernetes cluster to your kubeconfig and then in the UI press Done.
 ---
 
-## Step 10: Provision TIBCO BWCE and Flogo Capabilities from the GUI
+## 10: Provision TIBCO BWCE and Flogo Capabilities from the GUI
 
 Once the Data Plane is registered and core infrastructure is deployed, you can provision additional capabilities such as TIBCO BusinessWorks Container Edition (BWCE) and TIBCO Flogo directly from the TIBCO Control Plane GUI.
 
