@@ -305,11 +305,41 @@ Set additional variables (if you are still in the same terminal window, else exp
 export TP_TIBCO_HELM_CHART_REPO=https://tibcosoftware.github.io/tp-helm-charts
 ```
 
+
+### Ingress Controller & DNS
+
+#### Ingress Controller
+For the purpose of this data plane workshop, we are using the default ingress controller available with the ARO cluster.
+Please refer to [ARO Ingress Operator](https://docs.redhat.com/en/documentation/openshift_container_platform/4.15/html/networking/configuring-ingress#nw-ne-openshift-ingress_configuring-ingress)
+
+Use the following command to get the ingress class name.
+```bash
+oc get ingressclass -A
+NAME                            CONTROLLER                                                     PARAMETERS                                        AGE
+openshift-default               openshift.io/ingress-to-route                                  IngressController.operator.openshift.io/default   39d
+```
+
+If you are using network policies, to ensure that network traffic is allowed from the default ingress namespace to the Data Plane namespace pods, label the namespace running following command
+
+```bash
+oc label namespace openshift-ingress networking.platform.tibco.com/non-dp-ns=enable --overwrite=true
+```
+
+### DNS
+For the purpose of this data plane workshop, we are using default DNS provisioned for ARO cluster. The base DNS of this can be found using the following command
+
+```bash
+oc get ingresscontroller -n openshift-ingress-operator default -o json | jq -r '.status.domain'
+```
+It should be something like "apps.<random_alphanumeric_string>.${TP_AZURE_REGION}.aroapp.io"
 ---
 
 ## Step 8: Install Storage Classes
 
 ### 8.1. Azure Files Storage Class (Used in capabilities)
+
+You will require the storage classes for capabilities deployment.
+Run the following command to create a storage class which uses Azure Files (Persistent Volumes will be created as fileshares).
 
 ```bash
 oc apply -f - <<EOF
@@ -332,7 +362,11 @@ volumeBindingMode: Immediate
 EOF
 ```
 
-### 8.2. Azure Files (NFS) for EMS
+### 8.2. Azure Files for EMS
+For TIBCO Enterprise Message Service™ (EMS) capability, you will need to create one of the following two storage classes:
+Run the following command to create a storage class with nfs protocol which uses Azure Files
+
+#### With NFS
 
 ```bash
 oc apply -f - <<EOF
@@ -357,8 +391,8 @@ reclaimPolicy: Retain
 volumeBindingMode: Immediate
 EOF
 ```
-
-### 8.3. Azure Disk Storage Class
+#### Without NFS 
+Alternatively, run the following command to create a storage class with Azure Disks
 
 ```bash
 oc apply -f - <<EOF
