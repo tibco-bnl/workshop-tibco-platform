@@ -1,0 +1,29 @@
+app:
+  baseUrl: 
+  title: 
+backend:
+  baseUrl: 
+auth:
+  providers:
+    oauth2Proxy:
+      development: {}
+      production: {}
+  enableAuthProviders:
+    - oauth2Proxy
+integrations:
+  github:
+    - host: github.com
+      token: ${GITHUB_TOKEN}
+catalog:
+  locations: []
+  rules:
+    - allow:
+        - Component
+        - API
+        - Location
+        - Template
+        - User
+        - Group
+        - Domain
+        - System
+        - Resource
