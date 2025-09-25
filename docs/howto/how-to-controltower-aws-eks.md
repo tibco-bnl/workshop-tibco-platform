@@ -242,14 +242,15 @@ java.property.otel.exporter.otlp.traces.protocol=http/protobuf
 java.property.bw.engine.opentelemetry.disableAutoConfiguration=false
 java.property.bw.engine.opentelemetry.span.exporter=OTLP-HTTP
 java.property.bw.engine.opentelemetry.traces.enable=true
-java.property.otel.exporter.otlp.traces.endpoint=https://{{ FQDN }}/tibco/agent/o11y/d2mn70s4inpc73cvg35g/traces
+java.property.otel.exporter.otlp.traces.endpoint=https://{{ FQDN }}/tibco/agent/o11y/{{ dataplaneid}}/traces
 java.property.bw.engine.opentelemetry.metrics.enable=true
 java.property.otel.exporter.otlp.metrics.protocol=http/protobuf
-java.property.otel.exporter.otlp.metrics.endpoint=https://{{ FQDN }}/tibco/agent/o11y/d2mn70s4inpc73cvg35g/metrics
+java.property.otel.exporter.otlp.metrics.endpoint=https://{{ FQDN }}/tibco/agent/o11y/{{ dataplaneid}}/metrics
 ```
 
 
 Update the {{ FQDN }} with the 'Machine Host Name' as provided during the Register data plane procedure in CP UI.
+Update the {{ dataplaneid}} with the dataplanid created for the control tower.
 
 These properties need to be added in the file $TIBCO_HOME/bw/5.16/bin/bwengine.tra . After this any application being deployed will have these properties.
 For existing deployed applications these properties need to be added by either: <br>
