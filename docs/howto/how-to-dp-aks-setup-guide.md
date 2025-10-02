@@ -472,7 +472,7 @@ This includes ElasticSearch and Kibana.
 helm upgrade --install --wait --timeout 1h --labels layer=1 --create-namespace -n elastic-system eck-operator eck-operator --repo "https://helm.elastic.co" --version "2.16.0"
 
 # install dp-config-es
-helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
+helm upgrade --install --debug --wait --timeout 1h --create-namespace --reuse-values \
   -n elastic-system ${TP_ES_RELEASE_NAME} dp-config-es \
   --labels layer=2 \
   --repo "${TP_TIBCO_HELM_CHART_REPO}" --version "^1.0.0" -f - <<EOF
