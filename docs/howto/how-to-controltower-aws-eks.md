@@ -228,7 +228,7 @@ EMS: provide the ems details of the ems server used for domain communication<br>
 RV: <br>
 > Hawk RV service: port number of the Hawk RV service on the BW5 server<br>
 > Hawk RV Network: name of the Hawk RV Network on the BW5 server<br>
-> Hawk RV Daemon: rv daemon connection string (i.e. tcp://<bw server>:<rv deamon port>)<br>
+> Hawk RV Daemon: rv daemon connection string (i.e. tcp:// <bw server>:<rv deamon port>)<br>
 
 Click 'Add Domain' 
 
