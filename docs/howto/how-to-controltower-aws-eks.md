@@ -30,11 +30,11 @@ This section described the creation of EFS based storage in an EKS cluster.
 ## Environment Variables
 
 ```bash
-AWS_DEFAULT_PROFILE=emea-use ## Based on local config in ~/.aws/config 
-EKS_AWS_REGION=eu-west-1 
+AWS_DEFAULT_PROFILE={{local profile name}} ## Based on local config in ~/.aws/config 
+EKS_AWS_REGION={{ aws region}} ## Region where the EKS cluster is running 
 EKS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
-EKS_EKS_CLUSTER=NL_ControlTower
-EKS_DP_NAMESPACE=ct-ns
+EKS_EKS_CLUSTER={{ EKS cluster name }} ## Name of EKS cluster control tower will be installed in. Can be an cluster which already contain other (TIBCO Platform) components
+EKS_DP_NAMESPACE={{ Name of namespace }} ## Name of the namespace where the controltower will be deployed. Will be created during installation.
 ```
 
 ---
