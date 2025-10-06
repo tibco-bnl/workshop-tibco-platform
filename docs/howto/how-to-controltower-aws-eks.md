@@ -95,6 +95,8 @@ The access needs to be created both ingress and egress between EFS servcies and 
 EKS_EFS_SG_ID=$(aws ec2 create-security-group   --description eks-controltower-ingress-egress --group-name eks-controltower   --vpc-id $EKS_VPC_ID   --region $EKS_AWS_REGION   --query 'GroupId' --output text)
 echo "EKS_EFS_SG_ID: $EKS_EFS_SG_ID"
 ```
+Description can be changed as per own requirement (--description)
+
 ```bash
 aws ec2 authorize-security-group-ingress   --group-id $EKS_EFS_SG_ID   --protocol tcp   --port 2049   --cidr $EKS_CIDR_BLOCK
 aws ec2 authorize-security-group-egress   --group-id $EKS_EFS_SG_ID   --protocol tcp   --port 2049   --source-group $EKS_VPC_DEFAULT_SG_ID
