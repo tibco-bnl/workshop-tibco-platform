@@ -77,6 +77,7 @@ Only static assigned storage is permitted on Fargate.
 EKS_EFS_FS_ID=$(aws efs create-file-system   --creation-token controltower   --encrypted   --performance-mode generalPurpose   --throughput-mode bursting   --tags Key=Name,Value=ControlTowerVolume   --region $EKS_AWS_REGION   --query "FileSystemId" --output text)
 echo "EKS_EFS_FS_ID: $EKS_EFS_FS_ID"
 ```
+Token name can be changed as per own requirement (--cration-token)
 
 ### Create EFS Access Point
 
