@@ -67,10 +67,10 @@ export IS_OCI=false ## Set true for OCI repo
 
 ### Image Repo
 ```bash
-export CP_CONTAINER_REGISTRY="csgprdusw2reposaas.jfrog.io" ## TP Image Registry, default TIBCO JFrog
-export CP_CONTAINER_REGISTRY_REPOSITORY="tibco-platform-docker-dev"  ## TP Image Repo, default TIBCO JFrog
-export CP_CONTAINER_REGISTRY_USERNAME="tibco-platform-devqa" ## TP Image Registry User, TIBCO JFrog Credentials from CP SaaS
-export CP_CONTAINER_REGISTRY_PASSWORD="cmVmdGtuOjAxOjAwMDAwMDAwMDA6aEMxVkM0eEhzMWloNDBHRUJxeEZqN1k0N3Zv" ## TP Image Registry User, TIBCO JFrog Credentials from CP SaaS
+export CP_CONTAINER_REGISTRY="csgprduswrepoedge.jfrog.io" ## TP Image Registry, default TIBCO JFrog
+export CP_CONTAINER_REGISTRY_REPOSITORY="tibco-platform-docker-prod"  ## TP Image Repo, default TIBCO JFrog
+export CP_CONTAINER_REGISTRY_USERNAME="image-registry-user" ## TP Image Registry User, TIBCO JFrog Credentials from CP SaaS
+export CP_CONTAINER_REGISTRY_PASSWORD="image-registry-password" ## TP Image Registry User, TIBCO JFrog Credentials from CP SaaS
 ```
 
 ### Storage
@@ -84,12 +84,12 @@ export STORAGE_RECLAIM_POLICY=Retain ## Fileshare Storage Class
 
 ### Database
 ```bash
-export CP_DB_HOST="nl-mc-db-tp.postgres.database.azure.com" ## CP Postgress DB
+export CP_DB_HOST="db.postgres.database.com" ## CP Postgress DB
 export CP_DB_PORT="5432" ## CP Postgres DB Port
 export CP_DB_SECRET_NAME="cp-db-secret" ## CP DB Secret
 export CP_DB_SSL_MODE="verify-full" # verify-full, disable
-export CP_DB_USER_NAME="bnladmin" ## CP DB User
-export CP_DB_PASSWORD='Tibco@2015' ## CP DB Password
+export CP_DB_USER_NAME="db-user" ## CP DB User
+export CP_DB_PASSWORD='db-password' ## CP DB Password
 export CP_DB_NAME="postgres" ## CP default DB
 
 ### Database SSL Config
