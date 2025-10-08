@@ -70,7 +70,7 @@ export IS_OCI=false ## Set true for OCI repo
 export CP_CONTAINER_REGISTRY="csgprduswrepoedge.jfrog.io" ## TP Image Registry, default TIBCO JFrog
 export CP_CONTAINER_REGISTRY_REPOSITORY="tibco-platform-docker-prod"  ## TP Image Repo, default TIBCO JFrog
 export CP_CONTAINER_REGISTRY_USERNAME="image-registry-user" ## TP Image Registry User, TIBCO JFrog Credentials from CP SaaS
-export CP_CONTAINER_REGISTRY_PASSWORD="image-registry-password" ## TP Image Registry User, TIBCO JFrog Credentials from CP SaaS
+export CP_CONTAINER_REGISTRY_PASSWORD="" ## TP Image Registry User, TIBCO JFrog Credentials from CP SaaS
 ```
 
 ### Storage
