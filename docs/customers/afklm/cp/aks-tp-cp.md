@@ -357,6 +357,11 @@ kubectl create secret generic session-keys -n ${CP_NAMESPACE} \
 ```
 
 ## 10. Install Platform Bootstrap 
+
+### NGINX IC
+
+<details>
+
 ```bash
 helm upgrade --install --wait --timeout 1h --create-namespace  \
   --username ${TP_CHART_REPO_USER_NAME} --password ${TP_CHART_REPO_TOKEN} \
@@ -440,8 +445,9 @@ router-operator:
             port: 100                      
 EOF
 ```
+</details>
 
-##  Install Platform Bootstrap with HAProxy IC
+##  HAProxy IC
 <details>
 
 ```bash
@@ -798,6 +804,13 @@ Restart coredns:
 kubectl rollout restart deployment coredns -n kube-system
 ```
 
+## Log in CP and create subscription
+
+Log into the CP with the username / password defined in the above variables (CP_ADMIN_EMAIL and CP_ADMIN_INITIAL_PASSWORD). <br>
+Create a subscription and check the mailserver to open the activation link.<br>
+Activate the user and set permissions to manage data planes.
+
+
 ## Dataplane creation
 
 In order for the DP create scripts to use a custom helm repo the existing custom helm repo used for the CP created needs to be updated to be able to pull the latest charts.
@@ -843,6 +856,8 @@ export DATAPLANE_NAMESPACE=dp
 kubectl create secret generic tp-custom-cert -n ${DATAPLANE_NAMESPACE} --from-file=${DEFAULT_INGRESS_CERT_FILE}
  
  ``` 
-TODO
+TODO<br>
  3) 3rd command from dataplane creation<br>
  4) 4th command from dataplane creation
+
+ ## Deploy Developer hub capability
