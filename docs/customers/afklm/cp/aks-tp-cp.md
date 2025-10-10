@@ -48,17 +48,17 @@ export PROMETHEUS_NAMESPACE=prometheus-system ## Prometheus System Namespace
 
 ### Ingress TLS Config
 ```bash
-export TP_INGRESS_CLASS=haproxy ## Ingress Class nginx | haproxy
+export TP_INGRESS_CLASS=nginx ## Ingress Class nginx | haproxy
 export DEFAULT_INGRESS_KEY_FILE=private_key.pem ## Path to Private Key in PEM format
 export DEFAULT_INGRESS_CERT_FILE=public_cert.pem ## Path to Public Key in PEM format
 export DEFAULT_INGRESS_TLS_SECRET=ingress-cert-secret ## Default TLS Secret for Ingress
 #export AKS_SUBNET="aks-subnet" ## AKS Subnet for Private Load Balancer
-export TP_AUTHORIZED_IP_RANGE=85.145.141.250/32 ## Authorized Source IP Range
+#export TP_AUTHORIZED_IP_RANGE=x.x.x.x/32 ## Authorized Source IP Range
 ```
 
 ### Chart Repo
 ```bash
-export TP_CHART_REGISTRY="https://tibcosoftware.github.io" ## TP Helm Registry
+export TP_CHART_REGISTRY="https://tibcosoftware.github.io" ## TP Helm Registry or custom 
 export TP_CHART_REPO="tp-helm-charts" ## TP Helm Chart Repo
 export TP_CHART_REPO_USER_NAME="repo-user" ## TP Helm Chart Repo User. Ignore for public repo
 export TP_CHART_REPO_TOKEN="repo-passwd" ## TP Helm Chart Repo Password. Ignore for public repo
@@ -70,7 +70,7 @@ export IS_OCI=false ## Set true for OCI repo
 export CP_CONTAINER_REGISTRY="csgprduswrepoedge.jfrog.io" ## TP Image Registry, default TIBCO JFrog
 export CP_CONTAINER_REGISTRY_REPOSITORY="tibco-platform-docker-prod"  ## TP Image Repo, default TIBCO JFrog
 export CP_CONTAINER_REGISTRY_USERNAME="image-registry-user" ## TP Image Registry User, TIBCO JFrog Credentials from CP SaaS
-export CP_CONTAINER_REGISTRY_PASSWORD="" ## TP Image Registry User, TIBCO JFrog Credentials from CP SaaS
+export CP_CONTAINER_REGISTRY_PASSWORD="image-registry-password" ## TP Image Registry User, TIBCO JFrog Credentials from CP SaaS
 ```
 
 ### Storage
@@ -95,7 +95,7 @@ export CP_DB_NAME="postgres" ## CP default DB
 ### Database SSL Config
 export CP_DB_SSL_ROOT_CERT_SECRET_NAME="cp-db-ssl" ## CP SSL Secret
 export CP_DB_SSL_ROOT_CERT_FILENAME="cp_db_ssl.cert" ## CP SSL Filename
-export CP_DB_SSL_ROOT_CERT_FILE="azurepsql_certs.pem" ## CP SSL File name and path in PEM format
+export CP_DB_SSL_ROOT_CERT_FILE="db_ssl.pem" ## CP SSL File name and path in PEM format
 ```
 
 ### CP Bootstrap Config
@@ -106,29 +106,29 @@ export CP_NAMESPACE="${CP_INSTANCE_ID}-ns" ## CP Namespace
 
 export CP_PLATFORM_BOOTSTRAP_VERSION="1.11.0" ## CP Bootstrap Chart Version
 
-export CP_NODE_CIDR="10.244.0.0/16" ## Node Subnet CIDR
-export CP_POD_CIDR="10.244.0.0/20"  ## K8s Pod CIDR
+export CP_NODE_CIDR="10.4.0.0/16" ## Node Subnet CIDR
+export CP_POD_CIDR="10.4.0.0/20"  ## K8s Pod CIDR
 export CP_SERVICE_CIDR="10.0.0.0/16" ## K8s Service CIDR
-export TP_BASE_DNS_DOMAIN="afklm.atsnl-emea.azure.dataplanes.pro" ## TP base domain
+export TP_BASE_DNS_DOMAIN="tibco.example.com" ## TP base domain
 export CP_SERVICE_DNS_DOMAIN="cp.${TP_BASE_DNS_DOMAIN}" ## CP Router/UI DNS domain
 export CP_TUNNEL_DNS_DOMAIN="tunnel.${TP_BASE_DNS_DOMAIN}" ## CP Tunnel DNS domain 
-export CP_SUBSCRIPTION="afklm-poc" ## CP Subscription Name
+export CP_SUBSCRIPTION="dev" ## CP Subscription Name
 export CP_STORAGE_PV_SIZE="10Gi" ## CP PV Size
 ```
 
 ### CP Base Config
 ```bash
 export CP_PLATFORM_BASE_VERSION=1.11.0 ## CP Base Chart Version
-export CP_ADMIN_CUSTOMER_ID="01HP22KEJ6SGQSANAPTPVZWW46" ## Customer ID, available on SaaS CP
+export CP_ADMIN_CUSTOMER_ID="customerID" ## Customer ID, available on SaaS CP
 
 ## CP Email Config
-export CP_MAIL_SERVER_ADDRESS="ec2-63-34-112-27.eu-west-1.compute.amazonaws.com" ## SMTP Server
-export CP_MAIL_SERVER_PORT_NUMBER=8025 ## SMTP Port
+export CP_MAIL_SERVER_ADDRESS="mail.smtp-server.com" ## SMTP Server
+export CP_MAIL_SERVER_PORT_NUMBER=25 ## SMTP Port
 export CP_MAIL_SERVER_USERNAME="" ## SMTP User
 export CP_MAIL_SERVER_PASSWORD="" ## SMTP Password
-export CP_FROM_REPLY_TO_EMAIL="cptest@tibco.com" ## Platform Invitation Email. Must be valid email domain
-export CP_ADMIN_EMAIL="cpadmin@tibco.com" ## CP Admin Email
-export CP_ADMIN_INITIAL_PASSWORD="cpadmin" ## CP Admin Initial Password, if enabled
+export CP_FROM_REPLY_TO_EMAIL="platform-admin@customer.com" ## Platform Invitation Email. Must be valid email domain
+export CP_ADMIN_EMAIL="platform-admin@customer.com" ## CP Admin Email
+export CP_ADMIN_INITIAL_PASSWORD="adminpassword" ## CP Admin Initial Password, if enabled
 ```
 
 ### Adjust for HTTPS/OCI Helm Repo
@@ -163,7 +163,7 @@ kubectl create secret tls ingress-cert-secret \
 
 ## 3. Install Ingress Controller as a  Load Balancer
 
-### NGINX: 
+### NGINX:
 <details>
 
 ```bash
@@ -197,7 +197,7 @@ EOF
 ```
 </details>
 
-### HAProxy:
+### HAPROXY:
 
 <details>
 
@@ -228,17 +228,25 @@ controller:
 EOF
 ```
 
+#### Retrieve external-ip of Ingress
+
+``` bash
+ kubectl --namespace ingress-system get services haproxy-ingress -o wide 
+```
+
+
+
 ### Test HA Proxy Ingress
 ```bash
 ## deployment app and service
-kubectl --namespace default create deployment echoserver --image k8s.gcr.io/echoserver:1.3
-kubectl --namespace default expose deployment echoserver --port=8080
+kubectl --namespace ${TP_INGRESS_NAMESPACE} create deployment echoserver --image k8s.gcr.io/echoserver:1.3
+kubectl --namespace ${TP_INGRESS_NAMESPACE} expose deployment echoserver --port=8080
 
 ## validate app is running
-kubectl -n default get pod -w
+kubectl -n ${TP_INGRESS_NAMESPACE} get pod -w
 
 ## expose app service on ingress
-kubectl --namespace default create ingress echoserver \
+kubectl --namespace ${TP_INGRESS_NAMESPACE} create ingress echoserver \
   --class=$TP_INGRESS_CLASS \
   --rule="echoserver.${TP_BASE_DNS_DOMAIN}/*=echoserver:8080,tls"
 
@@ -246,9 +254,9 @@ kubectl --namespace default create ingress echoserver \
 curl -k https://echoserver.$TP_BASE_DNS_DOMAIN
 
 ## cleanup
-kubectl delete ingress echoserver
-kubectl delete service echoserver
-kubectl delete deployment echoserver
+kubectl delete --namespace ${TP_INGRESS_NAMESPACE} ingress echoserver
+kubectl delete --namespace ${TP_INGRESS_NAMESPACE} service echoserver
+kubectl delete --namespace ${TP_INGRESS_NAMESPACE} deployment echoserver
 ```
 </details>
 
@@ -349,11 +357,6 @@ kubectl create secret generic session-keys -n ${CP_NAMESPACE} \
 ```
 
 ## 10. Install Platform Bootstrap 
-
-### NGINX:
-
-<details>
-
 ```bash
 helm upgrade --install --wait --timeout 1h --create-namespace  \
   --username ${TP_CHART_REPO_USER_NAME} --password ${TP_CHART_REPO_TOKEN} \
@@ -437,10 +440,8 @@ router-operator:
             port: 100                      
 EOF
 ```
-</details>
 
-### HAProxy 
-
+##  Install Platform Bootstrap with HAProxy IC
 <details>
 
 ```bash
@@ -584,7 +585,7 @@ global:
         server: ${CP_MAIL_SERVER_ADDRESS}
         username: "${CP_MAIL_SERVER_USERNAME}"
     fromAndReplyToEmailAddress: ${CP_FROM_REPLY_TO_EMAIL}
-    #adminInitialPassword: ${CP_ADMIN_INITIAL_PASSWORD}    #uncomment to set a intiial password
+    adminInitialPassword: ${CP_ADMIN_INITIAL_PASSWORD}    #uncomment to set a intiial password
     admin:
       customerID: ${CP_ADMIN_CUSTOMER_ID}
       email: ${CP_ADMIN_EMAIL}
@@ -756,3 +757,92 @@ EOF
   ```
 
 > **_NOTE:_** Ensure  that DNS names for Control Plane Router/UI, and Control Plane Tunnel are mapped to the Ingress Load Balancer IP.
+
+
+
+## Update DNS 
+
+On AKS coreDNS should be updated by creating a custom configmap for dns.
+
+``` bash
+kubectl apply -f  - <<EOF
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns-custom
+  namespace: kube-system
+data:
+  custom.server: |
+    afsklm.dataplanes.pro:53 {
+      errors
+      rewrite name regex (.*)\.afklm\.dataplanes\.pro  haproxy-ingress.ingress-system.svc.cluster.local
+      forward . 10.0.0.10 
+    }
+  log.override: |
+    #
+  stub.server: |
+    #
+EOF
+
+``` 
+
+The aim is to rewrite the domainname used for CP to the haproxy server
+
+Update the following:
+- afsklm.dataplanes.pro:53 
+- rewrite name regex (.*)\.afklm\.dataplanes\.pro  haproxy-ingress.ingress-system.svc.cluster.local
+
+Restart coredns:
+
+``` bash
+kubectl rollout restart deployment coredns -n kube-system
+```
+
+## Dataplane creation
+
+In order for the DP create scripts to use a custom helm repo the existing custom helm repo used for the CP created needs to be updated to be able to pull the latest charts.
+This can be done via the CP API's (UI): 
+
+- GET /cp/api/v1/resources/instances to retrieve the resource instances find the instance id for the instance with type: 'HELM_REPO', scope: 'SUBSCRIPTION'
+- GET /cp/api/v1/resources/instances/{resourceInstanceId} to retrieve instance details to be used in the update command 
+- PUT /cp/api/v1/resources/instances/{resourceInstanceId} with the json body:
+``` json
+{
+  "name": "my-helm-repo",
+  "alias": "my-helm-repo",
+  "url": "https://www.helm-repo-url.com",
+  "repo": "repository-name",
+  "username": "username",
+  "password": "password",
+  "pull-latest-charts": true,
+  "certificate-secret-name": "my-secret"
+}
+```
+
+Copy the values for all the elements from the GET commands into this message. The 'pull-latest-charts' element needs to be set to true
+
+After executing this PUT command sucesfully the Global repo can be used for creating the dataplane.
+
+## Create Dataplane
+
+In the Control Plane UI create a dataplane
+
+Use the global helm repo and fill out the custom secret name as to be created after below step 2 ( tp-custom-cert)
+
+After confirming the dataplane configuration four commands need to be executed. For this kubectl and helm access to the cluster is required.
+
+Execute the first two steps:
+1) setup of helm repo
+2) creation of the dataplane namespace
+
+After this an additional step needs to be executed to create a secret in the dataplane which contains the custom certificate. 
+For this the environment setting a the top of this document are required.
+
+``` bash
+export DATAPLANE_NAMESPACE=dp
+kubectl create secret generic tp-custom-cert -n ${DATAPLANE_NAMESPACE} --from-file=${DEFAULT_INGRESS_CERT_FILE}
+ 
+ ``` 
+TODO
+ 3) 3rd command from dataplane creation<br>
+ 4) 4th command from dataplane creation
