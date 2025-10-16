@@ -22,7 +22,7 @@ Instruction to create the secret
 kubectl  create secret generic license-file -n {{dataplane namespace}} --from-file={{full path to local license.bin file}}
 ```
 Here the name of the secret is 'license-file'. 
-This name can be changed if required, but that change need to be reflected in the following two steps.
+This name can be changed if required, but that change need to be reflected in the step 2, secretName
 
 ## 2 Add a volume to the helm configuration
 
