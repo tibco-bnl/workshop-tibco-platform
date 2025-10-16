@@ -358,97 +358,7 @@ kubectl create secret generic session-keys -n ${CP_NAMESPACE} \
 
 ## 10. Install Platform Bootstrap 
 
-### NGINX IC
-
-<details>
-
-```bash
-helm upgrade --install --wait --timeout 1h --create-namespace  \
-  --username ${TP_CHART_REPO_USER_NAME} --password ${TP_CHART_REPO_TOKEN} \
-  -n ${CP_NAMESPACE}  platform-bootstrap    ${HELM_URL}platform-bootstrap  \
-  --version "${CP_PLATFORM_BOOTSTRAP_VERSION}" -f - <<EOF
-global:
-  external:
-    clusterInfo:
-      nodeCIDR: ${CP_NODE_CIDR}
-      podCIDR: ${CP_POD_CIDR}
-      serviceCIDR: ${CP_SERVICE_CIDR}
-    dnsDomain: ${CP_SERVICE_DNS_DOMAIN}
-    dnsTunnelDomain: ${CP_TUNNEL_DNS_DOMAIN}
-    storage:
-      resources:
-        requests:
-          storage: ${CP_STORAGE_PV_SIZE}
-      storageClassName: ${RWX_STORAGE_CLASS}
-  tibco:
-    containerRegistry:
-      url: ${CP_CONTAINER_REGISTRY}
-      repository: ${CP_CONTAINER_REGISTRY_REPOSITORY}      
-      username: ${CP_CONTAINER_REGISTRY_USERNAME}    
-      password: ${CP_CONTAINER_REGISTRY_PASSWORD}
-    controlPlaneInstanceId: ${CP_INSTANCE_ID}
-    #createNetworkPolicy: false    
-    logging:
-      fluentbit:
-        enabled: false
-    serviceAccount: ${CP_INSTANCE_ID}-sa                
-hybrid-proxy:
-  enabled: true
-  enableWebHooks: false
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-  ingress:
-    enabled: true
-    annotations:
-      nginx.ingress.kubernetes.io/proxy-buffer-size: 16k
-    ingressClassName: ${TP_INGRESS_CLASS}
-    hosts:
-      - host: '${CP_SUBSCRIPTION}.${CP_TUNNEL_DNS_DOMAIN}'
-        paths:
-          - path: /
-            pathType: Prefix
-            port: 105        
-otel-collector:
-  enabled: false
-resource-set-operator:
-  enabled: true
-  enableWebHooks: false
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-router-operator:
-  enabled: true
-  enableWebHooks: false
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-  ingress:
-    enabled: true
-    annotations:
-      nginx.ingress.kubernetes.io/proxy-buffer-size: 16k
-      nginx.ingress.kubernetes.io/proxy-body-size: 200m 
-    ingressClassName: ${TP_INGRESS_CLASS}   
-    hosts:
-      - host: '${CP_SUBSCRIPTION}.${CP_SERVICE_DNS_DOMAIN}'
-        paths:
-          - path: /
-            pathType: Prefix
-            port: 100
-      - host: 'admin.${CP_SERVICE_DNS_DOMAIN}'
-        paths:
-          - path: /
-            pathType: Prefix
-            port: 100                      
-EOF
-```
-</details>
-
 ##  HAProxy IC
-<details>
 
 ```bash
 helm upgrade --install --wait --timeout 1h --create-namespace  \
@@ -532,7 +442,6 @@ router-operator:
             port: 100                      
 EOF
 ```
-</details>
 
 ## 11. Create CP Encryption Secret
 > **_NOTE:_** REQUIRED from 1.9.0
@@ -779,7 +688,7 @@ metadata:
   namespace: kube-system
 data:
   custom.server: |
-    afsklm.dataplanes.pro:53 {
+    afklm.dataplanes.pro:53 {
       errors
       rewrite name regex (.*)\.afklm\.dataplanes\.pro  haproxy-ingress.ingress-system.svc.cluster.local
       forward . 10.0.0.10 
@@ -804,14 +713,25 @@ Restart coredns:
 kubectl rollout restart deployment coredns -n kube-system
 ```
 
-## Log in CP and create subscription
+# Log in CP
 
 Log into the CP with the username / password defined in the above variables (CP_ADMIN_EMAIL and CP_ADMIN_INITIAL_PASSWORD). <br>
+First update the cp admin password to a new password <br>
+
+
+# Create subscription
 Create a subscription and check the mailserver to open the activation link.<br>
-Activate the user and set permissions to manage data planes.
 
+1) Provision via Editor
+2) Update values of userDetails/email  and subscriptionDetails/hostprefix
+3) Provision
+4) A welcome mail is now sent to the email server with activation link
+5) Sign out of the CP UI
+5) Open the activation link and add the user details and password.
+6) Log into the CP with just created subscription details
+7) Goto 'User Management/Users', select the user and assign all permissions to this subscribtion admin user
 
-## Dataplane creation
+# Dataplane creation
 
 In order for the DP create scripts to use a custom helm repo the existing custom helm repo used for the CP created needs to be updated to be able to pull the latest charts.
 This can be done via the CP API's (UI): 
@@ -838,15 +758,30 @@ After executing this PUT command sucesfully the Global repo can be used for crea
 
 ## Create Dataplane
 
-In the Control Plane UI create a dataplane
+In the Control Plane UI create a dataplane:
 
-Use the global helm repo and fill out the custom secret name as to be created after below step 2 ( tp-custom-cert)
+1) 'Data Planes', 'Register a Data Plane', 'Existing Kubernetes Cluster' -> Start
+2) Add details for 'Data Plane Name', 'Description' (optional) and checkbox the End User Agreement. Next
+3) Add details for 'Namespace' (k8s namespace to be created), 'Service Account'(k8s service account to be created). Next
+4) In 'Helm Chart Repository select 'Custom Helm chart repo'
+5) Populate: 
+* 'Repository alias'
+* 'Registry URL' with the url of the customized repository
+* 'Repository' with the name of the repository
+* Check 'Apply latest patch versions of the charts' 
+The other fiels can remain empty
+6) Add details for 'Custom Certificate'. This will be created in one of the next steps. The secret name used is 'tp-custom-cert'. Next
+7) Validate the data on the Preview page. Next
+
+
+
 
 After confirming the dataplane configuration four commands need to be executed. For this kubectl and helm access to the cluster is required.
 
+
 Execute the first two steps:
-1) setup of helm repo
-2) creation of the dataplane namespace
+1) Helm Repository configuration
+2) Namespace creation
 
 After this an additional step needs to be executed to create a secret in the dataplane which contains the custom certificate. 
 For this the environment setting a the top of this document are required.
@@ -856,8 +791,23 @@ export DATAPLANE_NAMESPACE=dp
 kubectl create secret generic tp-custom-cert -n ${DATAPLANE_NAMESPACE} --from-file=${DEFAULT_INGRESS_CERT_FILE}
  
  ``` 
-TODO<br>
- 3) 3rd command from dataplane creation<br>
- 4) 4th command from dataplane creation
+ 3) Service Account creation<br>
+ 4) Cluster Registration
 
- ## Deploy Developer hub capability
+
+ # Deploy Developer hub capability
+
+ Goto the newly created dataplane.
+ 'Provision a Capability'
+ 'Provision TIBCO® Developer Hub', Start
+
+ Resources:
+ 'Storage Class'
+  Resource name: devhub-storage
+  Description :  develop hub storage
+  Storage class name: azure-disk-sc
+
+ 'Add Ingress Controller'
+  Ingress Controller: 'OpenShift Router'
+  Resource name: devhub-ingress
+  Default FQDN: devhub.dev.benelux.cp1.afklm.dataplanes.pro
