@@ -30,9 +30,10 @@
 
 ## Prerequisites
 > **_NOTE:_** Documented with TIBCO Platform 1.10.0  
-1. Access to TIBCO Control Plane SaaS.  
-2. Access to a PostgreSQL 16.x Database.  
-3. Access to a SMTP enabled Email Server. Starting 1.10.0 SMTP for install is Optional
+1. Access to AKS K8s cluster
+2. Access from the AKS K8S cluster to a PostgreSQL 16.x Database (for instance private end point)
+3. Database server should not have SSL enable, not supported by dev hub. (db server parameter 'require_secure_transport' should be set to 'OFF')
+3. Access to a SMTP enabled Email Server. 
 4. Identify, and register DNS names for Control Plane Router/UI, and Control Plane Tunnel.  
 5. Acquire certificates to secure Control Plane Services. Certificate CN and/or SAN must match CP Router/UI, and Tunnel DNS Names.  
 
@@ -87,7 +88,7 @@ export STORAGE_RECLAIM_POLICY=Retain ## Fileshare Storage Class
 export CP_DB_HOST="db.postgres.database.com" ## CP Postgress DB
 export CP_DB_PORT="5432" ## CP Postgres DB Port
 export CP_DB_SECRET_NAME="cp-db-secret" ## CP DB Secret
-export CP_DB_SSL_MODE="verify-full" # verify-full, disable
+export CP_DB_SSL_MODE="disable" # verify-full, disable. Disable is required since DevHub does not support SSL. Azure db server parameter 'require_secure_transport' should be set to 'OFF'
 export CP_DB_USER_NAME="db-user" ## CP DB User
 export CP_DB_PASSWORD='db-password' ## CP DB Password
 export CP_DB_NAME="postgres" ## CP default DB
@@ -733,47 +734,37 @@ Create a subscription and check the mailserver to open the activation link.<br>
 
 # Dataplane creation
 
-In order for the DP create scripts to use a custom helm repo the existing custom helm repo used for the CP created needs to be updated to be able to pull the latest charts.
-This can be done via the CP API's (UI): 
-
-- GET /cp/api/v1/resources/instances to retrieve the resource instances find the instance id for the instance with type: 'HELM_REPO', scope: 'SUBSCRIPTION'
-- GET /cp/api/v1/resources/instances/{resourceInstanceId} to retrieve instance details to be used in the update command 
-- PUT /cp/api/v1/resources/instances/{resourceInstanceId} with the json body:
-``` json
-{
-  "name": "my-helm-repo",
-  "alias": "my-helm-repo",
-  "url": "https://www.helm-repo-url.com",
-  "repo": "repository-name",
-  "username": "username",
-  "password": "password",
-  "pull-latest-charts": true,
-  "certificate-secret-name": "my-secret"
-}
-```
-
-Copy the values for all the elements from the GET commands into this message. The 'pull-latest-charts' element needs to be set to true
-
-After executing this PUT command sucesfully the Global repo can be used for creating the dataplane.
-
-## Create Dataplane
-
 In the Control Plane UI create a dataplane:
 
-1) 'Data Planes', 'Register a Data Plane', 'Existing Kubernetes Cluster' -> Start
-2) Add details for 'Data Plane Name', 'Description' (optional) and checkbox the End User Agreement. Next
-3) Add details for 'Namespace' (k8s namespace to be created), 'Service Account'(k8s service account to be created). Next
-4) In 'Helm Chart Repository select 'Custom Helm chart repo'
-5) Populate: 
+1) 'Data Planes', 'Register a Data Plane', 'Existing Kubernetes Cluster' -> Start <br>
+
+2) 'Basics'<br>add details:
+* 'Data Plane Name'
+* 'Description' (optional) 
+* checkbox the End User Agreement.<br> 
+Next
+
+3) 'Namespace and Service Account'<br>
+add details:
+* 'Namespace' (k8s namespace to be created)
+* 'Service Account'(k8s service account to be created)<br>
+Next
+
+4) 'Configuration'<br>
+In 'Helm Chart Repository section' select 'Custom Helm Chart Repository section'<br>
+Add details: 
 * 'Repository alias'
 * 'Registry URL' with the url of the customized repository
 * 'Repository' with the name of the repository
 * Check 'Apply latest patch versions of the charts' 
+<br><br>
 The other fiels can remain empty
-6) Add details for 'Custom Certificate'. This will be created in one of the next steps. The secret name used is 'tp-custom-cert'. Next
-7) Validate the data on the Preview page. Next
 
+6) Add details:
+*  'Custom Certificate'. This will be created in one of the next steps. The secret name used is 'tp-custom-cert'. <br><br>
+Next
 
+7) Validate the data on the Preview page. <br><br> Next
 
 
 After confirming the dataplane configuration four commands need to be executed. For this kubectl and helm access to the cluster is required.
@@ -784,30 +775,79 @@ Execute the first two steps:
 2) Namespace creation
 
 After this an additional step needs to be executed to create a secret in the dataplane which contains the custom certificate. 
-For this the environment setting a the top of this document are required.
-
+For this the environment setting a the top of this document are required.<br>
+In below command validate the value of DATAPLANE_NAMESPACE. This should be the same as the just created Namespace (step 2).
 ``` bash
 export DATAPLANE_NAMESPACE=dp
 kubectl create secret generic tp-custom-cert -n ${DATAPLANE_NAMESPACE} --from-file=${DEFAULT_INGRESS_CERT_FILE}
  
  ``` 
+
+
  3) Service Account creation<br>
  4) Cluster Registration
 
 
  # Deploy Developer hub capability
 
- Goto the newly created dataplane.
- 'Provision a Capability'
- 'Provision TIBCO® Developer Hub', Start
+ Goto the newly created dataplane.<br>
+ 'Provision a Capability'<br>
+ 'Provision TIBCO® Developer Hub', Start<br>
 
- Resources:
- 'Storage Class'
-  Resource name: devhub-storage
-  Description :  develop hub storage
-  Storage class name: azure-disk-sc
+ ### Resources
+ 'Storage Class'<br>
+  Resource name: devhub-storage<br>
+  Description :  develop hub storage<br>
+  Storage class name: azure-disk-sc<br>
 
- 'Add Ingress Controller'
-  Ingress Controller: 'OpenShift Router'
-  Resource name: devhub-ingress
-  Default FQDN: devhub.dev.benelux.cp1.afklm.dataplanes.pro
+ ### Add Ingress Controller
+  Ingress Controller: 'OpenShift Router'<br>
+  Resource name: devhub-ingress<br>
+  Default FQDN: devhub.dev.benelux.cp1.afklm.dataplanes.pro<br>
+
+### Database resource
+  Resource Name:  {name of the database resource}<br>
+  Type: PostgreSQL<br>
+  Database Host: {full host name of the database server}<br>
+  Database Port: {database port>}<br>
+  Database Name: {database name>}<br>
+  Database Username: {database username of the owner of this database>}<br>
+  Database Password: {database password>}<br>
+
+The database (database name) refered to needs to exists and owned by the provided database username).
+<br>
+
+### TIBCO® Developer Hub configuration
+   Developer Hub Name: provide a name of the developer hub<br>
+   Checkbox 'End User Agreement (EUA)'
+   Next
+
+### Custom Config
+
+  In order for developer hub to use the postgreSQL database connection with SSL enable a customer configuration is required.
+  Create a file 'devhub_custom.yaml' and populate with:
+
+  ``` yaml
+  backend:
+    database:
+      client: pg
+      connection:
+        database: {database name}
+        host: {full host name of the database server}
+        port: {database port>}
+        user:  {database username of the owner of this database>}
+        password: {database password>}
+        ssl:
+          require: true
+          rejectUnauthorized: true
+
+  ```
+
+  Replace the values between the curly brackets and save the file.<br>
+  Upload this file as custom configuration.<br>
+  Next
+
+### Provisioning
+
+Validate the configured details and click Next to provision the developer hub.
+
