@@ -60,11 +60,18 @@ git clone https://github.com/TIBCOSoftware/tp-helm-charts.git
 cd tp-helm-charts
 ```
 
-This will download the latest charts and scripts required for the setup.
+This will download the latest charts and scripts required for the setup. Cloning this repository is essential as it contains the Helm charts and scripts specifically designed for deploying TIBCO Platform on Kubernetes environments, ensuring you have access to all required deployment components.
 
 ## Using a Prebuilt Docker Container for CLI Tools
 
 All CLI commands in this guide can be executed inside a prebuilt Docker container that includes the required tools. This approach ensures a consistent environment and avoids local installation issues.
+
+### Why use a Docker container?
+Using a container provides several benefits:
+- Ensures all CLI tools are at the correct versions without conflicts
+- Eliminates the need to install and configure multiple tools locally
+- Creates a reproducible environment that works consistently across different operating systems
+- Avoids potential issues with local tool configurations or missing dependencies
 
 ### Build the Docker Image
 
@@ -90,6 +97,8 @@ All subsequent commands in this guide can be run from within this container shel
 
 ## Step 1: Prepare Azure Environment
 
+This step creates the foundation for your ARO deployment by setting necessary environment variables and ensuring your Azure subscription is properly configured.
+
 ### 1.1. Export Required Variables
 
 ```bash
@@ -109,12 +118,16 @@ export TP_WORKER_VM_SIZE="Standard_D8s_v5"
 export TP_WORKER_VM_DISK_SIZE_GB="128"
 ```
 
+We set these environment variables to streamline the deployment process and maintain consistency throughout the configuration. The worker count, VM size, and disk sizes are selected to ensure adequate resources for running TIBCO Platform workloads effectively.
+
 ### 1.2. Login and Set Subscription
 
 ```bash
 az login
 az account set --subscription ${TP_SUBSCRIPTION_ID}
 ```
+
+This ensures you're working with the correct Azure subscription for all subsequent operations.
 
 ### 1.3. Register Required Resource Providers
 
@@ -125,6 +138,8 @@ az provider register -n Microsoft.Storage --wait
 az provider register -n Microsoft.Authorization --wait
 ```
 
+These registrations are necessary because ARO requires specific Azure resource providers to manage compute resources, storage, and permissions. Without registering these providers, the ARO deployment would fail.
+
 ### 1.4. Download Red Hat Pull Secret
 
 - Download from: https://console.redhat.com/openshift/install/azure/aro-provisioned
@@ -133,6 +148,8 @@ az provider register -n Microsoft.Authorization --wait
 ```bash
 chmod +x pull-secret.txt
 ```
+
+The pull secret is required for ARO to authenticate with Red Hat's container registries and access the necessary OpenShift container images during installation and updates. Without this, the cluster cannot pull required images.
 
 ---
 
@@ -149,6 +166,7 @@ cd "aro (Azure Red Hat OpenShift)/scripts"
 ./pre-aro-cluster-script.sh
 ```
 
+This step is crucial because ARO requires a specific networking setup with segregated subnets for master and worker nodes. The script automates this complex networking configuration to ensure proper communication between cluster components while maintaining security through network isolation.
 
 ---
 
@@ -169,6 +187,7 @@ az aro create \
     --pull-secret @pull-secret.txt
 ```
 
+This command creates an Azure Red Hat OpenShift cluster with the specified configuration. The worker node count, size, and disk space are important parameters as they determine the cluster's capacity to run TIBCO Platform workloads. The pull secret enables the cluster to authenticate with Red Hat's container registry to download the required OpenShift images.
 
 ---
 
@@ -196,6 +215,8 @@ az role assignment create --role Contributor --scope /subscriptions/$TP_SUBSCRIP
 ```
 *Assigns necessary permissions for ARO to manage Azure Files storage resources.*
 
+This step is essential because without these permissions, the ARO cluster would be unable to create and manage Azure storage resources like file shares needed by the TIBCO Platform for persistent storage.
+
 ### 4.2. Set ARO Cluster Permissions
 
 The OpenShift persistent volume binder service account requires permission to read secrets. Create and assign a custom cluster role:
@@ -216,6 +237,8 @@ oc create clusterrole azure-secret-reader \
 oc adm policy add-cluster-role-to-user azure-secret-reader system:serviceaccount:kube-system:persistent-volume-binder
 ```
 *Enables OpenShift to bind persistent volumes by granting the required permissions to read secrets.*
+
+This permission configuration is critical because Kubernetes persistent volumes often require secret access to authenticate with external storage providers. Without these permissions, the OpenShift cluster would fail to properly provision storage for TIBCO Platform components.
 
 ---
 
@@ -241,6 +264,8 @@ oc login ${apiServer} -u <kubeadminUsername> -p <kubeadminPassword>
 ```bash
 az aro show --name ${TP_CLUSTER_NAME} --resource-group ${TP_RESOURCE_GROUP} --query "consoleProfile.url" -o tsv
 ```
+
+Connecting to your cluster is necessary to begin configuring OpenShift-specific resources and deploying applications. The different connection methods (CLI and web console) provide flexibility for different administrative tasks - CLI access is essential for automation and scripting, while the web console provides a visual interface for cluster management.
 
 ---
 
@@ -295,6 +320,8 @@ Verify:
 oc get scc tp-scc
 ```
 
+This custom Security Context Constraint is necessary because OpenShift enforces strict security policies by default. The TIBCO Platform requires specific permissions (like running as non-root users with specific UIDs) that aren't available in the default SCCs. This custom SCC provides the minimal privileges required for TIBCO applications to function properly without compromising the cluster's security posture.
+
 ---
 
 ## Step 7: Prepare Data Plane Environment
@@ -325,6 +352,8 @@ If you are using network policies, to ensure that network traffic is allowed fro
 oc label namespace openshift-ingress networking.platform.tibco.com/non-dp-ns=enable --overwrite=true
 ```
 
+This labeling is important because TIBCO Platform uses network policies to restrict traffic between namespaces for security. By labeling the ingress namespace, we explicitly allow traffic from the ingress controller to the Data Plane pods, ensuring applications remain accessible while maintaining security boundaries.
+
 ### DNS
 For the purpose of this data plane workshop, we are using default DNS provisioned for ARO cluster. The base DNS of this can be found using the following command
 
@@ -332,6 +361,9 @@ For the purpose of this data plane workshop, we are using default DNS provisione
 oc get ingresscontroller -n openshift-ingress-operator default -o json | jq -r '.status.domain'
 ```
 It should be something like "apps.<random_alphanumeric_string>.${TP_AZURE_REGION}.aroapp.io"
+
+Determining the base domain is crucial because all application routes and ingresses will use this domain. TIBCO Platform capabilities like Flogo and BWCE need to be exposed through specific subdomains of this base domain to be accessible from outside the cluster.
+
 ---
 
 ## Step 8: Install Storage Classes
@@ -362,6 +394,8 @@ volumeBindingMode: Immediate
 EOF
 ```
 
+Storage classes are essential because TIBCO Platform capabilities require persistent storage for configurations, logs, and application data. Using Azure Files provides a managed file storage solution that works well with multi-pod deployments that need shared access to the same files. The mount options are specifically configured to ensure optimal performance and compatibility with TIBCO applications.
+
 ### 8.2. Azure Files for EMS
 For TIBCO Enterprise Message Service™ (EMS) capability, you will need to create one of the following two storage classes:
 Run the following command to create a storage class with nfs protocol which uses Azure Files
@@ -391,6 +425,9 @@ reclaimPolicy: Retain
 volumeBindingMode: Immediate
 EOF
 ```
+
+EMS requires NFS storage because it provides file-level locking capabilities that are essential for the message store. The specific mount options optimize NFS behavior for enterprise messaging workloads, ensuring data consistency and reliability.
+
 #### Without NFS 
 Alternatively, run the following command to create a storage class with Azure Disks
 
@@ -409,6 +446,8 @@ volumeBindingMode: WaitForFirstConsumer
 EOF
 ```
 
+Azure Disk provides an alternative storage option with better performance for single-instance deployments. The "WaitForFirstConsumer" binding mode ensures that persistent volumes are only created when pods request them, which helps with pod scheduling efficiency across availability zones.
+
 ---
 ## Grant Privileged SCC to Service Accounts
 
@@ -420,6 +459,8 @@ oc adm policy add-scc-to-user privileged -z sa -n dp1
 ```
 
 *This step allows pods running under these service accounts to use the `privileged` SCC, which may be required for some TIBCO Platform components.*
+
+This permission assignment is necessary because some TIBCO Platform components need elevated privileges to perform specific operations like binding to lower-numbered ports or modifying certain system settings. Without these permissions, these components would fail to start or function correctly.
 
 ## Step 9: Configure Observability
 
@@ -436,6 +477,8 @@ Install ECK via OperatorHub:
 
 Follow Elastic configuration guide for creating all the indexes needed for the TIBCO Platform
 [Prepare logs and traces server](https://docs.tibco.com/pub/platform-cp/latest/doc/html/Default.htm#UserGuide/preparing-logs-and-traces-servers.htm?TocPath=Observability%2520in%2520TIBCO%2520Control%2520Plane%257CConfiguring%2520Observability%2520Resource%257C_____1)
+
+Observability is critical for TIBCO Platform because it provides visibility into application performance, troubleshooting capabilities, and monitoring of business metrics. The Elastic Stack handles logs and traces, giving you insight into application behavior and performance issues.
 
 ### 9.2. Prometheus
 
@@ -464,6 +507,8 @@ spec:
 EOF
 ```
 
+The ServiceMonitor is necessary because it configures Prometheus to automatically discover and scrape metrics from TIBCO Platform components. This metrics collection is essential for monitoring system health, resource usage, and application performance, allowing proactive identification of issues before they affect users.
+
 To access inbuilt ARO Prometheus externally, use a service account token:
 
 ```markdown
@@ -478,6 +523,8 @@ TOKEN=$(oc create token thanos-client -n openshift-monitoring)
 - `thanos-client` is simply a service account name; it does not require Thanos to be installed. This account is granted the `cluster-monitoring-view` role, allowing it to access Prometheus metrics.
 - The generated token (`$TOKEN`) can be used to authenticate with Prometheus endpoints for external scraping or dashboard access.
 ```
+
+External access to Prometheus is valuable for integrating with existing enterprise monitoring systems and creating custom dashboards for business-specific metrics outside the OpenShift console.
 
 ---
 
@@ -500,6 +547,8 @@ helm repo add tibco-platform-public https://tibcosoftware.github.io/tp-helm-char
 helm repo update tibco-platform-public
 ```
 
+Adding the TIBCO Helm repository gives you access to the official, tested, and supported Helm charts for deploying TIBCO Platform components. This ensures you're using configurations that have been verified to work together.
+
 ### 10.2. Create Namespace
 
 ```bash
@@ -512,6 +561,8 @@ metadata:
         platform.tibco.com/dataplane-id: <your-dataplane-id>
 EOF
 ```
+
+Creating a dedicated namespace isolates TIBCO Platform resources from other applications on the cluster, providing better security, resource management, and organizational clarity. The dataplane-id label is crucial for the Control Plane to identify and manage this specific Data Plane instance.
 
 ### 10.3. Configure Namespace
 
@@ -530,6 +581,8 @@ helm upgrade --install -n dp1 dp-configure-namespace tibco-platform-public/dp-co
     --set networkPolicy.createDeprecatedPolicies=false
 ```
 
+This namespace configuration is necessary to set up service accounts, roles, and network policies that secure the TIBCO Platform deployment. It also configures access to the container registry, which is essential for pulling TIBCO container images during deployment.
+
 ### 10.4. Deploy Core Infrastructure
 
 ```bash
@@ -545,6 +598,8 @@ helm upgrade --install dp-core-infrastructure -n dp1 tibco-platform-public/dp-co
     --set global.proxy.noProxy='' \
     --set global.logging.fluentbit.enabled=true
 ```
+
+The core infrastructure deployment installs essential components that enable communication between the Data Plane and Control Plane, including the tibtunnel component which creates a secure connection channel. This infrastructure is foundational for all TIBCO Platform operations in the cluster, such as application deployment, monitoring, and management.
 
 ---
 
@@ -580,6 +635,8 @@ Once the Data Plane is registered and core infrastructure is deployed, you can p
 
 > **Note:** The Control Plane GUI automates the Helm chart installation and configuration for these capabilities. No manual CLI steps are required for this process.
 
+Using the GUI for capability provisioning is advantageous because it simplifies the complex deployment process, ensures proper configuration with the Control Plane, and provides centralized management of all TIBCO Platform components. The GUI also offers built-in validation and simplified upgrades compared to manual Helm installations.
+
 --- 
 
 ---
@@ -593,6 +650,8 @@ Once the Data Plane is registered and core infrastructure is deployed, you can p
 cd ../scripts
 ./clean-up.sh
 ```
+
+Proper cleanup is important to avoid unnecessary Azure costs, as ARO clusters can be expensive to run. The cleanup script ensures that all resources are properly removed, preventing orphaned resources that might continue to incur charges.
 
 ---
 
@@ -688,4 +747,5 @@ oc -n dp1 logs -c <container-name> <pod-name>
 ---
 
 These commands help you quickly inspect, troubleshoot, and monitor your ARO cluster and TIBCO Platform Data Plane deployment.
+
 
