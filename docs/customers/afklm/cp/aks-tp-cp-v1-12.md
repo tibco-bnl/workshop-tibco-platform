@@ -1,19 +1,11 @@
 # TIBCO Platform Control Plane on AKS
 
-### copy from https://github.com/tibcofield/tp-poc
+
 
 ## Table of Contents
 - [Prerequisites](#prerequisites)
 - [Environment Variables](#environment-variables)
-  - [Namespaces](#namespaces)
-  - [Ingress TLS Config](#ingress-tls-config)
-  - [Chart Repo](#chart-repo)
-  - [Image Repo](#image-repo)
-  - [Storage](#storage)
-  - [Database](#database)
-  - [CP Bootstrap Config](#cp-bootstrap-config)
-  - [CP Base Config](#cp-base-config)
-  - [Adjust for HTTPS/OCI Helm Repo](#adjust-for-httpsoci-helm-repo)
+  
 - [1. Create Ingress Namespace](#1-create-ingress-namespace)
 - [2. Create Default TLS Secret in Ingress namespace](#2-create-default-tls-secret-in-ingress-namespace)
 - [3. Install Ingress Controller as a Load Balancer](#3-install-ingress-controller-as-a--load-balancer)
@@ -26,6 +18,12 @@
 - [10. Install Platform Bootstrap](#10-install-platform-bootstrap)
 - [11. Create CP Encryption Secret](#11-create-cp-encryption-secret)
 - [12. Install Platform Base](#12-install-platform-base)
+- [13. Update Core DNS](#13-update-dns)
+- [14. Log into CP](#14-log-in-cp)
+- [15. Create Subscription](#15-create-subscription)
+- [16. Data plane creation](#16-dataplane-creation)
+- [17. Deploy developer hub capability](#17-deploy-developer-hub-capability)
+- [18. Developer hub post deployment configuration](#18-post-deployment-configuration)
 
 
 ## Prerequisites
@@ -52,12 +50,10 @@ export PROMETHEUS_NAMESPACE=prometheus-system ## Prometheus System Namespace
 
 ### Ingress TLS Config
 ```bash
-export TP_INGRESS_CLASS=nginx ## Ingress Class nginx | haproxy
+export TP_INGRESS_CLASS=haproxy ## Ingress Class nginx | haproxy
 export DEFAULT_INGRESS_KEY_FILE=private_key.pem ## Path to Private Key in PEM format
 export DEFAULT_INGRESS_CERT_FILE=public_cert.pem ## Path to Public Key in PEM format
 export DEFAULT_INGRESS_TLS_SECRET=ingress-cert-secret ## Default TLS Secret for Ingress
-#export AKS_SUBNET="aks-subnet" ## AKS Subnet for Private Load Balancer
-#export TP_AUTHORIZED_IP_RANGE=x.x.x.x/32 ## Authorized Source IP Range
 ```
 
 ### Chart Repo
@@ -144,7 +140,7 @@ else
 fi
 ```
 
-## 1. Create Ingress Namespace
+## 1. Create Ingress Namespace (when haproxy ingress is not present in the k8s cluster)
 ```bash
 kubectl apply -f - <<EOF
 apiVersion: v1
@@ -156,7 +152,7 @@ metadata:
 EOF
 ```
 
-## 2. Create Default TLS Secret in Ingress namespace 
+## 2. Create Default TLS Secret in Ingress namespace (when haproxy ingress is not present in the k8s cluster)
 Starting 1.4.0 certificates signed by Well-Known CA is not mandatory [Reference: Using Custom Certificates](https://docs.tibco.com/pub/platform-cp/latest/doc/html/UserGuide/using-custom-certificate.htm)
 ```bash
 kubectl create secret tls ingress-cert-secret \
@@ -165,45 +161,9 @@ kubectl create secret tls ingress-cert-secret \
     --cert ${DEFAULT_INGRESS_CERT_FILE}
 ```
 
-## 3. Install Ingress Controller as a  Load Balancer
-
-### NGINX:
-<details>
-
-```bash
-helm upgrade --install --wait --timeout 1h --create-namespace  --reuse-values \
-  --username ${TP_CHART_REPO_USER_NAME} --password ${TP_CHART_REPO_TOKEN} \
-  -n ${TP_INGRESS_NAMESPACE} dp-config-aks-nginx  \
-  ${HELM_URL}dp-config-aks --version "1.6.0" -f - <<EOF
-clusterIssuer:
-  create: false
-httpIngress:
-  enabled: false
-ingress-nginx:
-  enabled: true
-  controller:
-    service:
-      type: LoadBalancer 
-      #loadBalancerSourceRanges: 
-      #- ${TP_AUTHORIZED_IP_RANGE} # allow only authorized IP Range
-      #- ${CP_POD_CIDR} # allow Data Plane Pod access via Ingress Load Balancer service
-      annotations:
-        service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: '/healthz'
-        # service.beta.kubernetes.io/azure-load-balancer-internal-subnet: $AKS_SUBNET ## Enable for Private Load Balancer
-        # service.beta.kubernetes.io/azure-load-balancer-internal: 'true' ## Enable for Private Load Balancer        
-      enableHttp: false 
-    config:
-      # required by apps swagger
-      use-forwarded-headers: 'true'
-    extraArgs:
-      default-ssl-certificate: ${TP_INGRESS_NAMESPACE}/${DEFAULT_INGRESS_TLS_SECRET}
-EOF
-```
-</details>
+## 3. Install Ingress Controller as a  Load Balancer (when haproxy ingress is not present in the k8s cluster)
 
 ### HAPROXY:
-
-<details>
 
 ```bash
 helm upgrade --install --wait --timeout 1h --create-namespace  \
@@ -232,7 +192,7 @@ controller:
 EOF
 ```
 
-#### Retrieve external-ip of Ingress
+#### Retrieve external-ip of Ingress (when haproxy ingress is not present in the k8s cluster)
 
 ``` bash
  kubectl --namespace ingress-system get services haproxy-ingress -o wide 
@@ -240,7 +200,7 @@ EOF
 
 
 
-### Test HA Proxy Ingress
+### Test HA Proxy Ingress (when haproxy ingress is not present in the k8s cluster)
 ```bash
 ## deployment app and service
 kubectl --namespace ${TP_INGRESS_NAMESPACE} create deployment echoserver --image k8s.gcr.io/echoserver:1.3
@@ -262,9 +222,9 @@ kubectl delete --namespace ${TP_INGRESS_NAMESPACE} ingress echoserver
 kubectl delete --namespace ${TP_INGRESS_NAMESPACE} service echoserver
 kubectl delete --namespace ${TP_INGRESS_NAMESPACE} deployment echoserver
 ```
-</details>
 
-## 4. Install Storage
+
+## 4. Install Storage (when storage classes described in environment sections are not present in the k8s cluster)
 ```bash
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   --username ${TP_CHART_REPO_USER_NAME} --password ${TP_CHART_REPO_TOKEN} \
@@ -333,7 +293,7 @@ EOF
 ```
 
 
-## 8. Create CP DB TLS Certificate Secret [Optional]
+## 8. Create CP DB TLS Certificate Secret [Optional only if ssl is enabled]
 Required for SSL enabled Databases, where SSL Mode is not set to _disable_
 [Reference: Creating K8s Secret for SSL enabled DB](https://docs.tibco.com/pub/platform-cp/latest/doc/html/Installation/creating-secret.htm)
 ```bash
@@ -353,7 +313,7 @@ EOF
 ```
 
 ## 9. Create Session Keys Secret
-> **_NOTE:_** REQUIRED from 1.9.0
+
 ```bash
 kubectl create secret generic session-keys -n ${CP_NAMESPACE} \
   --from-literal=TSC_SESSION_KEY=$(openssl rand -base64 48 | tr -dc A-Za-z0-9 | head -c32) \
@@ -679,7 +639,7 @@ EOF
 
 
 
-## Update DNS 
+## 13. Update DNS 
 
 On AKS coreDNS should be updated by creating a custom configmap for dns.
 
@@ -717,13 +677,13 @@ Restart coredns:
 kubectl rollout restart deployment coredns -n kube-system
 ```
 
-# Log in CP
+## 14. Log in CP
 
 Log into the CP with the username / password defined in the above variables (CP_ADMIN_EMAIL and CP_ADMIN_INITIAL_PASSWORD). <br>
 First update the cp admin password to a new password <br>
 
 
-# Create subscription
+## 15. Create subscription
 Create a subscription and check the mailserver to open the activation link.<br>
 
 1) Provision via Editor
@@ -735,7 +695,7 @@ Create a subscription and check the mailserver to open the activation link.<br>
 6) Log into the CP with just created subscription details
 7) Goto 'User Management/Users', select the user and assign all permissions to this subscribtion admin user
 
-# Dataplane creation
+## 16. Dataplane creation
 
 In the Control Plane UI create a dataplane:
 
@@ -784,7 +744,7 @@ Execute the first two steps:
 
 <br>
 
- # Deploy Developer hub capability
+ ## 17. Deploy Developer hub capability
 
  Goto the newly created dataplane.<br>
  'Provision a Capability'<br>
@@ -863,7 +823,7 @@ Validate the configured details and click Next to provision the developer hub.
 
 
 
-### Post Deployment configuration
+## 18. Post Deployment configuration
 
 Post deployement, nginx specific path regex on Developer Hub ingress must be updated to support haproxy based ingress.
 
