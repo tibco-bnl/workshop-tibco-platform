@@ -20,6 +20,7 @@
 - [12. Install Platform Base](#12-install-platform-base)
 - [13. Update Core DNS](#13-update-dns)
 - [14. Log into CP](#14-log-in-cp)
+- [14a. Connect to customer Idp]
 - [15. Create Subscription](#15-create-subscription)
 - [16. Data plane creation](#16-dataplane-creation)
 - [17. Deploy developer hub capability](#17-deploy-developer-hub-capability)
@@ -33,7 +34,7 @@
 3. Database server parameters to set:<br>
     'require_secure_transport' --> 'OFF' (To change!!!) <br>
     'max_connections' --> 150 <br>
-    'azure.extensions' --> 'UUID-OSPP'
+    'azure.extensions' --> 'UUID-OSPP'<br>
 3. Access to a SMTP enabled Email Server. 
 4. Identify, and register DNS names for Control Plane Router/UI, and Control Plane Tunnel.  
 5. Acquire certificates to secure Control Plane Services. Certificate CN and/or SAN must match CP Router/UI, and Tunnel DNS Names.  
@@ -296,6 +297,8 @@ EOF
 ## 8. Create CP DB TLS Certificate Secret [Optional only if ssl is enabled]
 Required for SSL enabled Databases, where SSL Mode is not set to _disable_
 [Reference: Creating K8s Secret for SSL enabled DB](https://docs.tibco.com/pub/platform-cp/latest/doc/html/Installation/creating-secret.htm)
+<br>
+For creating the certificate please refe to [https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/security-tls#configure-ssl-on-the-client](https://learn.microsoft.com/en-us/azure/postgresql/flexible-server/security-tls#configure-ssl-on-the-client)
 ```bash
 kubectl apply -f -  <<EOF
 apiVersion: v1
@@ -681,6 +684,9 @@ kubectl rollout restart deployment coredns -n kube-system
 
 Log into the CP with the username / password defined in the above variables (CP_ADMIN_EMAIL and CP_ADMIN_INITIAL_PASSWORD). <br>
 First update the cp admin password to a new password <br>
+
+## 14a. Connect to customer Idp
+
 
 
 ## 15. Create subscription
