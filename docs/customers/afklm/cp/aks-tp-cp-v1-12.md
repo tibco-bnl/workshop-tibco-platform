@@ -10,17 +10,17 @@
 - [2. Create Default TLS Secret in Ingress namespace](#2-create-default-tls-secret-in-ingress-namespace)
 - [3. Install Ingress Controller as a Load Balancer](#3-install-ingress-controller-as-a--load-balancer)
 - [4. Install Storage](#4-install-storage)
-- [5. Create CP Namespace](#5-create-cp-namespace)
-- [6. Create CP Service Account](#6-create-cp-service-account)
-- [7. Create CP DB Password Secret](#7-create-cp-db-password-secret)
-- [8. Create CP DB TLS Certificate Secret [Optional]](#8-create-cp-db-tls-certificate-secret-optional)
+- [5. Create Control Plane Namespace](#5-create-cp-namespace)
+- [6. Create Control Plane Service Account](#6-create-cp-service-account)
+- [7. Create Control Plane DB Password Secret](#7-create-cp-db-password-secret)
+- [8. Create Control Plane DB TLS Certificate Secret [Optional]](#8-create-cp-db-tls-certificate-secret-optional)
 - [9. Create Session Keys Secret](#9-create-session-keys-secret)
 - [10. Install Platform Bootstrap](#10-install-platform-bootstrap)
-- [11. Create CP Encryption Secret](#11-create-cp-encryption-secret)
+- [11. Create Control Plane Encryption Secret](#11-create-cp-encryption-secret)
 - [12. Install Platform Base](#12-install-platform-base)
 - [13. Update Core DNS](#13-update-dns)
 - [14. Log into CP](#14-log-in-cp)
-- [14a. Connect to customer Idp]
+- [14a. Connect to customer Idp](#14-log-in-cp)
 - [15. Create Subscription](#15-create-subscription)
 - [16. Data plane creation](#16-dataplane-creation)
 - [17. Deploy developer hub capability](#17-deploy-developer-hub-capability)
@@ -37,7 +37,7 @@
     'azure.extensions' --> 'UUID-OSPP'<br>
 3. Access to a SMTP enabled Email Server. 
 4. Identify, and register DNS names for Control Plane Router/UI, and Control Plane Tunnel.  
-5. Acquire certificates to secure Control Plane Services. Certificate CN and/or SAN must match CP Router/UI, and Tunnel DNS Names.  
+5. Acquire certificates to secure Control Plane Services. Certificate CN and/or SAN must match Control Plane Router/UI, and Tunnel DNS Names.  
 
 ## Environment Variables 
 
@@ -70,8 +70,8 @@ export IS_OCI=false ## Set true for OCI repo
 ```bash
 export CP_CONTAINER_REGISTRY="csgprduswrepoedge.jfrog.io" ## TP Image Registry, default TIBCO JFrog
 export CP_CONTAINER_REGISTRY_REPOSITORY="tibco-platform-docker-prod"  ## TP Image Repo, default TIBCO JFrog
-export CP_CONTAINER_REGISTRY_USERNAME="image-registry-user" ## TP Image Registry User, TIBCO JFrog Credentials from CP SaaS
-export CP_CONTAINER_REGISTRY_PASSWORD="image-registry-password" ## TP Image Registry User, TIBCO JFrog Credentials from CP SaaS
+export CP_CONTAINER_REGISTRY_USERNAME="image-registry-user" ## TP Image Registry User, TIBCO JFrog Credentials from Control Plane SaaS
+export CP_CONTAINER_REGISTRY_PASSWORD="image-registry-password" ## TP Image Registry User, TIBCO JFrog Credentials from Control Plane SaaS
 ```
 
 ### Storage
@@ -85,52 +85,58 @@ export STORAGE_RECLAIM_POLICY=Retain ## Fileshare Storage Class
 
 ### Database
 ```bash
-export CP_DB_HOST="db.postgres.database.com" ## CP Postgress DB
-export CP_DB_PORT="5432" ## CP Postgres DB Port
-export CP_DB_SECRET_NAME="cp-db-secret" ## CP DB Secret
+export CP_DB_HOST="db.postgres.database.com" ## Control Plane Postgress DB
+export CP_DB_PORT="5432" ## Control Plane Postgres DB Port
+export CP_DB_SECRET_NAME="cp-db-secret" ## Control Plane DB Secret
 export CP_DB_SSL_MODE="disable" # verify-full, disable. Disable is required since DevHub does not support SSL. Azure db server parameter 'require_secure_transport' should be set to 'OFF'
-export CP_DB_USER_NAME="db-user" ## CP DB User
-export CP_DB_PASSWORD='db-password' ## CP DB Password
-export CP_DB_NAME="postgres" ## CP default DB
+export CP_DB_USER_NAME="db-user" ## Control Plane DB User
+export CP_DB_PASSWORD='db-password' ## Control Plane DB Password
+export CP_DB_NAME="postgres" ## Control Plane default DB
 
 ### Database SSL Config
-export CP_DB_SSL_ROOT_CERT_SECRET_NAME="cp-db-ssl" ## CP SSL Secret
-export CP_DB_SSL_ROOT_CERT_FILENAME="cp_db_ssl.cert" ## CP SSL Filename
-export CP_DB_SSL_ROOT_CERT_FILE="db_ssl.pem" ## CP SSL File name and path in PEM format
+export CP_DB_SSL_ROOT_CERT_SECRET_NAME="cp-db-ssl" ## Control Plane SSL Secret
+export CP_DB_SSL_ROOT_CERT_FILENAME="cp_db_ssl.cert" ## Control Plane SSL Filename
+export CP_DB_SSL_ROOT_CERT_FILE="db_ssl.pem" ## Control Plane SSL File name and path in PEM format
 ```
 
-### CP Bootstrap Config
+### Control Plane Bootstrap Config
 ```bash
-### CP Config
-export CP_INSTANCE_ID="cp1" ## CP Instance ID
-export CP_NAMESPACE="${CP_INSTANCE_ID}-ns" ## CP Namespace
+### Control Plane Config
+export CP_INSTANCE_ID="cp1" ## Control Plane Instance ID
+export CP_NAMESPACE="${CP_INSTANCE_ID}-ns" ## Control Plane Namespace
 
-export CP_PLATFORM_BOOTSTRAP_VERSION="1.11.0" ## CP Bootstrap Chart Version
+export CP_PLATFORM_BOOTSTRAP_VERSION="1.11.0" ## Control Plane Bootstrap Chart Version
 
 export CP_NODE_CIDR="10.4.0.0/16" ## Node Subnet CIDR
 export CP_POD_CIDR="10.4.0.0/20"  ## K8s Pod CIDR
 export CP_SERVICE_CIDR="10.0.0.0/16" ## K8s Service CIDR
 export TP_BASE_DNS_DOMAIN="tibco.example.com" ## TP base domain
-export CP_SERVICE_DNS_DOMAIN="cp.${TP_BASE_DNS_DOMAIN}" ## CP Router/UI DNS domain
-export CP_TUNNEL_DNS_DOMAIN="tunnel.${TP_BASE_DNS_DOMAIN}" ## CP Tunnel DNS domain 
-export CP_SUBSCRIPTION="dev" ## CP Subscription Name
-export CP_STORAGE_PV_SIZE="10Gi" ## CP PV Size
+export CP_SERVICE_DNS_DOMAIN="cp.${TP_BASE_DNS_DOMAIN}" ## Control Plane Router/UI DNS domain
+export CP_TUNNEL_DNS_DOMAIN="tunnel.${TP_BASE_DNS_DOMAIN}" ## Control Plane Tunnel DNS domain 
+export CP_SUBSCRIPTION="dev" ## Control Plane Subscription Name
+export CP_STORAGE_PV_SIZE="10Gi" ## Control Plane PV Size
 ```
 
-### CP Base Config
+### Control Plane Base Config
 ```bash
-export CP_PLATFORM_BASE_VERSION=1.11.0 ## CP Base Chart Version
+export CP_PLATFORM_BASE_VERSION=1.11.0 ## Control Plane Base Chart Version
 export CP_ADMIN_CUSTOMER_ID="customerID" ## Customer ID, available on SaaS CP
 
-## CP Email Config
+## Control Plane Email Config
 export CP_MAIL_SERVER_ADDRESS="mail.smtp-server.com" ## SMTP Server
 export CP_MAIL_SERVER_PORT_NUMBER=25 ## SMTP Port
 export CP_MAIL_SERVER_USERNAME="" ## SMTP User
 export CP_MAIL_SERVER_PASSWORD="" ## SMTP Password
 export CP_FROM_REPLY_TO_EMAIL="platform-admin@customer.com" ## Platform Invitation Email. Must be valid email domain
-export CP_ADMIN_EMAIL="platform-admin@customer.com" ## CP Admin Email
-export CP_ADMIN_INITIAL_PASSWORD="adminpassword" ## CP Admin Initial Password, if enabled
+export CP_ADMIN_EMAIL="platform-admin@customer.com" ## Control Plane Admin Email
+export CP_ADMIN_INITIAL_PASSWORD="adminpassword" ## Control Plane Admin Initial Password, if enabled
 ```
+
+## Dataplane base Config
+``` bash
+export DP_Namespace=dp
+```
+
 
 ### Adjust for HTTPS/OCI Helm Repo
 ```bash
@@ -164,7 +170,7 @@ kubectl create secret tls ingress-cert-secret \
 
 ## 3. Install Ingress Controller as a  Load Balancer (when haproxy ingress is not present in the k8s cluster)
 
-### HAPROXY:
+### HAPROXY as Ingress Controller
 
 ```bash
 helm upgrade --install --wait --timeout 1h --create-namespace  \
@@ -196,12 +202,11 @@ EOF
 #### Retrieve external-ip of Ingress (when haproxy ingress is not present in the k8s cluster)
 
 ``` bash
- kubectl --namespace ingress-system get services haproxy-ingress -o wide 
+ kubectl -n ${TP_INGRESS_NAMESPACE} get services haproxy-ingress -o wide 
 ```
 
 
-
-### Test HA Proxy Ingress (when haproxy ingress is not present in the k8s cluster)
+### Test HA Proxy Ingress (when haproxy ingress is not present in the k8s cluster) (optional)
 ```bash
 ## deployment app and service
 kubectl --namespace ${TP_INGRESS_NAMESPACE} create deployment echoserver --image k8s.gcr.io/echoserver:1.3
@@ -258,7 +263,7 @@ EOF
 ```
 
 
-## 5. Create CP Namespace
+## 5. Create Control Plane Namespace
 ```bash
 kubectl apply -f - <<EOF
 apiVersion: v1
@@ -271,14 +276,14 @@ metadata:
 EOF
 ```
 
-## 6. Create CP Service Account
+## 6. Create Control Plane Service Account
 [Reference: Permissions Required by the Role ](https://docs.tibco.com/pub/platform-cp/latest/doc/html/Installation/rbac-permissions.htm)
 ```bash
 kubectl create -n  ${CP_NAMESPACE} serviceaccount ${CP_INSTANCE_ID}-sa
 ```
 
 
-## 7. Create CP DB Password Secret
+## 7. Create Control Plane DB Password Secret
 ```bash
 kubectl apply -f - <<EOF
 kind: Secret
@@ -294,7 +299,7 @@ EOF
 ```
 
 
-## 8. Create CP DB TLS Certificate Secret [Optional only if ssl is enabled]
+## 8. Create Control Plane DB TLS Certificate Secret [Optional only if ssl is enabled]
 Required for SSL enabled Databases, where SSL Mode is not set to _disable_
 [Reference: Creating K8s Secret for SSL enabled DB](https://docs.tibco.com/pub/platform-cp/latest/doc/html/Installation/creating-secret.htm)
 <br>
@@ -410,8 +415,8 @@ router-operator:
 EOF
 ```
 
-## 11. Create CP Encryption Secret
-> **_NOTE:_** REQUIRED from 1.9.0
+## 11. Create Control Plane Encryption Secret
+
 ```bash
 kubectl create secret -n ${CP_NAMESPACE} generic cporch-encryption-secret --from-literal=CP_ENCRYPTION_SECRET_KEY=$(openssl rand -base64 48 | tr -dc A-Za-z0-9 | head -c44)
 ```
@@ -655,9 +660,9 @@ metadata:
   namespace: kube-system
 data:
   custom.server: |
-    afklm.dataplanes.pro:53 {
+    azure.airfranceklm.com:53 {
       errors
-      rewrite name regex (.*)\.afklm\.dataplanes\.pro  haproxy-ingress.ingress-system.svc.cluster.local
+      rewrite name regex (.*)\.azure\.airfranceklm\.com  haproxy-ingress.ingress-system.svc.cluster.local
       forward . 10.0.0.10 
     }
   log.override: |
@@ -668,11 +673,11 @@ EOF
 
 ``` 
 
-The aim is to rewrite the domainname used for CP to the haproxy server
+The aim is to rewrite the domainname used for Control Plane to the haproxy server
 
-Update the following:
-- afsklm.dataplanes.pro:53 
-- rewrite name regex (.*)\.afklm\.dataplanes\.pro  haproxy-ingress.ingress-system.svc.cluster.local
+Update the following (if dns names are changing):
+- azure.airfranceklm.com:53 
+- rewrite name regex (.*)\.azure\.airfranceklm\.com  haproxy-ingress.ingress-system.svc.cluster.local
 
 Restart coredns:
 
@@ -682,8 +687,8 @@ kubectl rollout restart deployment coredns -n kube-system
 
 ## 14. Log in CP
 
-Log into the CP with the username / password defined in the above variables (CP_ADMIN_EMAIL and CP_ADMIN_INITIAL_PASSWORD). <br>
-First update the cp admin password to a new password <br>
+Log into the Control Plane with the username / password defined in the above variables (CP_ADMIN_EMAIL and CP_ADMIN_INITIAL_PASSWORD). <br>
+First update the Control Plane admin password to a new password <br>
 
 ## 14a. Connect to customer Idp
 
@@ -696,9 +701,9 @@ Create a subscription and check the mailserver to open the activation link.<br>
 2) Update values of userDetails/email  and subscriptionDetails/hostprefix
 3) Provision
 4) A welcome mail is now sent to the email server with activation link
-5) Sign out of the CP UI
+5) Sign out of the Control Plane UI
 5) Open the activation link and add the user details and password.
-6) Log into the CP with just created subscription details
+6) Log into the Control Plane with just created subscription details
 7) Goto 'User Management/Users', select the user and assign all permissions to this subscribtion admin user
 
 ## 16. Dataplane creation
@@ -706,7 +711,6 @@ Create a subscription and check the mailserver to open the activation link.<br>
 In the Control Plane UI create a dataplane:
 
 1) 'Data Planes', 'Register a Data Plane', 'Existing Kubernetes Cluster' -> Start <br>
-
 2) 'Basics'<br>add details:
 * 'Data Plane Name'
 * 'Description' (optional) 
@@ -742,7 +746,7 @@ Execute the first two steps:
     In below command validate the value of DATAPLANE_NAMESPACE. This should be the same as the just created Namespace (step 2).
 
     ``` bash
-    export DATAPLANE_NAMESPACE=dp
+    export DATAPLANE_NAMESPACE=${DP_Namespace}
     kubectl create secret generic tp-custom-cert -n ${DATAPLANE_NAMESPACE} --from-file=${DEFAULT_INGRESS_CERT_FILE}
      ``` 
  3) Service Account creation<br>
