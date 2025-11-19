@@ -97,18 +97,37 @@ Use [this guide](docs/configure-platform/configure-tibco-platform.md) to perform
 
 ## Documentation Index
 
-Below is a list of documentation files in this repository for quick reference:
 
-- [Install TIBCO Platform on Minikube or Docker Desktop kubernetes](/scripts/running_platform_installer.md)
-- [How to Set up AKS Cluster and Deploy TIBCO Platform Data Plane](docs/howto/how-to-dp-aks-setup-guide.md)
-- [How to Set Up EKS Fargate EFS and Deploy TIBCO Data Plane](docs/howto/how-to-dp-eks-fargate-efs-setup-guide.md)
-- [How to Set Up Azure Red Hat OpenShift (ARO) Cluster and Deploy TIBCO Platform Data Plane](docs/howto/how-to-dp-openshift-aro-aks-setup-guide.md)
-- [How to Set Up Observability on a DP running on Azure Red Hat OpenShift (ARO) Cluster](docs/howto/how-to-dp-openshift-observability.md)
-- [How to gracefully stop the platform](docs/howto/how-to-gracefully-stop-platform.md)
-- [How to install separate platform components](docs/howto/how-to-install-seperate-platform-components.md)
-- [How to add a capability](docs/howto/how-to-add-a-capability.md)
-- [How to create resources](docs/howto/how-to-create-resources.md)
-- [How to upgrade a platform](docs/howto/how-to-update-a-platform.md)
+### Control Plane
+- [How to: Control Plane setup AKS environment variables](docs/howto/aks-aks-env-variables.sh)
+- [How to: Setup AWS EKS storage for Control Tower](docs/howto/how-to-controltower-aws-eks-storage-only.md)
+
+### Data Planes / Control Tower
+- [How to: Setup Control Tower on AWS EKS](docs/howto/how-to-controltower-aws-eks.md)
+- [How to: Setup Control Tower on Azure AKS](docs/howto/how-to-controltower-azure-aks.md)
+- [How to: Set up AKS Cluster and Deploy TIBCO Platform Data Plane](docs/howto/how-to-dp-aks-setup-guide.md)
+- [How to: Set Up EKS Fargate EFS and Deploy TIBCO Data Plane](docs/howto/how-to-dp-eks-fargate-efs-setup-guide.md)
+- [How to: Add a capability](docs/howto/how-to-add-a-capability.md)
+- [How to: Create resources](docs/howto/how-to-create-resources.md)
+- [How to: Set Up Observability on a DP running on Azure Red Hat OpenShift (ARO) Cluster](docs/howto/how-to-dp-openshift-observability.md)
+- [How to: Set Up Azure Red Hat OpenShift (ARO) Cluster and Deploy TIBCO Platform Data Plane](docs/howto/how-to-dp-openshift-aro-aks-setup-guide.md)
+- [How to: Setup controltower on minikube](docs/howto/how-to-setup-controltower-on-minikube.md)
+
+### Applications
+- [How to: Run BW processes as a cronjob](docs/howto/hot-to-run-bw-process-as-cronjob.md)
+- [How to: Expose EMS outside cluster](docs/howto/how-to-ems-expose-outside-cluster.md)
+- [How to: Mount jks in bwce app](docs/howto/how-to-mount-jks-in-bwce-app.md)
+- [How to: Mount a license file as secret](docs/howto/how-to-mount-license-file-as-secret.md)
+
+### Infra (general)
+- [How to: Automate scaling up and down deployments](docs/howto/how-to-automate-stopping-and-starting-all-deployments.md)
+- [How to: Gracefully stop the platform](docs/howto/how-to-gracefully-stop-platform.md)
+- [How to: Install separate platform components](docs/howto/how-to-install-seperate-platform-components.md)
+- [How to: K8S sheetsheet](docs/howto/how-to-k8s-sheetsheet.md)
+- [How to: Remove minikube](docs/howto/how-to-remove-minikube.md)
+- [How to: Restore the platform after restart of VM](docs/howto/how-to-restore-the-platform-after-restart-of-the-VM.md)
+- [How to: Run the platform provisioner again](docs/howto/how-to-run-the-platform-provisioner-again.md)
+- [How to: Upgrade a platform](docs/howto/how-to-update-a-platform.md)
 
 ---
 
@@ -124,3 +143,4 @@ Below is a list of documentation files in this repository for quick reference:
 | Marco  | 03/06/2025 | v5      | Added How to Set Up EKS Fargate EFS and Deploy TIBCO Data Plane for 1.7 version          |                                          |
 | Kulbhushan  | 05/06/2025 | v5      | Added ARO Observability config - only logs working  |
 | Kulbhushan  | 12/09/2025 | v6      | Added AKS DP setup document |
+| Marco       | 19/11/2025 | v7      | Refreshed Document section |
