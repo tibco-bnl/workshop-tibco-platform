@@ -30,11 +30,11 @@ This section described the creation of EFS based storage in an EKS cluster.
 ## Environment Variables
 
 ```bash
-AWS_DEFAULT_PROFILE=emea-use ## Based on local config in ~/.aws/config 
-EKS_AWS_REGION=eu-west-1 
+AWS_DEFAULT_PROFILE={{local profile name}} ## Based on local config in ~/.aws/config 
+EKS_AWS_REGION={{ aws region}} ## Region where the EKS cluster is running 
 EKS_ACCOUNT_ID=$(aws sts get-caller-identity --query 'Account' --output text)
-EKS_EKS_CLUSTER=NL_ControlTower
-EKS_DP_NAMESPACE=ct-ns
+EKS_EKS_CLUSTER={{ EKS cluster name }} ## Name of EKS cluster control tower will be installed in. Can be an cluster which already contain other (TIBCO Platform) components
+EKS_DP_NAMESPACE={{ Name of namespace }} ## Name of the namespace where the controltower will be deployed. Will be created during installation.
 ```
 
 ---
@@ -77,6 +77,7 @@ Only static assigned storage is permitted on Fargate.
 EKS_EFS_FS_ID=$(aws efs create-file-system   --creation-token controltower   --encrypted   --performance-mode generalPurpose   --throughput-mode bursting   --tags Key=Name,Value=ControlTowerVolume   --region $EKS_AWS_REGION   --query "FileSystemId" --output text)
 echo "EKS_EFS_FS_ID: $EKS_EFS_FS_ID"
 ```
+Token name can be changed as per own requirement (--cration-token)
 
 ### Create EFS Access Point
 
@@ -94,6 +95,8 @@ The access needs to be created both ingress and egress between EFS servcies and 
 EKS_EFS_SG_ID=$(aws ec2 create-security-group   --description eks-controltower-ingress-egress --group-name eks-controltower   --vpc-id $EKS_VPC_ID   --region $EKS_AWS_REGION   --query 'GroupId' --output text)
 echo "EKS_EFS_SG_ID: $EKS_EFS_SG_ID"
 ```
+Description can be changed as per own requirement (--description)
+
 ```bash
 aws ec2 authorize-security-group-ingress   --group-id $EKS_EFS_SG_ID   --protocol tcp   --port 2049   --cidr $EKS_CIDR_BLOCK
 aws ec2 authorize-security-group-egress   --group-id $EKS_EFS_SG_ID   --protocol tcp   --port 2049   --source-group $EKS_VPC_DEFAULT_SG_ID
@@ -225,7 +228,7 @@ EMS: provide the ems details of the ems server used for domain communication<br>
 RV: <br>
 > Hawk RV service: port number of the Hawk RV service on the BW5 server<br>
 > Hawk RV Network: name of the Hawk RV Network on the BW5 server<br>
-> Hawk RV Daemon: rv daemon connection string (i.e. tcp://<bw server>:<rv deamon port>)<br>
+> Hawk RV Daemon: rv daemon connection string (i.e. tcp://{{bw server}}:{{rv deamon port}})<br>
 
 Click 'Add Domain' 
 

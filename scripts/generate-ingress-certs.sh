@@ -1,4 +1,4 @@
-#!/bin/bash
+ #!/bin/bash
 
 # This script generates a self-signed certificate authority (CA) and a server certificate for use with NGINX Ingress Controller.
 # The script also creates a Kubernetes secret that will be used by NGINX Ingress Controller to serve HTTPS traffic.

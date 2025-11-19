@@ -96,13 +96,13 @@ Run the following command:
 
 ```bash
 minikube start --cpus 8 --memory 24576 --disk-size "40g" \
---driver=docker \
---addons storage-provisioner \
---kubernetes-version "1.30.5"
+--driver=docker --addons storage-provisioner \
+--kubernetes-version "1.32.0" --extra-config=kubelet.max-pods=500
 ```
 
 Please mind: 
-(1) If you have more processors and ram, modify the parameters --cpu and --memory, but always leave 8 GB of ram for other purposes.
+(1) If you have more processors and ram, modify the parameters --cpu and --memory, but always leave 8 GB of ram for other purposes. One may want also to change the kubernetes version to the version is aligned with the required version in the target platform version.
+
 
 
 

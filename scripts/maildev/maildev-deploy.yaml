@@ -1,0 +1,105 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: maildev
+  namespace: tibco-ext
+  labels:
+    app: development-mailserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: development-mailserver
+  template:
+    metadata:
+      labels:
+        app: development-mailserver
+    spec:
+      containers:
+        - name: maildev
+          image: maildev/maildev:latest
+          args: ["-s", "1025", "-w", "1080"]
+          ports:
+            - name: http
+              containerPort: 1080
+              protocol: TCP
+            - name: smtp
+              containerPort: 1025
+              protocol: TCP
+          resources:
+            requests:
+              memory: "32Mi"
+              cpu: "25m"
+            limits:
+              memory: "64Mi"
+              cpu: "50m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: development-mailserver
+  namespace: tibco-ext
+spec:
+  selector:
+    app: development-mailserver
+  ports:
+    - protocol: TCP
+      port: 1080
+      targetPort: 1080
+      name: http
+    - protocol: TCP
+      port: 1025
+      targetPort: 1025
+      name: smtp
+  type: ClusterIP
+
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: maildev-route
+  namespace: tibco-ext
+  labels:
+    app: development-mailserver
+    app.cloud.tibco.com/created-by: pipeline
+spec:
+  host: mail.nxp.atsnl-emea.azure.dataplanes.pro
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+  to:
+    kind: Service
+    name: development-mailserver
+    weight: 100
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: maildev-ingress
+  namespace: tibco-ext
+  annotations:
+    kubernetes.io/ingress.class: "azure/application-gateway"
+    appgw.ingress.kubernetes.io/ssl-redirect: "true"
+  labels:
+    app: development-mailserver
+spec:
+  rules:
+  - host: mail.nxp.atsnl-emea.azure.dataplanes.pro
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: development-mailserver
+            port:
+              number: 1080
+  tls:
+  - hosts:
+    - mail.nxp.atsnl-emea.azure.dataplanes.pro
+    secretName: maildev-tls-secret
