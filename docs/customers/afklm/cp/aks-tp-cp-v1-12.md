@@ -1,5 +1,5 @@
 # TIBCO Platform Control Plane on AKS
-
+v 1.0 19-nov-2025
 
 
 ## Table of Contents
