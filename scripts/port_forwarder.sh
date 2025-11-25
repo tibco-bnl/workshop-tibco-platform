@@ -51,6 +51,18 @@ function forward_tekton() {
     done
 }
 
+function forward_maildev() {
+    while true; do
+        if pgrep -f "kubectl port-forward.*svc/development-mailserver.*8081:1080" >/dev/null; then
+            sleep 5
+        else
+            echo "Restarting port-forward for maildev (8081)"
+            nohup kubectl port-forward svc/development-mailserver 8081:1080 -n tibco-ext >/dev/null 2>&1 &
+            sleep 5
+        fi
+    done
+}
+
 function forward_provisioner() {
     while true; do
         POD_NAME=$(kubectl get pods --namespace tekton-tasks -l "app.kubernetes.io/name=platform-provisioner-ui,app.kubernetes.io/instance=platform-provisioner-ui" -o jsonpath="{.items[0].metadata.name}")
@@ -66,6 +78,9 @@ function forward_provisioner() {
 }
 
 case $1 in
+    "maildev")
+        forward_maildev &
+        ;;
     "tekton")
         forward_tekton &
         ;;
@@ -80,6 +95,7 @@ case $1 in
         forward_provisioner &
         forward_tekton &
         forward_ingress &
+        forward_maildev &
         wait
         ;;
     *)
