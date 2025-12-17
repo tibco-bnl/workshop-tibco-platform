@@ -130,7 +130,8 @@ Use [this guide](docs/configure-platform/configure-tibco-platform.md) to perform
 - [How to: Upgrade a platform](docs/howto/how-to-update-a-platform.md)
 
 ### Security
-- [IP Whitelist Configuration for Ingress Endpoints](scripts/other/dp4/README.md) - Manage IP-based access control for UI ingress endpoints
+- [IP Whitelist Configuration for Ingress Endpoints - DP4](scripts/other/dp4/README.md) - Manage IP-based access control for UI ingress endpoints (uses server-snippet annotation)
+- [IP Whitelist Configuration for Ingress Endpoints - DP1](scripts/other/dp1/README.md) - Manage IP-based access control for UI ingress endpoints (uses whitelist-source-range annotation)
 
 ---
 
