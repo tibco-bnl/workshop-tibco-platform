@@ -1,31 +1,24 @@
 #!/bin/bash
 
 # Script to apply IP whitelist protection to all UI-related ingresses using kubectl annotate
-# Whitelisted IPs:
-# - 63.34.112.27
-# - 85.145.141.250
-# - 217.120.32.76
-# - 86.90.167.198 (current IP)
-# - 10.4.0.* (internal subnet)
+# This script retrieves the existing IP whitelist from the Kibana ingress and applies it to all other UI ingresses
 
 set -e
 
-# Define the IP whitelist configuration
-IP_WHITELIST='# If not allowed, return blank page
- if ($remote_addr  !~ "^63\.34\.112\.27$|^85\.145\.141\.250$|^217\.120\.32\.76$|^86\.90\.167\.198$|^10\.4\.0\..*") {
-    return 444;
-  }'
+# Retrieve the existing IP whitelist configuration from Kibana ingress
+echo "Retrieving IP whitelist configuration from Kibana ingress..."
+IP_WHITELIST=$(kubectl get ingress dp-config-es-kibana -n elastic-system -o jsonpath='{.metadata.annotations.nginx\.ingress\.kubernetes\.io/server-snippet}' 2>/dev/null)
 
+# Check if we successfully retrieved the configuration
+if [ -z "$IP_WHITELIST" ]; then
+    echo "Error: Could not retrieve IP whitelist from Kibana ingress."
+    echo "Please ensure the Kibana ingress (dp-config-es-kibana) exists in the elastic-system namespace with IP whitelist configured."
+    exit 1
+fi
+
+echo "Successfully retrieved IP whitelist configuration."
+echo ""
 echo "Applying IP whitelist protection to ingresses..."
-echo "================================================"
-echo ""
-echo "Whitelisted IPs:"
-echo "  - 63.34.112.27"
-echo "  - 85.145.141.250"
-echo "  - 217.120.32.76"
-echo "  - 86.90.167.198 (current IP)"
-echo "  - 10.4.0.* (internal subnet)"
-echo ""
 echo "================================================"
 
 echo "1. Applying BPM ingress whitelist..."

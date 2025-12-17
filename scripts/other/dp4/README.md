@@ -2,6 +2,10 @@
 
 This directory contains scripts to manage IP-based access control for UI-related ingress endpoints in the cluster.
 
+## Overview
+
+The script retrieves the IP whitelist configuration from the Kibana ingress (which serves as the source of truth) and applies it to all other UI ingress endpoints, ensuring consistent access control across all protected services.
+
 ## Protected Endpoints
 
 The following endpoints are protected with IP whitelist:
@@ -14,13 +18,13 @@ The following endpoints are protected with IP whitelist:
 - `grafana.mle.atsnl-emea.azure.dataplanes.pro`
 - `prometheus-internal.mle.atsnl-emea.azure.dataplanes.pro`
 
-## Current Whitelisted IPs
+## How to View Current Whitelisted IPs
 
-- `63.34.112.27`
-- `85.145.141.250`
-- `217.120.32.76`
-- `86.90.167.198`
-- `10.4.0.*` (internal subnet)
+To see the current whitelisted IP addresses:
+
+```bash
+kubectl get ingress dp-config-es-kibana -n elastic-system -o jsonpath='{.metadata.annotations.nginx\.ingress\.kubernetes\.io/server-snippet}'
+```
 
 ## How to Add Your IP Address
 
@@ -30,92 +34,68 @@ The following endpoints are protected with IP whitelist:
 curl -s -4 ifconfig.me
 ```
 
-### Step 2: Edit the Script
+### Step 2: Update the Kibana Ingress (Source of Truth)
 
-Open the script file:
-
-```bash
-vi apply-ingress-whitelist-consolidated.sh
-```
-
-Find the `IP_WHITELIST` variable (around line 13) and add your IP address to the regex pattern:
+Add your IP to the Kibana ingress whitelist. Replace `YOUR_NEW_IP` with your actual IP address:
 
 ```bash
-IP_WHITELIST='# If not allowed, return blank page
- if ($remote_addr  !~ "^63\.34\.112\.27$|^85\.145\.141\.250$|^217\.120\.32\.76$|^86\.90\.167\.198$|^YOUR_IP_HERE$|^10\.4\.0\..*") {
+kubectl annotate ingress dp-config-es-kibana -n elastic-system \
+  nginx.ingress.kubernetes.io/server-snippet='# If not allowed, return blank page
+ if ($remote_addr  !~ "^EXISTING_IP_1$|^EXISTING_IP_2$|^YOUR_NEW_IP$|^10\.4\.0\..*") {
     return 444;
-  }'
+  }' --overwrite
 ```
 
-**Important:** Make sure to escape dots in the IP address with backslash: `\.`
+**Important:** 
+- Make sure to escape dots in IP addresses with backslash: `\.`
+- Include all existing IPs plus your new one
+- Get existing IPs first using the command in the section above
 
-For example, to add IP `192.168.1.100`:
-```bash
-IP_WHITELIST='# If not allowed, return blank page
- if ($remote_addr  !~ "^63\.34\.112\.27$|^85\.145\.141\.250$|^217\.120\.32\.76$|^86\.90\.167\.198$|^192\.168\.1\.100$|^10\.4\.0\..*") {
-    return 444;
-  }'
-```
+### Step 3: Apply Changes to All Ingresses
 
-### Step 3: Apply the Changes
-
-Run the script to apply the updated whitelist to all ingresses:
+Run the consolidated script to propagate the whitelist from Kibana ingress to all other ingresses:
 
 ```bash
 ./apply-ingress-whitelist-consolidated.sh
 ```
+
+This script will automatically retrieve the IP whitelist from the Kibana ingress and apply it to all protected endpoints.
 
 ## How to Remove an IP Address
 
-### Step 1: Edit the Script
+### Step 1: Update the Kibana Ingress
 
-Open the script file:
+Remove the IP from the Kibana ingress whitelist. Make sure to include all IPs you want to keep:
 
 ```bash
-vi apply-ingress-whitelist-consolidated.sh
+kubectl annotate ingress dp-config-es-kibana -n elastic-system \
+  nginx.ingress.kubernetes.io/server-snippet='# If not allowed, return blank page
+ if ($remote_addr  !~ "^REMAINING_IP_1$|^REMAINING_IP_2$|^10\.4\.0\..*") {
+    return 444;
+  }' --overwrite
 ```
 
-### Step 2: Remove the IP
+### Step 2: Apply Changes to All Ingresses
 
-Find the IP address you want to remove in the `IP_WHITELIST` variable and delete it along with the pipe separator `|`.
-
-For example, to remove `86.90.167.198`:
-
-**Before:**
-```bash
-if ($remote_addr  !~ "^63\.34\.112\.27$|^85\.145\.141\.250$|^217\.120\.32\.76$|^86\.90\.167\.198$|^10\.4\.0\..*") {
-```
-
-**After:**
-```bash
-if ($remote_addr  !~ "^63\.34\.112\.27$|^85\.145\.141\.250$|^217\.120\.32\.76$|^10\.4\.0\..*") {
-```
-
-### Step 3: Apply the Changes
-
-Run the script:
+Run the script to propagate the updated whitelist:
 
 ```bash
 ./apply-ingress-whitelist-consolidated.sh
 ```
 
-## Quick Add Single IP (Alternative Method)
+## Apply Whitelist to All Ingresses
 
-If you need to quickly add your current IP without editing the script:
+To sync the IP whitelist from Kibana ingress (source of truth) to all other UI ingresses:
 
 ```bash
-# Get your IP
-MY_IP=$(curl -s -4 ifconfig.me)
-
-# Add to all ingresses
-kubectl annotate ingress bpm-dev-ingress -n bpm \
-  nginx.ingress.kubernetes.io/server-snippet="# If not allowed, return blank page
- if (\$remote_addr  !~ \"^63\\.34\\.112\\.27\$|^85\\.145\\.141\\.250\$|^217\\.120\\.32\\.76\$|^86\\.90\\.167\\.198\$|^${MY_IP}\$|^10\\.4\\.0\\..*\") {
-    return 444;
-  }" --overwrite
+cd /path/to/scripts/other/dp4
+./apply-ingress-whitelist-consolidated.sh
 ```
 
-**Note:** You'll need to repeat this for all 7 ingresses or update the script for consistency.
+The script will:
+1. Retrieve the current IP whitelist from the Kibana ingress
+2. Apply it to all 7 protected ingress endpoints
+3. Display confirmation for each ingress updated
 
 ## Troubleshooting
 
