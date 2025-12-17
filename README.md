@@ -129,6 +129,9 @@ Use [this guide](docs/configure-platform/configure-tibco-platform.md) to perform
 - [How to: Run the platform provisioner again](docs/howto/how-to-run-the-platform-provisioner-again.md)
 - [How to: Upgrade a platform](docs/howto/how-to-update-a-platform.md)
 
+### Security
+- [IP Whitelist Configuration for Ingress Endpoints](scripts/other/dp4/README.md) - Manage IP-based access control for UI ingress endpoints
+
 ---
 
 ## Doc Control
