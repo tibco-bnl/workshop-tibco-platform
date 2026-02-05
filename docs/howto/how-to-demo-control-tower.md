@@ -24,10 +24,10 @@ Please don't change the inbound rules with the Description 'AKS cluster Control 
 SSH access is key based access.
 To add a public key for ssh access follow below steps:
 
-1) Select your instance in the console and click Connect.
+1) Select your instance in the console and click Connect. 
 2) Choose the EC2 Instance Connect tab and click Connect to open a browser-based terminal.
-3) Once inside, run: nano ~/.ssh/authorized_keys
-Paste your Public Key (the one ending in .pub) on a new line.
-Save and exit (Ctrl+O, Enter, Ctrl+X).
+3) Once inside, run: nano ~/.ssh/authorized_keys<br>
+Paste your Public Key (the one ending in .pub) on a new line.<br>
+Save and exit (Ctrl+O, Enter, Ctrl+X).<br>
 
 Now the instance can be accessed via ssh using the private key associated to the public key.
