@@ -1,5 +1,8 @@
 # TIBCO Platform Workshop
 
+> **Current Release:** [v1.14.0](./releases/v1.14.0.md) | **TIBCO Platform CP Version:** 1.14.0  
+> 📋 **Release History:** See `releases` folder for all versions
+
 #### [GH Pages Web link](https://tibco-bnl.github.io/workshop-tibco-platform/)
 #### [Github source code link](https://github.com/tibco-bnl/workshop-tibco-platform)
 
