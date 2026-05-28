@@ -1,8 +1,8 @@
 # TIBCO Platform Control Plane on AKS
-v 1.0 19-nov-2025
-v 1.1 10-mrt-2026 upgrade to v1.15 
-v 1.2 22-may-2026 upgrade to v1.16
-v 1.3 28-may-2026 upgrade to v1.17
+v 1.0 19-nov-2025<br>
+v 1.1 10-mrt-2026 upgrade to v1.15 <br>
+v 1.2 22-may-2026 upgrade to v1.16 <br>
+v 1.3 28-may-2026 upgrade to v1.17 <br>
 
 
 ## Table of Contents
