@@ -2,6 +2,7 @@
 v 1.0 19-nov-2025
 v 1.1 10-mrt-2026 upgrade to v1.15 
 v 1.2 22-may-2026 upgrade to v1.16
+v 1.3 28-may-2026 upgrade to v1.17
 
 
 ## Table of Contents
