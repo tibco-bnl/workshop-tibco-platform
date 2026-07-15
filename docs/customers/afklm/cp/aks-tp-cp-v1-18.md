@@ -1,10 +1,10 @@
 # TIBCO Platform Control Plane on AKS
 
-v 1.0 19-nov-2025<br>
-v 1.1 10-mrt-2026 upgrade to v1.15 <br>
-v 1.2 22-may-2026 upgrade to v1.16 <br>
-v 1.3 28-may-2026 upgrade to v1.17 <br>
-v 1.4 14-july-2026 upgrade to v1.18 <br>
+* v 1.0 19-nov-2025
+* v 1.1 10-mrt-2026 upgrade to v1.15 
+* v 1.2 22-may-2026 upgrade to v1.16 
+* v 1.3 28-may-2026 upgrade to v1.17 
+* v 1.4 15-july-2026 upgrade to v1.18
 
 ## Purpose
 
@@ -121,13 +121,13 @@ Database prerequisites (as listed in Prerequisites):
 
 ```bash
 export CP_DB_MANAGE_SCHEMA="true" ## If false, DB schema must be manually deployed
-export CP_DB_HOST="postgresdatabasehost" ## Control Plane Postgress DB ## update this
+export CP_DB_HOST="psql-tibcoplatform-cae-3sujozm3.postgres.database.azure.com" ## Control Plane Postgress DB ## update this
 export CP_DB_PORT="5432" ## Control Plane Postgres DB Port ## update this
 export CP_DB_SECRET_NAME="cp-db-secret" ## Control Plane DB Secret ## update this
 export CP_DB_SSL_MODE="disable" # verify-full, disable. Disable is required since DevHub does not support SSL. Azure db server parameter 'require_secure_transport' should be set to 'OFF'
-export CP_DB_USER_NAME="db-user" ## Control Plane DB User ## update this
+export CP_DB_USER_NAME="tibcoplatform_cae_user" ## Control Plane DB User ## update this
 export CP_DB_PASSWORD='db-password' ## Control Plane DB Password ## update this
-export CP_DB_NAME="postgres" ## Control Plane default DB ## update this
+export CP_DB_NAME="tibcoplatform_cae_db" ## Control Plane default DB ## update this
 
 ### Database SSL Config
 export CP_DB_SSL_ROOT_CERT_SECRET_NAME="cp-db-ssl" ## Control Plane SSL Secret
