@@ -20,21 +20,21 @@ It also notes the sections that can be skipped when the customer already provide
 - [ 1. Create Ingress Namespace](#1-create-ingress-namespace)
 - [ 2. Create Default TLS Secret in Ingress namespace](#2-create-default-tls-secret-in-ingress-namespace)
 - [ 3. Install Ingress Controller as a Load Balancer](#3-install-ingress-controller-as-a--load-balancer)
-- [ 4. Install Storage](#4-install-storage)
-- [ 5. Create Control Plane Namespace](#5-create-cp-namespace)
-- [ 6. Create Control Plane Service Account](#6-create-cp-service-account)
-- [ 7. Create Control Plane DB Password Secret](#7-create-cp-db-password-secret)
-- [ 8. Create Control Plane DB TLS Certificate Secret [Optional]](#8-create-cp-db-tls-certificate-secret-optional)
+- [ 4. Storage classes](#4-storage-classes)
+- [ 5. Create Control Plane Namespace](#5-create-control-plane-namespace)
+- [ 6. Create Control Plane Service Account](#6-create-control-plane-service-account)
+- [ 7. Create Control Plane DB Password Secret](#7-create-control-plane-db-password-secret)
+- [ 8. Create Control Plane DB TLS Certificate Secret [Optional only if ssl is enabled]](#8-create-control-plane-db-tls-certificate-secret-optional-only-if-ssl-is-enabled)
 - [ 9. Create Session Keys Secret](#9-create-session-keys-secret)
-- [10. Create Control Plane Encryption Secret](#10-create-cp-encryption-secret)
+- [10. Create Control Plane Encryption Secret](#10-create-control-plane-encryption-secret)
 - [11. Install Platform Base](#11-install-platform-base)
 - [12. Update DNS](#12-update-dns)
 - [13. Install Platform Capability](#13-install-platform-capability)
-- [14. Log into CP](#14-log-in-cp)
-- [15. Create Subscription](#15-create-subscription)
-- [16. Data plane creation](#16-dataplane-creation)
+- [13. Log in CP](#13-log-in-cp)
+- [14. Configure Email server](#14-configure-email-server)
+- [15. Create subscription](#15-create-subscription)
+- [16. Dataplane creation](#16-dataplane-creation)
 - [17. Deploy developer hub capability](#17-deploy-developer-hub-capability)
-- [18. Developer hub post deployment configuration](#18-post-deployment-configuration)
 
 
 ## Prerequisites
@@ -42,12 +42,24 @@ It also notes the sections that can be skipped when the customer already provide
 1. Access to AKS K8s cluster
 2. Access from the AKS K8S cluster to a PostgreSQL 16.x Database (for instance private end point)
 3. Database server parameters to set:<br>
-    'require_secure_transport' --> 'OFF' (To change!!!) <br>
+    'require_secure_transport' --> 'OFF' (devhub does not support ssl for custom external db) <br>
     'max_connections' --> 150 <br>
     'azure.extensions' --> 'UUID-OSPP'<br>
-3. Access to a SMTP enabled Email Server. 
-4. Identify, and register DNS names for Control Plane admin console, subscription, devhub and bwce capabilities  
-5. Acquire certificates to secure Control Plane Services. Certificate CN and/or SAN must match Control Plane admin console, subscription, devhub and bwce capabilities.  
+4. Database user with rights to create databases and read/write access to tables
+5. Access to a SMTP enabled Email Server. 
+6. Identify, and register DNS names for Control Plane admin console, subscription, devhub and bwce capabilities  
+7. Acquire certificates to secure Control Plane Services. Certificate CN and/or SAN must match Control Plane admin console, subscription, devhub and bwce capabilities.  
+
+## DNS requirements
+
+Customer has a limites set of DNS entries without wildcards available in an certificate.
+The available DNS hostnames are:
+| DNS entry| purpose| 
+|----------|--------|
+|admincp-weu-bwce-cae.azure.airfranceklm.com| Admin Controlplane access|
+|controlplane-weu-bwce-cae.azure.airfranceklm.com| Subscription Controlplane access| 
+|devhub-weu-bwce-cae.azure.airfranceklm.com| Develop hub access|
+|bwcecap-weu-bwce-cae.azure.airfranceklm.com| BWCE Capability access|
 
 ## Environment Variables 
 
@@ -103,13 +115,13 @@ export STORAGE_RECLAIM_POLICY=Retain ## Fileshare Storage Class ## update this i
 ### Database
 Database prerequisites (as listed in Prerequisites):
 1. PostgreSQL 16.x database must be reachable from the AKS cluster.
-2. Database server parameter `require_secure_transport` should be `OFF` ## update this.
+2. Database server parameter `require_secure_transport` should be `OFF` 
 3. Database server parameter `max_connections` should be `150`.
 4. Database server parameter `azure.extensions` should include `UUID-OSPP`.
 
 ```bash
 export CP_DB_MANAGE_SCHEMA="true" ## If false, DB schema must be manually deployed
-export CP_DB_HOST="db.postgres.database.com" ## Control Plane Postgress DB ## update this
+export CP_DB_HOST="postgresdatabasehost" ## Control Plane Postgress DB ## update this
 export CP_DB_PORT="5432" ## Control Plane Postgres DB Port ## update this
 export CP_DB_SECRET_NAME="cp-db-secret" ## Control Plane DB Secret ## update this
 export CP_DB_SSL_MODE="disable" # verify-full, disable. Disable is required since DevHub does not support SSL. Azure db server parameter 'require_secure_transport' should be set to 'OFF'
@@ -138,12 +150,12 @@ export CP_OTEL_COLLECTOR_ENABLED="true" ## Enable/Disable Otel Collector. Requir
 ### Control Plane Config
 export CP_INSTANCE_ID="cp" ## Control Plane Instance ID  ## update this 
 export CP_NAMESPACE="${CP_INSTANCE_ID}-ns" ## Control Plane Namespace ## update this 
-export CP_NODE_CIDR="10.4.0.0/16" ## Node Subnet CIDR ## update this ## update this
-export CP_POD_CIDR="10.4.0.0/20"  ## K8s Pod CIDR ## update this ## update this
-export CP_SERVICE_CIDR="10.0.0.0/16" ## K8s Service CIDR ## update this ## update this
-export TP_BASE_DNS_DOMAIN="azure.company.tp" ## TP base domain ## update this ## update this
+export CP_NODE_CIDR="10.204.93.64/26" ## Node Subnet CIDR ## update this ## update this
+export CP_POD_CIDR="10.50.128.0/18"  ## K8s Pod CIDR ## update this ## update this
+export CP_SERVICE_CIDR="10.50.192.0/18" ## K8s Service CIDR ## update this ## update this
+export TP_BASE_DNS_DOMAIN="azure.airfranceklm.com" ## TP base domain ## update this ## update this
 export CP_ADMIN_HOST_PREFIX="admincp-weu-bwce-cae" ## Customizable Admin host prefix ## update this
-export CP_SUBSCRIPTION="controlplane-cp-weu-bwce-cae" ## Control Plane Subscription Name ## update this
+export CP_SUBSCRIPTION="controlplane-weu-bwce-cae" ## Control Plane Subscription Name ## update this
 export CP_STORAGE_PV_SIZE="10Gi" ## Control Plane PV Size ## update this
 export CP_HYBRID_CONNECTIVITY="true" ## Enable Hybrid Connectivity 
 ```
@@ -176,7 +188,12 @@ else
 fi
 ```
 
-## 1. Create Ingress Namespace (when haproxy ingress is not present in the k8s cluster)
+<details id="haproxy-ingress-not-installed">
+<summary style="font-size: 1.50em;"><strong>HaProxy ingress not installed</strong></summary>
+
+<details id="1-create-ingress-namespace">
+<summary style="font-size: 1.15em;"><strong>1. Create Ingress Namespace (when haproxy ingress is not present in the k8s cluster)</strong></summary>
+
 ```bash
 kubectl apply -f - <<EOF
 apiVersion: v1
@@ -188,7 +205,10 @@ metadata:
 EOF
 ```
 
-## 2. Create Default TLS Secret in Ingress namespace (when haproxy ingress is not present in the k8s cluster)
+</details>
+
+<details id="2-create-default-tls-secret-in-ingress-namespace">
+<summary style="font-size: 1.15em;"><strong>2. Create Default TLS Secret in Ingress namespace (when haproxy ingress is not present in the k8s cluster)</strong></summary>
 
 ```bash
 kubectl create secret tls ${DEFAULT_INGRESS_TLS_SECRET} \
@@ -197,7 +217,10 @@ kubectl create secret tls ${DEFAULT_INGRESS_TLS_SECRET} \
     --cert ${DEFAULT_INGRESS_CERT_FILE}
 ```
 
-## 3. Install Ingress Controller as a  Load Balancer (when haproxy ingress is not present in the k8s cluster)
+</details>
+
+<details id="3-install-ingress-controller-as-a--load-balancer">
+<summary style="font-size: 1.15em;"><strong>3. Install Ingress Controller as a  Load Balancer (when haproxy ingress is not present in the k8s cluster)</strong></summary>
 
 ### HAPROXY as Ingress Controller
 
@@ -260,21 +283,27 @@ kubectl delete --namespace ${TP_INGRESS_NAMESPACE} deployment echoserver
 ```
 
 
-## 4. Install Storage (when storage classes described in environment sections are not present in the k8s cluster)
+</details>
 
-### Bring your own storage classes (requirements)
+
+</details>
+
+
+## 4. Storage classes
+
+### Bring your own storage classes (optional)
 
 If customer-managed storage classes already exist, this step can be skipped. In that case, ensure the following requirements are met.
 
 1. Two classes must be available:
-RWO class (mapped to `${RWO_STORAGE_CLASS}`) for Azure Disk style block storage.
-RWX class (mapped to `${RWX_STORAGE_CLASS}`) for Azure File style shared storage.
+* RWO class (mapped to `${RWO_STORAGE_CLASS}`) for Azure Disk style block storage.
+* RWX class (mapped to `${RWX_STORAGE_CLASS}`) for Azure File style shared storage.
 2. `volumeBindingMode` should be `Immediate` for both classes.
 3. `allowVolumeExpansion` should be `true` for both classes.
 4. Reclaim policy must match customer policy and `${STORAGE_RECLAIM_POLICY}` (`Retain` or `Delete`).
 5. RWX class should support secure/private usage:
-`allowBlobPublicAccess: "false"`
-`networkEndpointType: privateEndpoint` when private endpoint is required.
+* `allowBlobPublicAccess: "false"`
+* `networkEndpointType: privateEndpoint` when private endpoint is required.
 6. RWX mount options should include `mfsymlinks`, `cache=strict`, and `nosharesock`.
 7. Do not rely on the cluster default storage class for Control Plane; explicitly use `${RWO_STORAGE_CLASS}` and `${RWX_STORAGE_CLASS}`.
 
@@ -747,6 +776,7 @@ Execute the first two steps:
  'Provision TIBCO® Developer Hub', Start<br>
 
  ### Resources
+ #### Database
   Select Database resource
   Add Database Resource
   Resource name: devhub-storage<br>
@@ -758,8 +788,8 @@ Execute the first two steps:
 
   These database details should refer to a postgres dba user and main database (default: postgres)
   
- ### Add Ingress Controller
-  Ingress Controller: 'nxinx' (this value is not used anymore in code, hence leave it to nginx)<br>
+ #### Route resource
+  Ingress Controller: 'HaProxy'<br>
   Resource name: devhub-ingress<br>
   Ingress Class name: 'haproxy'<br>
   Default FQDN: devhub-weu-bwce-cae.azure.airfranceklm.tp<br>
@@ -814,37 +844,3 @@ Validate the configured details and click Next to provision the developer hub.
 
 
 
-## 18. Post Deployment configuration
-
-Post deployement, nginx specific path regex on Developer Hub ingress must be updated to support haproxy based ingress.
-
-Change to apply to the ingress is
-
-| Before | After|
-|-|-|
-|path: /tibco/hub/(.*)<br>pathType: ImplementationSpecific|path: /tibco/hub<br>pathType: ImplementationSpecific|
-
-
-To find the correct ingress use below command
-
-``` bash
-kubectl get ingress -n <dp-namespace> | grep tibco-developer-hub
-```` 
-
-This will return the name of the ingress.
-
-
-To edit the ingress use below command
-
-``` bash
-kubectl edit ingress -n <dp-namespace> <ingress name>
-
-This will open the default editor (usually vim). Update the mentioned change. 
-To save and apply follow the steps:
-- press <esc> key
-- press colon (:)
-- press keys wq
-
-This will update the ingress.
-
-This concludes the setup of developer hub on dataplane with ha-proxy as ingress.
