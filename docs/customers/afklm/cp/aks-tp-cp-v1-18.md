@@ -6,25 +6,31 @@ v 1.2 22-may-2026 upgrade to v1.16 <br>
 v 1.3 28-may-2026 upgrade to v1.17 <br>
 v 1.4 14-july-2026 upgrade to v1.18 <br>
 
+## Purpose
+
+This document provides the step-by-step guidance to install, configure, and operate the TIBCO Platform Control Plane on AKS for the AFKLM environment. It is intended as the customer-specific runbook for preparing prerequisites, setting required values, and completing the Control Plane deployment with the approved platform settings.
+It also notes the sections that can be skipped when the customer already provides an equivalent solution, specifically sections 1, 2, 3, and 4.
+
+
+
 ## Table of Contents
 - [Prerequisites](#prerequisites)
 - [Environment Variables](#environment-variables)
   
-- [1. Create Ingress Namespace](#1-create-ingress-namespace)
-- [2. Create Default TLS Secret in Ingress namespace](#2-create-default-tls-secret-in-ingress-namespace)
-- [3. Install Ingress Controller as a Load Balancer](#3-install-ingress-controller-as-a--load-balancer)
-- [4. Install Storage](#4-install-storage)
-- [5. Create Control Plane Namespace](#5-create-cp-namespace)
-- [6. Create Control Plane Service Account](#6-create-cp-service-account)
-- [7. Create Control Plane DB Password Secret](#7-create-cp-db-password-secret)
-- [8. Create Control Plane DB TLS Certificate Secret [Optional]](#8-create-cp-db-tls-certificate-secret-optional)
-- [9. Create Session Keys Secret](#9-create-session-keys-secret)
+- [ 1. Create Ingress Namespace](#1-create-ingress-namespace)
+- [ 2. Create Default TLS Secret in Ingress namespace](#2-create-default-tls-secret-in-ingress-namespace)
+- [ 3. Install Ingress Controller as a Load Balancer](#3-install-ingress-controller-as-a--load-balancer)
+- [ 4. Install Storage](#4-install-storage)
+- [ 5. Create Control Plane Namespace](#5-create-cp-namespace)
+- [ 6. Create Control Plane Service Account](#6-create-cp-service-account)
+- [ 7. Create Control Plane DB Password Secret](#7-create-cp-db-password-secret)
+- [ 8. Create Control Plane DB TLS Certificate Secret [Optional]](#8-create-cp-db-tls-certificate-secret-optional)
+- [ 9. Create Session Keys Secret](#9-create-session-keys-secret)
 - [10. Create Control Plane Encryption Secret](#10-create-cp-encryption-secret)
 - [11. Install Platform Base](#11-install-platform-base)
-- [12. Install Platform Capabilities](#12-install-platform-capability)
-- [13. Update Core DNS](#13-update-dns)
+- [12. Update DNS](#12-update-dns)
+- [13. Install Platform Capability](#13-install-platform-capability)
 - [14. Log into CP](#14-log-in-cp)
-- [14a. Connect to customer Idp](#14-log-in-cp)
 - [15. Create Subscription](#15-create-subscription)
 - [16. Data plane creation](#16-dataplane-creation)
 - [17. Deploy developer hub capability](#17-deploy-developer-hub-capability)
@@ -45,29 +51,31 @@ v 1.4 14-july-2026 upgrade to v1.18 <br>
 
 ## Environment Variables 
 
+Review the values below before deployment and validate them against the target environment. Update any variable values where applicable so they match the customer-specific namespaces, registry settings, storage classes, DNS names, and database details.
+
 ### Namespaces
 ```bash
-export TP_INGRESS_NAMESPACE=ingress-system ## Ingress System Namespace 
-export STORAGE_NAMESPACE=storage-system ## Storage System Namespace
+export TP_INGRESS_NAMESPACE=ingress-system ## Ingress System Namespace ## only required if ingress is not present
+export STORAGE_NAMESPACE=storage-system ## Storage System Namespace ## only required if storage classes are not present
 ```
 
 ### Ingress TLS Config
 ```bash
 export TP_INGRESS_CLASS=haproxy ## Ingress Class nginx | haproxy
 export TP_INGRESS_SERVICE_TYPE=LoadBalancer ## Ingress Service type (LoadBalancer | NodePort)
-export TP_AUTHORIZED_IP_RANGE="0.0.0.0/0" ## Authorized source CIDR for ingress access (to be changed)
-export DEFAULT_INGRESS_KEY_FILE=private_key.pem ## Full path and filename of Private Key in PEM format
-export DEFAULT_INGRESS_CERT_FILE=public_cert.pem ## Full path and filename of Public Key in PEM format
-export DEFAULT_INGRESS_TLS_SECRET=ingress-cert-secret ## Default TLS Secret name for Ingress to be created during helm installation
+export TP_AUTHORIZED_IP_RANGE="0.0.0.0/0" ## Authorized source CIDR for ingress access ## update this
+export DEFAULT_INGRESS_KEY_FILE=private_key.pem ## Full path and filename of Private Key in PEM format ## update this
+export DEFAULT_INGRESS_CERT_FILE=public_cert.pem ## Full path and filename of Public Key in PEM format ## update this
+export DEFAULT_INGRESS_TLS_SECRET=ingress-cert-secret ## Default TLS Secret name for Ingress to be created during helm installation ## only update this when customer has secret naming convention
 
 ```
 
 ### Chart Repo
 ```bash
-export TP_CHART_REGISTRY="https://tibcosoftware.github.io" ## TP Helm Registry or custom 
-export TP_CHART_REPO="tp-helm-charts" ## TP Helm Chart Repo
-export TP_CHART_REPO_USER_NAME="repo-user" ## TP Helm Chart Repo User. Ignore for public repo
-export TP_CHART_REPO_TOKEN="repo-passwd" ## TP Helm Chart Repo Password. Ignore for public repo
+export TP_CHART_REGISTRY="https://tibcosoftware.github.io" ## TP Helm Registry or custom ## only update this when using custom helm chart registry
+export TP_CHART_REPO="tp-helm-charts" ## TP Helm Chart Repo ## only update this when using custom helm chart registry
+export TP_CHART_REPO_USER_NAME="repo-user" ## TP Helm Chart Repo User. Ignore for public repo ## only update this when using custom helm chart registry
+export TP_CHART_REPO_TOKEN="repo-passwd" ## TP Helm Chart Repo Password. Ignore for public repo ## only update this when using custom helm chart registry
 export IS_OCI=false ## Set true for OCI repo
 ```
 
@@ -75,71 +83,69 @@ export IS_OCI=false ## Set true for OCI repo
 Image repository details and credentials can be retrieved from the Control Plane user interface under Settings.
 
 ```bash
-export CP_CONTAINER_REGISTRY="csgprduswrepoedge.jfrog.io" ## TP Image Registry, default TIBCO JFrog
-export CP_CONTAINER_REGISTRY_REPOSITORY="tibco-platform-docker-prod"  ## TP Image Repo, default TIBCO JFrog
-export CP_CONTAINER_REGISTRY_USERNAME="image-registry-user" ## TP Image Registry User, TIBCO JFrog Credentials from Control Plane SaaS (to be changed)
-export CP_CONTAINER_REGISTRY_PASSWORD="image-registry-password" ## TP Image Registry User, TIBCO JFrog Credentials from Control Plane SaaS (to be changed)
+export CP_CONTAINER_REGISTRY="csgprduswrepoedge.jfrog.io" ## TP Image Registry, default TIBCO JFrog ## update this
+export CP_CONTAINER_REGISTRY_REPOSITORY="tibco-platform-docker-prod"  ## TP Image Repo, default TIBCO JFrog ## update this
+export CP_CONTAINER_REGISTRY_USERNAME="image-registry-user" ## TP Image Registry User, TIBCO JFrog Credentials from Control Plane SaaS ## update this
+export CP_CONTAINER_REGISTRY_PASSWORD="image-registry-password" ## TP Image Registry User, TIBCO JFrog Credentials from Control Plane SaaS ## update this
 ```
 
 ### Storage
 Customer can bring their own storage classes or create the storage system by following this document.
 
 ```bash
-export RWO_STORAGE_CLASS=azure-disk-sc ## Disk Storage Class
-export RWO_STORAGE_SKU=Premium_LRS ## Disk Storage SKU
-export RWX_STORAGE_CLASS=azure-files-sc ## Fileshare Storage Class
-export RWX_STORAGE_SKU=Premium_LRS ## Fileshare Storage Class
-export STORAGE_RECLAIM_POLICY=Retain ## Fileshare Storage Class
+export RWO_STORAGE_CLASS=azure-disk-sc ## Disk Storage Class ## update this if using own storage classes
+export RWO_STORAGE_SKU=Premium_LRS ## Disk Storage SKU ## update this if using own storage classes
+export RWX_STORAGE_CLASS=azure-files-sc ## Fileshare Storage Class ## update this if using own storage classes
+export RWX_STORAGE_SKU=Premium_LRS ## Fileshare Storage Class ## update this if using own storage classes
+export STORAGE_RECLAIM_POLICY=Retain ## Fileshare Storage Class ## update this if using own storage classes
 ```
 
 ### Database
 Database prerequisites (as listed in Prerequisites):
 1. PostgreSQL 16.x database must be reachable from the AKS cluster.
-2. Database server parameter `require_secure_transport` should be `OFF` (to be changed).
+2. Database server parameter `require_secure_transport` should be `OFF` ## update this.
 3. Database server parameter `max_connections` should be `150`.
 4. Database server parameter `azure.extensions` should include `UUID-OSPP`.
 
 ```bash
 export CP_DB_MANAGE_SCHEMA="true" ## If false, DB schema must be manually deployed
-export CP_DB_HOST="db.postgres.database.com" ## Control Plane Postgress DB (to be changed)
-export CP_DB_PORT="5432" ## Control Plane Postgres DB Port (to be changed)
-export CP_DB_SECRET_NAME="cp-db-secret" ## Control Plane DB Secret (to be changed)
+export CP_DB_HOST="db.postgres.database.com" ## Control Plane Postgress DB ## update this
+export CP_DB_PORT="5432" ## Control Plane Postgres DB Port ## update this
+export CP_DB_SECRET_NAME="cp-db-secret" ## Control Plane DB Secret ## update this
 export CP_DB_SSL_MODE="disable" # verify-full, disable. Disable is required since DevHub does not support SSL. Azure db server parameter 'require_secure_transport' should be set to 'OFF'
-export CP_DB_USER_NAME="db-user" ## Control Plane DB User (to be changed)
-export CP_DB_PASSWORD='db-password' ## Control Plane DB Password (to be changed)
-export CP_DB_NAME="postgres" ## Control Plane default DB (to be changed)
+export CP_DB_USER_NAME="db-user" ## Control Plane DB User ## update this
+export CP_DB_PASSWORD='db-password' ## Control Plane DB Password ## update this
+export CP_DB_NAME="postgres" ## Control Plane default DB ## update this
 
 ### Database SSL Config
 export CP_DB_SSL_ROOT_CERT_SECRET_NAME="cp-db-ssl" ## Control Plane SSL Secret
-export CP_DB_SSL_ROOT_CERT_FILENAME="cp_db_ssl.cert" ## Full path and filename of database ssl certificate (to be changed)
+export CP_DB_SSL_ROOT_CERT_FILENAME="cp_db_ssl.cert" ## Full path and filename of database ssl certificate ## update this
 export CP_DB_SSL_ROOT_CERT_FILE="db_ssl.pem" ## Control Plane SSL File name and path in PEM format
 ```
 ### Logging 
 ```bash
-export CP_ELASTIC_ENDPOINT="https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200" ## Elasticsearch endpoint for CP Logs, and Audits
-export CP_ELASTIC_USER="elastic" ## Elasticsearch User
-export CP_ELASTIC_PASSWORD="elasticpassword" ## Elasticsearch Password
-export CP_AUDIT_INDEX="tibco-cp-audit" ## CP Audits Index
-export CP_LOG_INDEX="tibco-cp-log" ## CP Logs Index
-export CP_LOG_ENABLED="false" ## Enable/Disable CP FluentBit
-export CP_OTEL_COLLECTOR_ENABLED="true" ## Enable/Disable Otel Collector. Required for Audit Trail and CP logs
+export CP_ELASTIC_ENDPOINT="https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200" ## Elasticsearch endpoint for CP Logs, and Audits ## update this
+export CP_ELASTIC_USER="elastic" ## Elasticsearch User ## update this
+export CP_ELASTIC_PASSWORD="elasticpassword" ## Elasticsearch Password ## update this
+export CP_AUDIT_INDEX="tibco-cp-audit" ## CP Audits Index ## update this
+export CP_LOG_INDEX="tibco-cp-log" ## CP Logs Index ## update this
+export CP_LOG_ENABLED="false" ## Enable/Disable CP FluentBit ## update this
+export CP_OTEL_COLLECTOR_ENABLED="true" ## Enable/Disable Otel Collector. Required for Audit Trail and CP logs ## update this
 ```
 
 ### Control Plane Bootstrap Config
 ```bash
 ### Control Plane Config
-export CP_INSTANCE_ID="cp" ## Control Plane Instance ID 
-export CP_NAMESPACE="${CP_INSTANCE_ID}-ns" ## Control Plane Namespace
-export CP_NODE_CIDR="10.4.0.0/16" ## Node Subnet CIDR (to be changed)
-export CP_POD_CIDR="10.4.0.0/20"  ## K8s Pod CIDR (to be changed)
-export CP_SERVICE_CIDR="10.0.0.0/16" ## K8s Service CIDR (to be changed)
-export TP_BASE_DNS_DOMAIN="azure.company.tp" ## TP base domain (to be changed)
-export CP_ADMIN_HOST_PREFIX="admin-cp-weu-bwce-cae" ## Customizable Admin host prefix
-export CP_SERVICE_DNS_DOMAIN="${TP_BASE_DNS_DOMAIN}" ## Control Plane Router/UI DNS domain 
-export CP_TUNNEL_DNS_DOMAIN="${TP_BASE_DNS_DOMAIN}" ## Control Plane Tunnel DNS domain 
-export CP_SUBSCRIPTION="dev" ## Control Plane Subscription Name
-export CP_STORAGE_PV_SIZE="10Gi" ## Control Plane PV Size
-export CP_HYBRID_CONNECTIVITY="true" ## Enable Hybrid Connectivity
+export CP_INSTANCE_ID="cp" ## Control Plane Instance ID  ## update this 
+export CP_NAMESPACE="${CP_INSTANCE_ID}-ns" ## Control Plane Namespace ## update this 
+export CP_NODE_CIDR="10.4.0.0/16" ## Node Subnet CIDR ## update this ## update this
+export CP_POD_CIDR="10.4.0.0/20"  ## K8s Pod CIDR ## update this ## update this
+export CP_SERVICE_CIDR="10.0.0.0/16" ## K8s Service CIDR ## update this ## update this
+export TP_BASE_DNS_DOMAIN="azure.company.tp" ## TP base domain ## update this ## update this
+export CP_ADMIN_HOST_PREFIX="admin-cp-weu-bwce-cae" ## Customizable Admin host prefix ## update this
+export CP_SUBSCRIPTION="dev" ## Control Plane Subscription Name ## update this
+export CP_STORAGE_PV_SIZE="10Gi" ## Control Plane PV Size ## update this
+export CP_HYBRID_CONNECTIVITY="true" ## Enable Hybrid Connectivity 
 ```
 
 ### Control Plane Base Config
@@ -147,18 +153,18 @@ Customer ID can be retrieved from the Control Plane user interface under Setting
 
 ```bash
 export CP_PLATFORM_BASE_VERSION=1.18.0 ## Control Plane Base Chart Version
-export CP_ADMIN_CUSTOMER_ID="424242" ## Customer ID, available on SaaS CP
-export CP_ENABLE_MCP_SERVERS="true" ## Enable MCP Servers
+export CP_ADMIN_CUSTOMER_ID="424242" ## Customer ID, available on SaaS CP ## update this
+export CP_ENABLE_MCP_SERVERS="true" ## Enable MCP Servers 
 export ENABLE_API_INIT=false ## TRUE to enable API based Admin and CP initialization , e2e automation
 
 ## Control Plane bootstrap admin user details
-export CP_ADMIN_EMAIL="cpadmin@tibco.com" ## Control Plane Admin user used for bootstrap
+export CP_ADMIN_EMAIL="cpadmin@tibco.com" ## Control Plane Admin user used for bootstrap 
 export CP_ADMIN_INITIAL_PASSWORD="adminpassword" ## Control Plane Admin user for bootstrap Initial Password
 ```
 
 ## Dataplane base Config
 ``` bash
-export DP_NAMESPACE=dp1
+export DP_NAMESPACE=dp1 ## update this
 ```
 
 ### Adjust for HTTPS/OCI Helm Repo
@@ -603,7 +609,7 @@ Restart coredns:
 kubectl rollout restart deployment coredns -n kube-system
 ```
 
-## 12. Install Platform Capability
+## 13. Install Platform Capability
 
 Starting 1.13.0 Platform capabilities are decoupled, and are installed separately. 
 
