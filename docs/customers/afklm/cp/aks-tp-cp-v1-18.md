@@ -38,8 +38,8 @@ It also notes the sections that can be skipped when the customer already provide
 
 
 ## Prerequisites
-> **_NOTE:_** Documented with TIBCO Platform 1.18.0  
-1. Access to AKS K8s cluster
+> **_NOTE:_** Documented with TIBCO Platform 1.18.0  <br>
+1. Access to AKS K8s cluster from command line with kubectl and helm (3.17.0 or later)
 2. Access from the AKS K8S cluster to a PostgreSQL 16.x Database (for instance private end point)
 3. Database server parameters to set:<br>
     'require_secure_transport' --> 'OFF' (devhub does not support ssl for custom external db) <br>
@@ -47,7 +47,7 @@ It also notes the sections that can be skipped when the customer already provide
     'azure.extensions' --> 'UUID-OSPP'<br>
 4. Database user with rights to create databases and read/write access to tables
 5. Access to a SMTP enabled Email Server. 
-6. Identify, and register DNS names for Control Plane admin console, subscription, devhub and bwce capabilities  
+6. Registered DNS names for Control Plane admin console, subscription, devhub and bwce capabilities  
 7. Acquire certificates to secure Control Plane Services. Certificate CN and/or SAN must match Control Plane admin console, subscription, devhub and bwce capabilities.  
 
 ## DNS requirements
