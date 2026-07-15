@@ -142,8 +142,8 @@ export CP_NODE_CIDR="10.4.0.0/16" ## Node Subnet CIDR ## update this ## update t
 export CP_POD_CIDR="10.4.0.0/20"  ## K8s Pod CIDR ## update this ## update this
 export CP_SERVICE_CIDR="10.0.0.0/16" ## K8s Service CIDR ## update this ## update this
 export TP_BASE_DNS_DOMAIN="azure.company.tp" ## TP base domain ## update this ## update this
-export CP_ADMIN_HOST_PREFIX="admin-cp-weu-bwce-cae" ## Customizable Admin host prefix ## update this
-export CP_SUBSCRIPTION="dev" ## Control Plane Subscription Name ## update this
+export CP_ADMIN_HOST_PREFIX="admincp-weu-bwce-cae" ## Customizable Admin host prefix ## update this
+export CP_SUBSCRIPTION="controlplane-cp-weu-bwce-cae" ## Control Plane Subscription Name ## update this
 export CP_STORAGE_PV_SIZE="10Gi" ## Control Plane PV Size ## update this
 export CP_HYBRID_CONNECTIVITY="true" ## Enable Hybrid Connectivity 
 ```
@@ -673,17 +673,22 @@ Configure the email server connection.
 ## 15. Create subscription
 Create a subscription and check the mailserver to open the activation link.<br>
 
+For email a customer email address can be used now in the previous step the email server was configured.
+For hostprefix the dns name without the base DNS DOMAIN (TP_BASE_DNS_DOMAIN) can be used (CP_SUBSCRIPTION)
+
 1) Click 'Subscriptions'
 2) Click 'Provision via Editor'
 3) Update values of userDetails/email  and subscriptionDetails/hostprefix
 4) Click 'Provision'
 
-welcome mail is now sent to the email server with activation link
+A Welcome mail is now sent to the email server with activation link
 
 5) Sign out of the Control Plane UI
 5) Open the activation link and add the user details and password.
 6) Log into the Control Plane with just created subscription details
 7) Goto 'User Management/Users', select the user and assign all permissions to this subscribtion admin user
+
+It may occur that the user is not allowed update the permissions, log out and log in again and try again. 
 
 ## 16. Dataplane creation
 
@@ -707,7 +712,9 @@ In 'Helm Chart Repository section' select Global Repository<br>
 
 
 5) 'Custom Certificate'. 
-This will be created in one of the next steps. The secret name used is 'tp-custom-cert'. <br>
+The secret name used is 'tp-custom-cert'. <br>
+This will be created in one of the next steps. 
+
 Next
 
 6) Validate the data on the Preview page. <br>Next
