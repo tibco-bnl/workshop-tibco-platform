@@ -49,13 +49,13 @@ v 1.4 14-july-2026 upgrade to v1.18 <br>
 ```bash
 export TP_INGRESS_NAMESPACE=ingress-system ## Ingress System Namespace 
 export STORAGE_NAMESPACE=storage-system ## Storage System Namespace
-export ELASTIC_NAMESPACE=elastic-system ## Elastic System Namespace
-export PROMETHEUS_NAMESPACE=prometheus-system ## Prometheus System Namespace
 ```
 
 ### Ingress TLS Config
 ```bash
 export TP_INGRESS_CLASS=haproxy ## Ingress Class nginx | haproxy
+export TP_INGRESS_SERVICE_TYPE=LoadBalancer ## Ingress Service type (LoadBalancer | NodePort)
+export TP_AUTHORIZED_IP_RANGE="0.0.0.0/0" ## Authorized source CIDR for ingress access (to be changed)
 export DEFAULT_INGRESS_KEY_FILE=private_key.pem ## Full path and filename of Private Key in PEM format
 export DEFAULT_INGRESS_CERT_FILE=public_cert.pem ## Full path and filename of Public Key in PEM format
 export DEFAULT_INGRESS_TLS_SECRET=ingress-cert-secret ## Default TLS Secret name for Ingress to be created during helm installation
@@ -72,6 +72,8 @@ export IS_OCI=false ## Set true for OCI repo
 ```
 
 ### Image Repo
+Image repository details and credentials can be retrieved from the Control Plane user interface under Settings.
+
 ```bash
 export CP_CONTAINER_REGISTRY="csgprduswrepoedge.jfrog.io" ## TP Image Registry, default TIBCO JFrog
 export CP_CONTAINER_REGISTRY_REPOSITORY="tibco-platform-docker-prod"  ## TP Image Repo, default TIBCO JFrog
@@ -80,6 +82,8 @@ export CP_CONTAINER_REGISTRY_PASSWORD="image-registry-password" ## TP Image Regi
 ```
 
 ### Storage
+Customer can bring their own storage classes or create the storage system by following this document.
+
 ```bash
 export RWO_STORAGE_CLASS=azure-disk-sc ## Disk Storage Class
 export RWO_STORAGE_SKU=Premium_LRS ## Disk Storage SKU
@@ -89,6 +93,12 @@ export STORAGE_RECLAIM_POLICY=Retain ## Fileshare Storage Class
 ```
 
 ### Database
+Database prerequisites (as listed in Prerequisites):
+1. PostgreSQL 16.x database must be reachable from the AKS cluster.
+2. Database server parameter `require_secure_transport` should be `OFF` (to be changed).
+3. Database server parameter `max_connections` should be `150`.
+4. Database server parameter `azure.extensions` should include `UUID-OSPP`.
+
 ```bash
 export CP_DB_MANAGE_SCHEMA="true" ## If false, DB schema must be manually deployed
 export CP_DB_HOST="db.postgres.database.com" ## Control Plane Postgress DB (to be changed)
@@ -123,31 +133,32 @@ export CP_NAMESPACE="${CP_INSTANCE_ID}-ns" ## Control Plane Namespace
 export CP_NODE_CIDR="10.4.0.0/16" ## Node Subnet CIDR (to be changed)
 export CP_POD_CIDR="10.4.0.0/20"  ## K8s Pod CIDR (to be changed)
 export CP_SERVICE_CIDR="10.0.0.0/16" ## K8s Service CIDR (to be changed)
-export TP_BASE_DNS_DOMAIN="azure.airfranceklm.tp" ## TP base domain (to be changed)
+export TP_BASE_DNS_DOMAIN="azure.company.tp" ## TP base domain (to be changed)
 export CP_ADMIN_HOST_PREFIX="admin-cp-weu-bwce-cae" ## Customizable Admin host prefix
 export CP_SERVICE_DNS_DOMAIN="${TP_BASE_DNS_DOMAIN}" ## Control Plane Router/UI DNS domain 
 export CP_TUNNEL_DNS_DOMAIN="${TP_BASE_DNS_DOMAIN}" ## Control Plane Tunnel DNS domain 
 export CP_SUBSCRIPTION="dev" ## Control Plane Subscription Name
 export CP_STORAGE_PV_SIZE="10Gi" ## Control Plane PV Size
 export CP_HYBRID_CONNECTIVITY="true" ## Enable Hybrid Connectivity
-
 ```
 
 ### Control Plane Base Config
+Customer ID can be retrieved from the Control Plane user interface under Settings.
+
 ```bash
 export CP_PLATFORM_BASE_VERSION=1.18.0 ## Control Plane Base Chart Version
 export CP_ADMIN_CUSTOMER_ID="424242" ## Customer ID, available on SaaS CP
-export CP_ENABLE_MCP_SERVERS="false" ## Enable MCP Servers
+export CP_ENABLE_MCP_SERVERS="true" ## Enable MCP Servers
 export ENABLE_API_INIT=false ## TRUE to enable API based Admin and CP initialization , e2e automation
 
 ## Control Plane bootstrap admin user details
-export CP_ADMIN_EMAIL="platform-admin@customer.com" ## Control Plane Admin user used for bootstrap
+export CP_ADMIN_EMAIL="cpadmin@tibco.com" ## Control Plane Admin user used for bootstrap
 export CP_ADMIN_INITIAL_PASSWORD="adminpassword" ## Control Plane Admin user for bootstrap Initial Password
 ```
 
 ## Dataplane base Config
 ``` bash
-export DP_NAMESPACE=dp
+export DP_NAMESPACE=dp1
 ```
 
 ### Adjust for HTTPS/OCI Helm Repo
@@ -244,6 +255,33 @@ kubectl delete --namespace ${TP_INGRESS_NAMESPACE} deployment echoserver
 
 
 ## 4. Install Storage (when storage classes described in environment sections are not present in the k8s cluster)
+
+### Bring your own storage classes (requirements)
+
+If customer-managed storage classes already exist, this step can be skipped. In that case, ensure the following requirements are met.
+
+1. Two classes must be available:
+RWO class (mapped to `${RWO_STORAGE_CLASS}`) for Azure Disk style block storage.
+RWX class (mapped to `${RWX_STORAGE_CLASS}`) for Azure File style shared storage.
+2. `volumeBindingMode` should be `Immediate` for both classes.
+3. `allowVolumeExpansion` should be `true` for both classes.
+4. Reclaim policy must match customer policy and `${STORAGE_RECLAIM_POLICY}` (`Retain` or `Delete`).
+5. RWX class should support secure/private usage:
+`allowBlobPublicAccess: "false"`
+`networkEndpointType: privateEndpoint` when private endpoint is required.
+6. RWX mount options should include `mfsymlinks`, `cache=strict`, and `nosharesock`.
+7. Do not rely on the cluster default storage class for Control Plane; explicitly use `${RWO_STORAGE_CLASS}` and `${RWX_STORAGE_CLASS}`.
+
+Quick validation commands:
+
+```bash
+kubectl get storageclass ${RWO_STORAGE_CLASS} ${RWX_STORAGE_CLASS}
+kubectl describe storageclass ${RWO_STORAGE_CLASS}
+kubectl describe storageclass ${RWX_STORAGE_CLASS}
+```
+
+If customer-managed storage classes are not provided, use the dp-config-aks-storage chart command below to create the required storage classes.
+
 ```bash
 helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
   --username ${TP_CHART_REPO_USER_NAME} --password ${TP_CHART_REPO_TOKEN} \
@@ -395,16 +433,6 @@ global:
     cpEncryptionSecretKey: CP_ENCRYPTION_SECRET      
     cpEncryptionSecretName: cporch-encryption-secret
     enable_api_based_initialization: ${ENABLE_API_INIT}
-    emailServerType: smtp    
-    emailServer:
-      smtp:
-        password: "${CP_MAIL_SERVER_PASSWORD}"
-        port: "${CP_MAIL_SERVER_PORT_NUMBER}"
-        server: ${CP_MAIL_SERVER_ADDRESS}
-        username: "${CP_MAIL_SERVER_USERNAME}"
-    fromAndReplyToEmailAddress: ${CP_FROM_REPLY_TO_EMAIL} 
-    cronJobReportsEmailAlias: ${CP_JOB_REPORT_TO_EMAIL}
-    platformEmailNotificationCcAddresses: ${CP_NOTIFICATION_CC_EMAIL}
       
     adminInitialPassword: ${CP_ADMIN_INITIAL_PASSWORD}    
     admin:
