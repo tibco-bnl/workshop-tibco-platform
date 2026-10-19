@@ -1,11 +1,11 @@
 # TIBCO Platform Control Plane on AKS
 
-* v 1.0 19-nov-2025
-* v 1.1 10-mrt-2026 upgrade to v1.15 
-* v 1.2 22-may-2026 upgrade to v1.16 
-* v 1.3 28-may-2026 upgrade to v1.17 
-* v 1.4 15-july-2026 upgrade to v1.18
-* v 1.5 15-october-2026 upgrade to v1.21
+* v 1.0 19-November-2025
+* v 1.1 10-March-2026 upgrade to v1.15 
+* v 1.2 22-May-2026 upgrade to v1.16 
+* v 1.3 28-May-2026 upgrade to v1.17 
+* v 1.4 15-July-2026 upgrade to v1.18
+* v 1.5 19-October-2026 upgrade to v1.21
 
 ## Purpose
 
@@ -57,10 +57,10 @@ Customer has a limites set of DNS entries without wildcards available in an cert
 The available DNS hostnames are:
 | DNS entry| purpose| 
 |----------|--------|
-|admincp-weu-bwce-cae.azure.airfranceklm.com| Admin Controlplane access|
-|controlplane-weu-bwce-cae.azure.airfranceklm.com| Subscription Controlplane access| 
-|devhub-weu-bwce-cae.azure.airfranceklm.com| Develop hub access|
-|bwcecap-weu-bwce-cae.azure.airfranceklm.com| BWCE Capability access|
+|admincp-frc-bwce-cae.azure.airfranceklm.com| Admin Controlplane access|
+|controlplane-frc-bwce-cae.azure.airfranceklm.com| Subscription Controlplane access| 
+|devhub-frc-bwce-cae.azure.airfranceklm.com| Develop hub access|
+|bwcecap-frc-bwce-cae.azure.airfranceklm.com| BWCE Capability access|
 
 ## Environment Variables 
 
@@ -76,10 +76,13 @@ export STORAGE_NAMESPACE=storage-system ## Storage System Namespace ## only requ
 ```bash
 export TP_INGRESS_CLASS=haproxy ## Ingress Class nginx | haproxy
 export TP_INGRESS_SERVICE_TYPE=LoadBalancer ## Ingress Service type (LoadBalancer | NodePort)
-export TP_AUTHORIZED_IP_RANGE="0.0.0.0/0" ## Authorized source CIDR for ingress access ## update this
+
 export DEFAULT_INGRESS_KEY_FILE=private_key.pem ## Full path and filename of Private Key in PEM format ## update this
 export DEFAULT_INGRESS_CERT_FILE=public_cert.pem ## Full path and filename of Public Key in PEM format ## update this
 export DEFAULT_INGRESS_TLS_SECRET=ingress-cert-secret ## Default TLS Secret name for Ingress to be created during helm installation ## only update this when customer has secret naming convention
+
+## Authorized source CIDR for ingress access, update this to allow ip ranges to ingress. Only required if new haProxy ingress is created during this installation.
+export TP_AUTHORIZED_IP_RANGE="0.0.0.0/0" 
 
 ```
 
@@ -125,17 +128,20 @@ export CP_DB_MANAGE_SCHEMA="false" ## If false, DB schema must be manually deplo
 export CP_DB_HOST="psql-tibcoplatform-cae-3sujozm3.postgres.database.azure.com" ## Control Plane Postgress DB ## update this
 export CP_DB_PORT="5432" ## Control Plane Postgres DB Port ## update this
 export CP_DB_SECRET_NAME="cp-db-secret" ## Control Plane DB Secret ## update this
-export CP_DB_SSL_MODE="disable" # verify-full, disable. Disable is required since DevHub does not support SSL. Azure db server parameter 'require_secure_transport' should be set to 'OFF'
+export CP_DB_SSL_MODE="disable" # verify-full, disable. Disable is required since DevHub does not support SSL. Azure db server parameter 'require_secure_transport' should be'OFF'
 export CP_DB_USER_NAME="tibcoplatform_cae_user" ## Control Plane DB User ## update this
 export CP_DB_PASSWORD='db-password' ## Control Plane DB Password ## update this
 export CP_DB_NAME="tibcoplatform_cae_db" ## Control Plane default DB ## update this
 
+```
+<!--
 ### Database SSL Config
 export CP_DB_SSL_ROOT_CERT_SECRET_NAME="cp-db-ssl" ## Control Plane SSL Secret
 export CP_DB_SSL_ROOT_CERT_FILENAME="cp_db_ssl.cert" ## Full path and filename of database ssl certificate ## update this
 export CP_DB_SSL_ROOT_CERT_FILE="db_ssl.pem" ## Control Plane SSL File name and path in PEM format
 ```
-### Logging 
+--->
+<!-- ### Logging 
 ```bash
 export CP_ELASTIC_ENDPOINT="https://dp-config-es-es-http.elastic-system.svc.cluster.local:9200" ## Elasticsearch endpoint for CP Logs, and Audits ## update this
 export CP_ELASTIC_USER="elastic" ## Elasticsearch User ## update this
@@ -143,9 +149,9 @@ export CP_ELASTIC_PASSWORD="elasticpassword" ## Elasticsearch Password ## update
 export CP_AUDIT_INDEX="tibco-cp-audit" ## CP Audits Index ## update this
 export CP_LOG_INDEX="tibco-cp-log" ## CP Logs Index ## update this
 export CP_LOG_ENABLED="false" ## Enable/Disable CP FluentBit ## update this
-export CP_OTEL_COLLECTOR_ENABLED="true" ## Enable/Disable Otel Collector. Required for Audit Trail and CP logs ## update this
+export CP_OTEL_COLLECTOR_ENABLED="false" ## Enable/Disable Otel Collector. Required for Audit Trail and CP logs ## update this
 ```
-
+-->
 ### Control Plane Bootstrap Config
 ```bash
 ### Control Plane Config
@@ -155,8 +161,8 @@ export CP_NODE_CIDR="10.204.93.64/26" ## Node Subnet CIDR ## update this ## upda
 export CP_POD_CIDR="10.50.128.0/18"  ## K8s Pod CIDR ## update this ## update this
 export CP_SERVICE_CIDR="10.50.192.0/18" ## K8s Service CIDR ## update this ## update this
 export TP_BASE_DNS_DOMAIN="azure.airfranceklm.com" ## TP base domain ## update this ## update this
-export CP_ADMIN_HOST_PREFIX="admincp-weu-bwce-cae" ## Customizable Admin host prefix ## update this
-export CP_SUBSCRIPTION="controlplane-weu-bwce-cae" ## Control Plane Subscription Name ## update this
+export CP_ADMIN_HOST_PREFIX="admincp-frc-bwce-cae" ## Customizable Admin host prefix ## update this
+export CP_SUBSCRIPTION="controlplane-frc-bwce-cae" ## Control Plane Subscription Name ## update this
 export CP_STORAGE_PV_SIZE="10Gi" ## Control Plane PV Size ## update this
 export CP_HYBRID_CONNECTIVITY="true" ## Enable Hybrid Connectivity 
 ```
@@ -171,6 +177,7 @@ export CP_ENABLE_MCP_SERVERS="true" ## Enable MCP Servers
 export ENABLE_API_INIT=false ## TRUE to enable API based Admin and CP initialization , e2e automation
 
 ## Control Plane bootstrap admin user details
+### These details are for internal controlplane idp only to perform the initial bootstrap and login.
 export CP_ADMIN_EMAIL="cpadmin@tibco.com" ## Control Plane Admin user used for bootstrap 
 export CP_ADMIN_INITIAL_PASSWORD="adminpassword" ## Control Plane Admin user for bootstrap Initial Password
 ```
@@ -193,107 +200,103 @@ fi
 <summary style="font-size: 1.50em;"><strong>HaProxy ingress not installed</strong></summary>
 
 <details id="1-create-ingress-namespace">
-<summary style="font-size: 1.15em;"><strong>1. Create Ingress Namespace (when haproxy ingress is not present in the k8s cluster)</strong></summary>
+    <summary style="font-size: 1.15em;"><strong>1. Create Ingress Namespace (when haproxy ingress is not present in the k8s cluster)</strong></summary>
 
-```bash
-kubectl apply -f - <<EOF
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: ${TP_INGRESS_NAMESPACE}
-  labels:
-    platform.tibco.com/controlplane-instance-id: ${CP_INSTANCE_ID}
-EOF
-```
-
+    ```bash
+    kubectl apply -f - <<EOF
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: ${TP_INGRESS_NAMESPACE}
+      labels:
+        platform.tibco.com/controlplane-instance-id: ${CP_INSTANCE_ID}
+    EOF
+    ```
 </details>
 
 <details id="2-create-default-tls-secret-in-ingress-namespace">
-<summary style="font-size: 1.15em;"><strong>2. Create Default TLS Secret in Ingress namespace (when haproxy ingress is not present in the k8s cluster)</strong></summary>
+    <summary style="font-size: 1.15em;"><strong>2. Create Default TLS Secret in Ingress namespace (when haproxy ingress is not present in the k8s cluster)</strong></summary>
 
-```bash
-kubectl create secret tls ${DEFAULT_INGRESS_TLS_SECRET} \
-    -n  ${TP_INGRESS_NAMESPACE} \
-    --key ${DEFAULT_INGRESS_KEY_FILE} \
-    --cert ${DEFAULT_INGRESS_CERT_FILE}
-```
+    ```bash
+    kubectl create secret tls ${DEFAULT_INGRESS_TLS_SECRET} \
+        -n  ${TP_INGRESS_NAMESPACE} \
+        --key ${DEFAULT_INGRESS_KEY_FILE} \
+        --cert ${DEFAULT_INGRESS_CERT_FILE}
+    ```
 
 </details>
 
 <details id="3-install-ingress-controller-as-a--load-balancer">
-<summary style="font-size: 1.15em;"><strong>3. Install Ingress Controller as a  Load Balancer (when haproxy ingress is not present in the k8s cluster)</strong></summary>
+    <summary style="font-size: 1.15em;"><strong>3. Install Ingress Controller as a  Load Balancer (when haproxy ingress is not present in the k8s cluster)</strong></summary>
 
-### HAPROXY as Ingress Controller
+    ### HAPROXY as Ingress Controller
 
-```bash
-helm upgrade --install --wait --timeout 1h --create-namespace  \
-  -n  ${TP_INGRESS_NAMESPACE} haproxy-ingress haproxy-ingress \
-  --repo "https://haproxy-ingress.github.io/charts" --version 0.14.7 --set controller.service.http.disabled=true -f - <<EOF
-controller:
-  logs:
-    enabled: "true" ## Enable  access logs
-  service:
-    type: ${TP_INGRESS_SERVICE_TYPE}
-    loadBalancerSourceRanges: 
-    - ${TP_AUTHORIZED_IP_RANGE} # allow only authorized IP Range
-    - 108.202.252.33/32
-    - ${CP_POD_CIDR} # allow Data Plane Pod access via Ingress Load Balancer service
-    annotations: 
-      service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: '/healthz'
-      # service.beta.kubernetes.io/azure-load-balancer-internal-subnet: $AKS_SUBNET ## Enable for Private Load Balancer
-      # service.beta.kubernetes.io/azure-load-balancer-internal: 'true' ## Enable for Private Load Balancer  
-  ingressClass: ${TP_INGRESS_CLASS}
-  ingressClassResource:
-    enabled: true
-  config:
-    ssl-always-add-https: "true" #https://haproxy-ingress.github.io/docs/configuration/keys/#ssl-always-add-https
-  extraArgs:
-    default-ssl-certificate: ${TP_INGRESS_NAMESPACE}/${DEFAULT_INGRESS_TLS_SECRET}
-EOF
-```
+    ```bash
+    helm upgrade --install --wait --timeout 1h --create-namespace  \
+      -n  ${TP_INGRESS_NAMESPACE} haproxy-ingress haproxy-ingress \
+      --repo "https://haproxy-ingress.github.io/charts" --version 0.14.7 --set controller.service.http.disabled=true -f - <<EOF
+    controller:
+      logs:
+        enabled: "true" ## Enable  access logs
+      service:
+        type: ${TP_INGRESS_SERVICE_TYPE}
+        loadBalancerSourceRanges: 
+        - ${TP_AUTHORIZED_IP_RANGE} # allow only authorized IP Range
+        - 108.202.252.33/32
+        - ${CP_POD_CIDR} # allow Data Plane Pod access via Ingress Load Balancer service
+        annotations: 
+          service.beta.kubernetes.io/azure-load-balancer-health-probe-request-path: '/healthz'
+          # service.beta.kubernetes.io/azure-load-balancer-internal-subnet: $AKS_SUBNET ## Enable for Private Load Balancer
+          # service.beta.kubernetes.io/azure-load-balancer-internal: 'true' ## Enable for Private Load Balancer  
+      ingressClass: ${TP_INGRESS_CLASS}
+      ingressClassResource:
+        enabled: true
+      config:
+        ssl-always-add-https: "true" #https://haproxy-ingress.github.io/docs/configuration/keys/#ssl-always-add-https
+      extraArgs:
+        default-ssl-certificate: ${TP_INGRESS_NAMESPACE}/${DEFAULT_INGRESS_TLS_SECRET}
+    EOF
+    ```
 
-#### Retrieve external-ip of Ingress (when haproxy ingress is not present in the k8s cluster)
+    #### Retrieve external-ip of Ingress (when haproxy ingress is not present in the k8s cluster)
 
-``` bash
- kubectl -n ${TP_INGRESS_NAMESPACE} get services haproxy-ingress -o wide 
-```
-Update DNS entries with this ip address.
+    ``` bash
+    kubectl -n ${TP_INGRESS_NAMESPACE} get services haproxy-ingress -o wide 
+    ```
+    Update DNS entries with this ip address.
 
 
-### Test HA Proxy Ingress (when haproxy ingress is not present in the k8s cluster) (optional)
-```bash
-## deployment app and service
-kubectl --namespace ${TP_INGRESS_NAMESPACE} create deployment echoserver --image k8s.gcr.io/echoserver:1.3
-kubectl --namespace ${TP_INGRESS_NAMESPACE} expose deployment echoserver --port=8080
+    ### Test HA Proxy Ingress (when haproxy ingress is not present in the k8s cluster) (optional)
+    ```bash
+    ## deployment app and service
+    kubectl --namespace ${TP_INGRESS_NAMESPACE} create deployment echoserver --image k8s.gcr.io/echoserver:1.3
+    kubectl --namespace ${TP_INGRESS_NAMESPACE} expose deployment echoserver --port=8080
 
-## validate app is running
-kubectl -n ${TP_INGRESS_NAMESPACE} get pod -w
+    ## validate app is running
+    kubectl -n ${TP_INGRESS_NAMESPACE} get pod -w
 
-## expose app service on ingress
-kubectl --namespace ${TP_INGRESS_NAMESPACE} create ingress echoserver \
-  --class=$TP_INGRESS_CLASS \
-  --rule="echoserver.${TP_BASE_DNS_DOMAIN}/*=echoserver:8080,tls"
+    ## expose app service on ingress
+    kubectl --namespace ${TP_INGRESS_NAMESPACE} create ingress echoserver \
+      --class=$TP_INGRESS_CLASS \
+      --rule="echoserver.${TP_BASE_DNS_DOMAIN}/*=echoserver:8080,tls"
 
-## test access
-curl -k https://echoserver.$TP_BASE_DNS_DOMAIN
+    ## test access
+    curl -k https://echoserver.$TP_BASE_DNS_DOMAIN
 
-## cleanup
-kubectl delete --namespace ${TP_INGRESS_NAMESPACE} ingress echoserver
-kubectl delete --namespace ${TP_INGRESS_NAMESPACE} service echoserver
-kubectl delete --namespace ${TP_INGRESS_NAMESPACE} deployment echoserver
-```
-
+    ## cleanup
+    kubectl delete --namespace ${TP_INGRESS_NAMESPACE} ingress echoserver
+    kubectl delete --namespace ${TP_INGRESS_NAMESPACE} service echoserver
+    kubectl delete --namespace ${TP_INGRESS_NAMESPACE} deployment echoserver
+    ```
+</details>
 
 </details>
 
+<br>
 
-</details>
+# 4 Storage Classes
 
-
-## 4. Storage classes
-
-### Bring your own storage classes (optional)
-
+## Bring your own storage classes (optional)
 If customer-managed storage classes already exist, this step can be skipped. In that case, ensure the following requirements are met.
 
 1. Two classes must be available:
@@ -315,39 +318,40 @@ kubectl get storageclass ${RWO_STORAGE_CLASS} ${RWX_STORAGE_CLASS}
 kubectl describe storageclass ${RWO_STORAGE_CLASS}
 kubectl describe storageclass ${RWX_STORAGE_CLASS}
 ```
+## Create new storage classes (optional)
 
-If customer-managed storage classes are not provided, use the dp-config-aks-storage chart command below to create the required storage classes.
+  If customer-managed storage classes are not provided, use the dp-config-aks-storage chart command below to create the required storage classes.
 
-```bash
-helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
-  --username ${TP_CHART_REPO_USER_NAME} --password ${TP_CHART_REPO_TOKEN} \
-  -n ${STORAGE_NAMESPACE} dp-config-aks-storage \
-  ${HELM_URL}dp-config-aks --version "1.18.0" -f - <<EOF
-clusterIssuer:
-  create: false
-storageClass:
-  azuredisk:
-    enabled: true
-    name: ${RWO_STORAGE_CLASS}
-    reclaimPolicy: ${STORAGE_RECLAIM_POLICY}
-    volumeBindingMode: Immediate
-    parameters:
-      skuName: ${RWO_STORAGE_SKU}
-  azurefile: 
-    enabled: true
-    name: ${RWX_STORAGE_CLASS}
-    reclaimPolicy: ${STORAGE_RECLAIM_POLICY}
-    volumeBindingMode: Immediate 
-    parameters:
-      skuName: ${RWX_STORAGE_SKU}
-      allowBlobPublicAccess: "false"
-      networkEndpointType: privateEndpoint
-    mountOptions:
-      - mfsymlinks
-      - cache=strict
-      - nosharesock
-EOF
-```
+  ```bash
+  helm upgrade --install --wait --timeout 1h --create-namespace --reuse-values \
+    --username ${TP_CHART_REPO_USER_NAME} --password ${TP_CHART_REPO_TOKEN} \
+    -n ${STORAGE_NAMESPACE} dp-config-aks-storage \
+    ${HELM_URL}dp-config-aks --version "1.18.0" -f - <<EOF
+  clusterIssuer:
+    create: false
+  storageClass:
+    azuredisk:
+      enabled: true
+      name: ${RWO_STORAGE_CLASS}
+      reclaimPolicy: ${STORAGE_RECLAIM_POLICY}
+      volumeBindingMode: Immediate
+      parameters:
+        skuName: ${RWO_STORAGE_SKU}
+    azurefile: 
+      enabled: true
+      name: ${RWX_STORAGE_CLASS}
+      reclaimPolicy: ${STORAGE_RECLAIM_POLICY}
+      volumeBindingMode: Immediate 
+      parameters:
+        skuName: ${RWX_STORAGE_SKU}
+        allowBlobPublicAccess: "false"
+        networkEndpointType: privateEndpoint
+      mountOptions:
+        - mfsymlinks
+        - cache=strict
+        - nosharesock
+  EOF
+  ```
 
 
 ## 5. Create Control Plane Namespace
@@ -393,10 +397,10 @@ export MASTER_PGUSER=postgres
 export MASTER_PGPASSWORD=postgres
 
 # Database prefix for object naming (use controlPlaneInstanceId with underscore suffix from tibco-cp-chart)
-export DB_PREFIX=cp1_					
+export DB_PREFIX="${CP_INSTANCE_ID}_"
 
 # Kubernetes namespace for secrets (create command script only)
-export POD_NAMESPACE=cp-ns
+export POD_NAMESPACE=${CP_NAMESPACE}
 ```
 
 To execute the script in order to create the new databases and tables the 'upgrade' command will be used.
@@ -416,18 +420,20 @@ This will create nine databases on the postgres database server with the followi
 * cp1_tscschedulerdb
 * cp1_tsctutdb
 
-The script will also generate a script file to create the secrets for the database credentials created for each database.
+The script will also create k8s secrets for these database and generate a script file to create the secrets for the database credentials created for each database.
 
 The name of this script is 'kubectl-create-secret-commands.sh'.
 Perform the next commands to create the secrets.
 (replace the actual name of the namespace for the control plane)
+<br> Please note the script will try to create the secrets while executing, therefore first check if the secrets are created.
+If not then execute below commands
 
 ```bash
-export NAMESPACE="controlplane-namespace-here"
+export NAMESPACE=${CP_NAMESPACE}
 ./kubectl-create-secret-commands.sh
 ```
 
-## 8. Create Control Plane DB TLS Certificate Secret [Optional only if ssl is enabled]
+## 8. Create Control Plane DB TLS Certificate Secret [Optional only required if ssl is enabled]
 Required for SSL enabled Databases, where SSL Mode is not set to _disable_
 [Reference: Creating K8s Secret for SSL enabled DB](https://docs.tibco.com/pub/platform-cp/latest/doc/html/Installation/creating-secret.htm)
 <br>
@@ -682,7 +688,7 @@ Starting 1.13.0 Platform capabilities are decoupled, and are installed separatel
 Capability charts reuse the Platform base (tibco-cp-base) chart configurations, and support capability specific customization. Get values from the deployed Platform base to reuse 
 
 ```bash
-export CP_VALUES_FILE=aks-tibco-cp-base-1.17.0.yaml
+export CP_VALUES_FILE=aks-tibco-cp-base-1.21.0.yaml
 helm get values -n $CP_NAMESPACE tibco-cp-base  > $CP_VALUES_FILE
 ```
 
@@ -708,7 +714,7 @@ helm upgrade --install -n $CP_NAMESPACE tibco-cp-devhub ${HELM_URL} tibco-cp-dev
 ### Install Messaging Capability
 
 ```bash
-helm upgrade --install -n  $CP_NAMESPACE tibco-cp-messaging ${HELM_URL} tibco-cp-messaging -f $CP_VALUES_FILE --version='1.15.*'
+helm upgrade --install -n  $CP_NAMESPACE tibco-cp-messaging ${HELM_URL} tibco-cp-messaging -f $CP_VALUES_FILE --version='1.21.*'
 ```
 
 please note version is different from cp version.
@@ -716,7 +722,7 @@ please note version is different from cp version.
 ### Install Hawk Capability
 
 ```bash
-helm upgrade --install -n  $CP_NAMESPACE tibco-cp-hawk  ${HELM_URL} tibco-cp-hawk -f $CP_VALUES_FILE  --version='1.18.*'
+helm upgrade --install -n  $CP_NAMESPACE tibco-cp-hawk  ${HELM_URL} tibco-cp-hawk -f $CP_VALUES_FILE  --version='1.21.*'
 ```
 
 
@@ -829,7 +835,7 @@ Execute the first two steps:
   Ingress Controller: 'HaProxy'<br>
   Resource name: devhub-ingress<br>
   Ingress Class name: 'haproxy'<br>
-  Default FQDN: devhub-weu-bwce-cae.azure.airfranceklm.tp<br>
+  Default FQDN: devhub-frc-bwce-cae.azure.airfranceklm.tp<br>
 
 ##### Ingress Annotations
 
@@ -850,6 +856,7 @@ Where FQDN should be replace by the value as provided in Default FQDN in the Ing
    Checkbox 'End User Agreement (EUA)'
    Next
 
+<!---
 ### Custom Config
 
   In order for developer hub to use the postgreSQL database connection with SSL enable a customer configuration is required.
@@ -874,7 +881,7 @@ Where FQDN should be replace by the value as provided in Default FQDN in the Ing
   Replace the values between the curly brackets and save the file.<br>
   Upload this file as custom configuration.<br>
   Next
-
+-->
 ### Provisioning
 
 Validate the configured details and click Next to provision the developer hub.
